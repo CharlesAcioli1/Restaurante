@@ -73,9 +73,25 @@ namespace Restaurante.Services.Implementations
             var garcom = await _context.Garcons.FindAsync(id);
             if (garcom == null) return null;
 
-            garcom.Nome = dto.Nome;
-            garcom.Cpf = dto.Cpf;
-            garcom.Telefone = dto.Telefone;
+            if(!string.IsNullOrEmpty(dto.Nome))
+            {
+                garcom.Nome = dto.Nome;
+            }
+
+            if(!string.IsNullOrEmpty(dto.Cpf))
+            {
+                garcom.Cpf = dto.Cpf;
+            }
+
+            if(!string.IsNullOrEmpty(dto.Telefone))
+            {
+                garcom.Telefone = dto.Telefone;
+            }
+
+            //FORMA ANTERIOR, SEM O TRATAMENTO DO ERROS!
+            //garcom.Nome = dto.Nome;
+            //garcom.Cpf = dto.Cpf;
+            //garcom.Telefone = dto.Telefone;
 
             _context.Garcons.Update(garcom);
             await _context.SaveChangesAsync();

@@ -45,7 +45,22 @@ namespace Restaurante.Services.Implementations
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<MesaResponseDto> CriarAsync(MesaResponseDto dto)
+        public async Task<IEnumerable<MesaResponseDto>> ObterPorRestauranteIdAsync(int restauranteId)
+        {
+            return await _context.Mesas
+                .AsNoTracking()
+                .Where(m => m.RestauranteId == restauranteId)
+                .Select(m => new MesaResponseDto
+                {
+                    Id= m.Id,
+                    Numero = m.Numero,
+                    StatusId = m.StatusId,
+                    RestauranteId = m.RestauranteId
+                })
+                .ToListAsync();
+        }
+
+        public async Task<MesaResponseDto> CriarAsync(CriarMesaDto dto)
         {
             var mesa = new Mesa
             {

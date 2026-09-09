@@ -1,3 +1,5 @@
+using Restaurante.Domain.Compartilhar;
+
 namespace Restaurante.Domain;
 
 /*

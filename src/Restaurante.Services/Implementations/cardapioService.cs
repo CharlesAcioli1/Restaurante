@@ -1,105 +1,97 @@
-using Microsoft.EntityFrameworkCore;
-using Restaurante.Infrastructure.Persistencia;
+using Restaurante.Domain;
+using Restaurante.Domain.Compartilhar;
+using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Cardapio;
 using Restaurante.Services.Interfaces;
-using DomainEntity = Restaurante.Domain.Cardapio;
 
 namespace Restaurante.Services.Implementations
 {
-    public class CardapioService : ICardapioService
+    public class CardapioService(ICardapioRepository cardapioRepository) : ICardapioService
     {
-        private readonly RestauranteDbContext _context;
+        private readonly ICardapioRepository _cardapioRepository = cardapioRepository;
 
-        public CardapioService (RestauranteDbContext context)
+        public async Task<Resultado> ObterTodosAsync()
         {
-            _context = context;
+            var resultado = await _cardapioRepository.ObterTodosAsync();
+
+            if (!resultado.PossuiDados)
+                return resultado;
+
+            var listaCardapio = (List<Cardapio>)resultado.Dados!;
+
+            var listaDto = listaCardapio.Select(CardapioResponseDto.CardapioToDto);
+
+            return Resultado.Success(listaDto);
         }
 
-        public async Task<IEnumerable<CardapioResponseDto>> ObterTodosAsync()
+        public async Task<Resultado> ObterPorIdAsync(int id)
         {
-            return await _context.Cardapios
-                .AsNoTracking()
-                .Select(c => new CardapioResponseDto
-                {
-                    Id = c.Id,
-                    Nome = c.Nome,
-                    RestauranteId = c.RestauranteId
-                })
-                .ToListAsync();
+            var resultado = await _cardapioRepository.ObterPorIdAsync(id);
+
+            if (!resultado.PossuiDados)
+                return resultado;
+
+            var retorno = CardapioResponseDto.CardapioToDto((Cardapio)resultado.Dados!);
+
+            return Resultado.Success(retorno);
         }
 
-        public async Task<CardapioResponseDto?> ObterPorIdAsync(int id)
+        public async Task<Resultado> ObterPorRestauranteIdAsync(int restauranteId)
         {
-            var cardapio = await _context.Cardapios
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id);
+            var resultado = await _cardapioRepository.ObterPorRestauranteIdAsync(restauranteId);
 
-            if(cardapio == null)
-                return null;
+            if (!resultado.PossuiDados)
+                return resultado;
 
-            return new CardapioResponseDto
+            var retorno = CardapioResponseDto.CardapioToDto((Cardapio)resultado.Dados!);
+
+            return Resultado.Success(retorno);
+        }
+
+        public async Task<Resultado> CriarCardapioAsync(CriarCardapioDto dto)
+        {
+            var novoCardapio = new Cardapio
             {
-                Id = cardapio.Id,
-                Nome = cardapio.Nome,
-                RestauranteId = cardapio.RestauranteId
+                Nome = dto.Nome,
+                RestauranteId = dto.RestauranteId
             };
+
+            var resultado = await _cardapioRepository.CriarCardapioAsync(novoCardapio);
+
+            if (!resultado.PossuiDados)
+                return resultado;
+
+            var cardapioDto = CardapioResponseDto.CardapioToDto(novoCardapio);
+
+            return Resultado.Success(cardapioDto);
         }
 
-        public async Task<IEnumerable<CardapioResponseDto>> ObterPorRestauranteIdAsync(int restauranteId)
+        public async Task<Resultado> DeletarAsync(int id)
         {
-            return await _context.Cardapios
-                .AsNoTracking()
-                .Where(c => c.RestauranteId == restauranteId)
-                .Select(c => new CardapioResponseDto
-                {
-                    Id = c.Id,
-                    Nome = c.Nome,
-                    RestauranteId = c.RestauranteId
-                })
-                .ToListAsync();
+            var resultadoBusca = await _cardapioRepository.ObterPorIdAsync(id);
+
+            if (!resultadoBusca.PossuiDados)
+                return resultadoBusca;
+
+            var cardapio = (Cardapio)resultadoBusca.Dados!;
+
+            var resultadoDeletar = await _cardapioRepository.DeletarAsync(cardapio);
+
+            return resultadoDeletar;
         }
 
-        public async Task<CardapioResponseDto> CriarCardapioAsync(CriarCardapioDto dto)
+        public async Task<Resultado> AtualizarCardapioAsync(AtualizarCardapioDto dto)
         {
-            var novoCardapio = new DomainEntity
-            {
-                Nome = dto.Nome
-            };
-            _context.Cardapios.Add(novoCardapio);
-            await _context.SaveChangesAsync();
+            var resultadoBusca = await _cardapioRepository.ObterPorIdAsync(dto.Id);
 
-            return new CardapioResponseDto
-            {
-                Id = novoCardapio.Id,
-                Nome = novoCardapio.Nome,
-                RestauranteId = novoCardapio.RestauranteId
-            };
-        }
+            if (!resultadoBusca.PossuiDados)
+                return resultadoBusca;
 
-        public async Task<bool> DeletarAsync(int id)
-        {
-            var cardapio = await _context.Cardapios.FindAsync(id);
-            if (cardapio == null) return false;
-            _context.Cardapios.Remove(cardapio);
-            await _context.SaveChangesAsync();
-            return true;
+            var cardapio = (Cardapio)resultadoBusca.Dados!;
 
-        }
+            var resultadoAtualizar = await _cardapioRepository.AtualizarCardapioAsync(cardapio);
 
-        public async Task<CardapioResponseDto?> AtualizarCardapioAsync(AtualizarCardapioDto dto)
-        {
-            var cardapio = await _context.Cardapios.FindAsync();
-            if(cardapio == null) return null;
-
-            _context.Cardapios.Update(cardapio);
-            await _context.SaveChangesAsync();
-
-            return new CardapioResponseDto
-            {
-                Id = cardapio.Id,
-                Nome = cardapio.Nome,
-                RestauranteId = cardapio.RestauranteId
-            };
+            return resultadoAtualizar;
         }
     }
 }

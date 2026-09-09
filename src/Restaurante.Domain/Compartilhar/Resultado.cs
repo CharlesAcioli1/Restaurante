@@ -6,6 +6,8 @@
         public bool Sucesso { get; set; }
         public string? Erro { get; set; }
 
+        public bool PossuiDados { get => Sucesso && Dados is not null; }
+
         private Resultado(bool sucesso, object? dados = null, string? erro = null)
         {
             Sucesso = sucesso;

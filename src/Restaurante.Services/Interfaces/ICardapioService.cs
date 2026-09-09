@@ -1,14 +1,15 @@
+using Restaurante.Domain.Compartilhar;
 using Restaurante.Services.DTOs.Cardapio;
 
 namespace Restaurante.Services.Interfaces
 {
     public interface ICardapioService
     {
-        Task<IEnumerable<CardapioResponseDto>> ObterTodosAsync();
-        Task<CardapioResponseDto?> ObterPorIdAsync(int id);
-        Task<IEnumerable<CardapioResponseDto>> ObterPorRestauranteIdAsync(int restauranteId);
-        Task<CardapioResponseDto> CriarCardapioAsync(CriarCardapioDto dto);
-        Task<CardapioResponseDto?> AtualizarCardapioAsync(AtualizarCardapioDto dto);
-        Task<bool> DeletarAsync(int id);
+        Task<Resultado> ObterTodosAsync();
+        Task<Resultado> ObterPorIdAsync(int id);
+        Task<Resultado> ObterPorRestauranteIdAsync(int restauranteId);
+        Task<Resultado> CriarCardapioAsync(CriarCardapioDto dto);
+        Task<Resultado> AtualizarCardapioAsync(AtualizarCardapioDto dto);
+        Task<Resultado> DeletarAsync(int id);
     }
 }

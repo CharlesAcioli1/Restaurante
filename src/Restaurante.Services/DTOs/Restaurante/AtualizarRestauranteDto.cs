@@ -1,9 +1,12 @@
 namespace Restaurante.Services.DTOs.Restaurante;
 
-public class AtualizarRestauranteDto
+public sealed record AtualizarRestauranteDto
 {
-    public string Nome { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Endereco { get; set; } = string.Empty;
-    public string Telefone {get; set; } = string.Empty;
+    public int Id { get; init; }
+    public string? Nome { get; init; }
+    public string? Cnpj { get; init; }
+    public string? Email { get; init; }
+    public string? Endereco { get; init; }
+    public string? Telefone { get; init; }
+    public string? Ativo { get; init; }
 }

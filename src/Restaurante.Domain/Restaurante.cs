@@ -5,11 +5,11 @@ public sealed class Restaurante
     //PROPRIEDADES
     public int Id { get; set; }
     public string? Nome { get; set; }
-    public string? Cnpj { get; private set; }
-    public string? Email { get; private set; }
+    public string? Cnpj { get; set; }
+    public string? Email { get; set; }
     public string? Endereco { get; set; }
-    public string? Telefone { get; private set; }
-    public bool Ativo { get; private set; } = true;
+    public string? Telefone { get; set; }
+    public bool Ativo { get; set; } = true;
 
     //CONSTRUTOR
     public Restaurante(string nome, string cnpj, string email, string endereco, string telefone)
@@ -51,5 +51,5 @@ public sealed class Restaurante
         Telefone = novoTelefone;
     }
 
-    private Restaurante() { }
+    public Restaurante() { }
 }

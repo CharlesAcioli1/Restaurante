@@ -1,13 +1,13 @@
+using Restaurante.Domain.Compartilhar;
 using Restaurante.Services.DTOs.Restaurante;
 
 namespace Restaurante.Services.Interfaces;
 
 public interface IRestauranteService
 {
-    Task<IEnumerable<RestauranteResponseDto>> ObterTodosAsync();
-    Task<RestauranteResponseDto?> ObterPorIdAsync(int Id);
-    Task<RestauranteResponseDto> CriarAsync(CriarRestauranteDto dto);
-    Task<RestauranteResponseDto?> AtualizarAsync(int Id, AtualizarRestauranteDto dto);
-
-    Task<bool> DeletarAsync(int Id);
+    Task<Resultado> ObterTodosAsync();
+    Task<Resultado> ObterPorIdAsync(int id);
+    Task<Resultado> CriarAsync(CriarRestauranteDto dto);
+    Task<Resultado> AtualizarAsync(AtualizarRestauranteDto dto);
+    Task<Resultado> DeletarAsync(int id);
 }

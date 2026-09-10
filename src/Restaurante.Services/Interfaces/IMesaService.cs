@@ -1,13 +1,15 @@
+using Restaurante.Domain.Compartilhar;
 using Restaurante.Services.DTOs.Mesa;
 
 namespace Restaurante.Services.Interfaces;
 
 public interface IMesaService
 {
-    Task<IEnumerable<MesaResponseDto>> ObterTodasAsync();
-    Task<MesaResponseDto?> ObterPorIdAsync(int id);
-    Task<IEnumerable<MesaResponseDto>> ObterPorRestauranteIdAsync(int restauranteId);
-    Task<MesaResponseDto> CriarAsync(CriarMesaDto dto);
-    Task<bool> AtualizarAsync(AtualizarMesaDto dto);
-    Task<bool> DeletarAsync(int id);
+    Task<Resultado> ObterTodosAsync();
+    Task<Resultado> ObterPorIdAsync(int id);
+    Task<Resultado> ObterPorRestauranteIdAsync(int restauranteId);
+    Task<Resultado> ObterPorStatusAsync(int statusId);
+    Task<Resultado> CriarAsync(CriarMesaDto dto);
+    Task<Resultado> AtualizarAsync(AtualizarMesaDto dto);
+    Task<Resultado> DeletarAsync(int id);
 }

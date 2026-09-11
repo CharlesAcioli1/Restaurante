@@ -1,13 +1,15 @@
+using Restaurante.Domain.Compartilhar;
 using Restaurante.Services.DTOs;
+using Restaurante.Services.DTOs.Garcom;
 
 namespace Restaurante.Services.Interfaces
 {
     public interface IGarcomService
     {
-        Task<IEnumerable<GarcomResponseDto>> ObterTodosAsync();
-        Task<GarcomResponseDto?> ObterPorIdAsync(int id);
-        Task<GarcomResponseDto> CriarAsync(CriarGarcomDto dto);
-        Task<GarcomResponseDto?> AtualizarAsync(int id, AtualizarGarcomDto dto);
-        Task<bool> DeletarAsync(int id);
+        Task<Resultado> ObterTodosAsync();
+        Task<Resultado> ObterPorIdAsync(int id);
+        Task<Resultado> CriarAsync(CriarGarcomDto dto);
+        Task<Resultado> AtualizarAsync(AtualizarGarcomDto dto);
+        Task<Resultado> DeletarAsync(int id);
     }
 }

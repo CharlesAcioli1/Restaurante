@@ -1,12 +1,23 @@
+using Dom = Restaurante.Domain;
 namespace Restaurante.Services.DTOs.Restaurante;
 
-public class RestauranteResponseDto
+public sealed record RestauranteResponseDto
 {
-    public int Id { get; set; }
-    public string? Nome { get; set; }
-    public string? Cnpj { get; set; }
-    public string? Email { get; set; }
-    public string? Endereco { get; set; }
-    public string? Telefone { get; set; }
-    public string? Ativo { get; set; }
+    public int Id { get; init; }
+    public string? Nome { get; init; }
+    public string? Cnpj { get; init; }
+    public string? Email { get; init; }
+    public string? Endereco { get; init; }
+    public string? Telefone { get; init; }
+
+    public static RestauranteResponseDto RestauranteToDto(Dom.Restaurante restaurante)
+        => new()
+        {
+            Id = restaurante.Id,
+            Nome = restaurante.Nome,
+            Cnpj = restaurante.Cnpj,
+            Email = restaurante.Email,
+            Endereco = restaurante.Endereco,
+            Telefone = restaurante.Telefone
+        };
 }

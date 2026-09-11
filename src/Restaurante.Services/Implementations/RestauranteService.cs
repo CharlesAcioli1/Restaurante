@@ -1,110 +1,80 @@
-using Microsoft.EntityFrameworkCore;
-using Restaurante.Infrastructure.Persistencia;
+using Dom = Restaurante.Domain;
+using Restaurante.Domain.Compartilhar;
+using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Restaurante;
 using Restaurante.Services.Interfaces;
-using DomainEntity = Restaurante.Domain.Restaurante;
+using Restaurante.Domain;
 
-namespace Restaurante.Services.Implementations;
-
-public class RestauranteService : IRestauranteService
+namespace Restaurante.Services.Implementations
 {
-    private readonly RestauranteDbContext _context;
-
-    public RestauranteService(RestauranteDbContext context)
+    public class RestauranteService(IRestauranteRepository restauranteRepository) : IRestauranteService
     {
-        _context = context;
-    }
-    public async Task<IEnumerable<RestauranteResponseDto>> ObterTodosAsync()
+    private readonly IRestauranteRepository _restauranteRepository = restauranteRepository;
+
+        public async Task<Resultado> AtualizarAsync(AtualizarRestauranteDto dto)
         {
-            return await _context.Restaurantes
-                .AsNoTracking()
-                .Select(r => new RestauranteResponseDto
-                {
-                    Id = r.Id,
-                    Nome = r.Nome,
-                    Cnpj = r.Cnpj,
-                    Email = r.Email,
-                    Endereco = r.Endereco,
-                    Telefone = r.Telefone
-                })
-                .ToListAsync();
+            var obterId = await _restauranteRepository.ObterPorIdAsync(dto.Id);
+            if (!obterId.PossuiDados)
+                return obterId;
+
+            var resultado = (Dom.Restaurante)obterId.Dados!;
+            var atualizarRestaurante = await _restauranteRepository.AtualizarAsync(resultado);
+            return atualizarRestaurante;
+
         }
 
-    public async Task<RestauranteResponseDto?> ObterPorIdAsync(int Id)
-    {
-        var restaurante = await _context.Restaurantes
-            .AsNoTracking()
-            .FirstOrDefaultAsync(r => r.Id == Id);
-
-        if (restaurante == null) return null;
-
-        return new RestauranteResponseDto
+        public async Task<Resultado> CriarAsync(CriarRestauranteDto dto)
         {
-            Id = restaurante.Id,
-            Nome = restaurante.Nome,
-            Cnpj = restaurante.Cnpj,
-            Email = restaurante.Email,
-            Endereco = restaurante.Endereco,
-            Telefone = restaurante.Telefone
-        };
-    }
+            var novoRestaurante = new Dom.Restaurante
+            {
+               Nome = dto.Nome,
+               Cnpj = dto.Cnpj,
+               Email = dto.Email,
+               Telefone = dto.Telefone,
+               Endereco = dto.Endereco
+            };
 
-    public async Task<RestauranteResponseDto> CriarAsync(CriarRestauranteDto dto)
-    {
-        var novoRestaurante = new DomainEntity(
-            dto.Nome,
-            dto.Cnpj,
-            dto.Email,
-            dto.Endereco,
-            dto.Telefone
-            );
+            var criarRestaurante = await _restauranteRepository.CriarAsync(novoRestaurante);
+            if (!criarRestaurante.PossuiDados)
+                return criarRestaurante;
 
-        _context.Restaurantes.Add( novoRestaurante );
-        await _context.SaveChangesAsync();
+            var restaurante = RestauranteResponseDto.RestauranteToDto(novoRestaurante);
+            return Resultado.Success(restaurante);
+        }
 
-        return new RestauranteResponseDto
+        public async Task<Resultado> DeletarAsync(int id)
         {
-            Id = novoRestaurante.Id,
-            Nome = novoRestaurante.Nome,
-            Cnpj = novoRestaurante.Cnpj,
-            Email = novoRestaurante.Email,
-            Telefone = novoRestaurante.Telefone
-        };
-    }
+            var obterId = await _restauranteRepository.ObterPorIdAsync(id);
+            if (!obterId.PossuiDados)
+                return obterId;
 
-    public async Task<RestauranteResponseDto?> AtualizarAsync(int Id, AtualizarRestauranteDto dto)
-    {
-        var restaurante = await _context.Restaurantes.FindAsync(Id);
-        if (restaurante == null) return null;
 
-        restaurante.Nome = dto.Nome;
-        restaurante.Endereco = dto.Endereco;
-        restaurante.AtualizarEmail(dto.Email);
-        restaurante.AtualizarTelefone(dto.Telefone);
+            var restaurante = (Dom.Restaurante)obterId.Dados!;
+            var deletarRestaurante = await _restauranteRepository.DeletarAsync(restaurante);
+            return deletarRestaurante;
+        }
 
-        _context.Restaurantes.Update(restaurante);
-        await _context.SaveChangesAsync();
-
-        return new RestauranteResponseDto
+        public async Task<Resultado> ObterPorIdAsync(int id)
         {
-            Id = restaurante.Id,
-            Nome = restaurante.Nome,
-            Cnpj = restaurante.Cnpj,
-            Email = restaurante.Email,
-            Endereco = restaurante.Endereco,
-            Telefone = restaurante.Telefone
-        };
-    }
+            var obterId = await _restauranteRepository.ObterPorIdAsync(id);
+            if (!obterId.PossuiDados)
+                return obterId;
 
-    public async Task<bool> DeletarAsync(int Id)
-    {
-        var restaurante = await _context.Restaurantes.FindAsync(Id);
-        if(restaurante == null) return false;
+            var retornoId = RestauranteResponseDto.RestauranteToDto((Dom.Restaurante)obterId.Dados!);
+            return Resultado.Success(retornoId);
+        }
 
-        _context.Restaurantes.Remove(restaurante);
-        await _context.SaveChangesAsync();
-        return true;
-    }
+        public async Task<Resultado> ObterTodosAsync()
+        {
+            var obterTodos = await _restauranteRepository.ObterTodosAsync();
+            if (!obterTodos.PossuiDados)
+                return obterTodos;
+
+            var listaRestaurante = (List<Dom.Restaurante>)obterTodos.Dados!;
+            var listaDto = listaRestaurante.Select(RestauranteResponseDto.RestauranteToDto);
+            return Resultado.Success(listaRestaurante);
+        }
+    }    
 }
 
 

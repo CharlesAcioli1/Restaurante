@@ -1,118 +1,73 @@
-using Microsoft.EntityFrameworkCore;
-using Restaurante.Infrastructure.Persistencia;
+using Restaurante.Domain;
+using Restaurante.Domain.Compartilhar;
+using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs;
+using Restaurante.Services.DTOs.Garcom;
 using Restaurante.Services.Interfaces;
-using DomainEntity = Restaurante.Domain.Garcom;
-
 
 namespace Restaurante.Services.Implementations
 {
-    public class GarcomService : IGarcomService
+    public class GarcomService(IGarcomRepository garcomRepository) : IGarcomService
     {
-        private readonly RestauranteDbContext _context;
-
-        public GarcomService(RestauranteDbContext context)
+        private readonly IGarcomRepository _garcomRepository = garcomRepository;
+        public async Task<Resultado> ObterTodosAsync()
         {
-            _context = context;
+            var resultado = await _garcomRepository.ObterTodosAsync();
+            if (!resultado.PossuiDados)
+                return resultado;
+
+            var listaGarcom = (List<Garcom>)resultado.Dados!;
+            var listaDto = listaGarcom.Select(GarcomResponseDto.GarcomToDto);
+            return Resultado.Success(listaGarcom);
+        }
+        public async Task<Resultado> ObterPorIdAsync(int id)
+        {
+            var resultado = await _garcomRepository.ObterPorIdAsync(id);
+            if (!resultado.PossuiDados)
+                return resultado;
+
+            var retorno = GarcomResponseDto.GarcomToDto((Garcom)resultado.Dados!);
+            return Resultado.Success(retorno);
         }
 
-        public async Task<IEnumerable<GarcomResponseDto>> ObterTodosAsync()
+        public async Task<Resultado> CriarAsync(CriarGarcomDto dto)
         {
-            return await _context.Garcons
-                .AsNoTracking()
-                .Select(g => new GarcomResponseDto
-                {
-                    Id = g.Id,
-                    Nome = g.Nome,
-                    Cpf = g.Cpf,
-                    Telefone = g.Telefone
-                })
-                .ToListAsync();
-        }
-
-        public async Task<GarcomResponseDto?> ObterPorIdAsync(int id)
-        {
-            var garcom = await _context.Garcons
-                .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id == id);
-
-            if (garcom == null) return null;
-
-            return new GarcomResponseDto
-            {
-                Id = garcom.Id,
-                Nome = garcom.Nome,
-                Cpf = garcom.Cpf,
-                Telefone = garcom.Telefone
-            };
-        }
-
-        public async Task<GarcomResponseDto> CriarAsync(CriarGarcomDto dto)
-        {
-            var novoGarcom = new DomainEntity
+            var novoGarcom = new Garcom
             {
                 Nome = dto.Nome,
                 Cpf = dto.Cpf,
                 Telefone = dto.Telefone
             };
 
-            _context.Garcons.Add(novoGarcom);
-            await _context.SaveChangesAsync();
+            var resultado = await _garcomRepository.CriarAsync(novoGarcom);
+            if (!resultado.PossuiDados)
+                return resultado;
 
-            return new GarcomResponseDto
-            {
-                Id = novoGarcom.Id,
-                Nome = novoGarcom.Nome,
-                Cpf = novoGarcom.Cpf,
-                Telefone = novoGarcom.Telefone
-            };
+            var garcomDto = GarcomResponseDto.GarcomToDto(novoGarcom);
+            return Resultado.Success(garcomDto);
         }
 
-        public async Task<GarcomResponseDto?> AtualizarAsync(int id, AtualizarGarcomDto dto)
+        public async Task<Resultado> AtualizarAsync(AtualizarGarcomDto dto)
         {
-            var garcom = await _context.Garcons.FindAsync(id);
-            if (garcom == null) return null;
+            var obterId = await _garcomRepository.ObterPorIdAsync(dto.Id);
 
-            if(!string.IsNullOrEmpty(dto.Nome))
-            {
-                garcom.Nome = dto.Nome;
-            }
+            if (!obterId.PossuiDados)
+                return obterId;
 
-            if(!string.IsNullOrEmpty(dto.Cpf))
-            {
-                garcom.Cpf = dto.Cpf;
-            }
-
-            if(!string.IsNullOrEmpty(dto.Telefone))
-            {
-                garcom.Telefone = dto.Telefone;
-            }
-
-            //FORMA ANTERIOR, SEM O TRATAMENTO DO ERROS!
-            //garcom.Nome = dto.Nome;
-            //garcom.Cpf = dto.Cpf;
-            //garcom.Telefone = dto.Telefone;
-
-            _context.Garcons.Update(garcom);
-            await _context.SaveChangesAsync();
-
-            return new GarcomResponseDto
-            {
-                Id = garcom.Id,
-                Nome = garcom.Nome,
-                Cpf = garcom.Cpf,
-                Telefone = garcom.Telefone
-            };
+            var garcom = (Garcom)obterId.Dados!;
+            var atualizarGarcom = await _garcomRepository.AtualizarAsync(garcom);
+            return atualizarGarcom;
         }
 
-        public async Task<bool> DeletarAsync(int id)
+        public async Task<Resultado> DeletarAsync(int id)
         {
-            var garcom = await _context.Garcons.FindAsync(id);
-            if(garcom == null) return false;
+            var obterId = await _garcomRepository.ObterPorIdAsync(id);
+            if (!obterId.PossuiDados)
+                return obterId;
 
-            _context.Garcons.Remove(garcom);
-            await _context.SaveChangesAsync();
-            return true;
+            var garcom = (Garcom)obterId.Dados!;
+            var deletarGarcom = await _garcomRepository.DeletarAsync(garcom);
+            return deletarGarcom;
         }
     }
 }

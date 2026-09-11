@@ -1,3 +1,4 @@
+using Dom = Restaurante.Domain;
 namespace Restaurante.Services.DTOs.Mesa;
 
 public sealed record MesaResponseDto
@@ -9,4 +10,13 @@ public sealed record MesaResponseDto
     public int Numero { get; init; }
     public int StatusId { get; init; }
     public int RestauranteId { get; init; }
+
+    public static MesaResponseDto MesaToDto(Dom.Mesa mesa)
+        => new()
+        {
+            Id = mesa.Id,
+            Numero = mesa.Numero,
+            StatusId = mesa.StatusId,
+            RestauranteId = mesa.RestauranteId
+        };
 }

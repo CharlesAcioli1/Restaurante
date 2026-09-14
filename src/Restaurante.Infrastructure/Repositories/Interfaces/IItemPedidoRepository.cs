@@ -10,6 +10,7 @@ namespace Restaurante.Infrastructure.Repositories.Interfaces
         Task<Resultado> ObterPorItemIdAsync(int id);
         Task<Resultado> ObterPorStatusId(int id);
 
+        Task<Resultado> ObterTodosAsync();
         Task<Resultado> CriarAsync(Dom.ItemPedido itemPedido);
         Task<Resultado> AtualizarAsync(Dom.ItemPedido itemPedido);
         Task<Resultado> DeletarAsync(Dom.ItemPedido itemPedido);

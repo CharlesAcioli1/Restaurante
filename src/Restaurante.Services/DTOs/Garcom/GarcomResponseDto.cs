@@ -9,7 +9,8 @@ public sealed record GarcomResponseDto
 
     public static GarcomResponseDto GarcomToDto(Dom.Garcom garcom)
         => new()
-        { Id = garcom.Id,
+        { 
+            Id = garcom.Id,
             Nome = garcom.Nome,
             Cpf = garcom.Cpf,
             Telefone = garcom.Telefone

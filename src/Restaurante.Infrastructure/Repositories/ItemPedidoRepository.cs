@@ -110,5 +110,21 @@ namespace Restaurante.Infrastructure.Repositories
                 return Resultado.Falha("Não foi possível obter Status dos itens pedidos no banco de dados");
             }
         }
+
+        public async Task<Resultado> ObterTodosAsync()
+        {
+            try
+            {
+                var itemPedido = await _context.ItemPedidos
+                .AsNoTracking()
+                .ToListAsync();
+                return Resultado.Success(itemPedido);
+            }
+            catch (Exception)
+            {
+
+                return Resultado.Falha("Não foi possível lista de itens e pedidos no banco de dados!");
+            }
+        }
     }
 }

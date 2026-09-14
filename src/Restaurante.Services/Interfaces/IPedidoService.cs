@@ -1,5 +1,4 @@
 using Restaurante.Domain.Compartilhar;
-
 using Restaurante.Services.DTOs.Pedido;
 
 namespace Restaurante.Services.Interfaces;

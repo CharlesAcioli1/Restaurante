@@ -1,10 +1,9 @@
-﻿using Dom = Restaurante.Domain;
-using Restaurante.Domain.Compartilhar;
-using Restaurante.Domain;
+﻿using Restaurante.Domain.Compartilhar;
+using Dom = Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Repositories.Interfaces
 {
-    internal interface IItemRepository
+    public interface IItemRepository
     {
         Task<Resultado> ObterTodasAsync();
         Task<Resultado> ObterPorIdAsync(int id);

@@ -1,15 +1,14 @@
-using Dom = Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Restaurante;
 using Restaurante.Services.Interfaces;
-using Restaurante.Domain;
+using Dom = Restaurante.Domain;
 
 namespace Restaurante.Services.Implementations
 {
     public class RestauranteService(IRestauranteRepository restauranteRepository) : IRestauranteService
     {
-    private readonly IRestauranteRepository _restauranteRepository = restauranteRepository;
+        private readonly IRestauranteRepository _restauranteRepository = restauranteRepository;
 
         public async Task<Resultado> AtualizarAsync(AtualizarRestauranteDto dto)
         {
@@ -27,11 +26,11 @@ namespace Restaurante.Services.Implementations
         {
             var novoRestaurante = new Dom.Restaurante
             {
-               Nome = dto.Nome,
-               Cnpj = dto.Cnpj,
-               Email = dto.Email,
-               Telefone = dto.Telefone,
-               Endereco = dto.Endereco
+                Nome = dto.Nome,
+                Cnpj = dto.Cnpj,
+                Email = dto.Email,
+                Telefone = dto.Telefone,
+                Endereco = dto.Endereco
             };
 
             var criarRestaurante = await _restauranteRepository.CriarAsync(novoRestaurante);
@@ -74,7 +73,7 @@ namespace Restaurante.Services.Implementations
             var listaDto = listaRestaurante.Select(RestauranteResponseDto.RestauranteToDto);
             return Resultado.Success(listaRestaurante);
         }
-    }    
+    }
 }
 
 

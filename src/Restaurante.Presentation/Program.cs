@@ -1,6 +1,7 @@
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories;
 using Restaurante.Infrastructure.Repositories.Interfaces;
+using Restaurante.Presentation.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Restaurante.Services.Interfaces;
@@ -45,6 +46,8 @@ builder.Services.AddScoped<IRestauranteService, RestauranteService>();
 //builder.Services.AddScoped<IGarcomRestauranteService, GarcomRestaurante>();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

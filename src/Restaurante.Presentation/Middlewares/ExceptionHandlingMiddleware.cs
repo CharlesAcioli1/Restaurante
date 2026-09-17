@@ -1,11 +1,6 @@
-﻿using System;
+﻿using Restaurante.Domain.Compartilhar;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Restaurante.Domain.Compartilhar;
 
 namespace Restaurante.Presentation.Middlewares
 {
@@ -20,7 +15,7 @@ namespace Restaurante.Presentation.Middlewares
             _logger = logger;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
@@ -30,10 +25,12 @@ namespace Restaurante.Presentation.Middlewares
             {
 
                 _logger.LogError(ex, "Erro não tratado, capturado no middleware: {Message}", ex.Message);
+
+                await HandleExceptionAsync(context, ex);
             }
         }
-        #region TRATAMENTO DE EXCEÇÃO
-        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
+        
+        private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             context.Response.ContentType = "application/json";
 
@@ -48,8 +45,7 @@ namespace Restaurante.Presentation.Middlewares
 
             var jsonResponse = JsonSerializer.Serialize(response, jsonOptions);
 
-            return context.Response.WriteAsync(jsonResponse);
+            await context.Response.WriteAsync(jsonResponse);
         }
-        #endregion
     }
 }

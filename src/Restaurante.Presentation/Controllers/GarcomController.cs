@@ -25,7 +25,7 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> ObterPorIdAsync([FromRoute]int id)
+        public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var garcons = await _garcomService.ObterPorIdAsync(id);
             return Ok(garcons);
@@ -40,7 +40,7 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarGarcomDto dto)
+        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarGarcomDto dto)
         {
             var atualizarDtoGarcom = dto with { Id = id };
             await _garcomService.AtualizarAsync(atualizarDtoGarcom);
@@ -48,7 +48,7 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarAsync([FromRoute]int id)
+        public async Task<IActionResult> DeletarAsync(int id)
         {
             await _garcomService.DeletarAsync(id);
             return NoContent();

@@ -22,7 +22,7 @@ namespace Restaurante.Presentation.Controllers
             return Ok(restaurantes);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> ObterPorIdAsync([FromRoute]int id)
+        public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var restaurantes = await _restauranteService.ObterPorIdAsync(id);
             return Ok(restaurantes);
@@ -36,7 +36,7 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarRestauranteDto dto)
+        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarRestauranteDto dto)
         {
             var atualizarDtoRestaurante = dto with { Id = id };
             await _restauranteService.AtualizarAsync(atualizarDtoRestaurante);

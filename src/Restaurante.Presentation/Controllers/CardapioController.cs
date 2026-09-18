@@ -24,9 +24,16 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> ObterPorIdAsync([FromRoute]int id)
+        public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var cardapios = await _cardapioService.ObterPorIdAsync(id);
+            return Ok(cardapios);
+        }
+
+        [HttpGet("restaurante/{restauranteId}")]
+        public async Task<IActionResult> ObterPorCardapioId(int restauranteId)
+        {
+            var cardapios = await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
             return Ok(cardapios);
         }
 
@@ -38,7 +45,7 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarCardapioAsync([FromRoute] int id, [FromBody]AtualizarCardapioDto dto)
+        public async Task<IActionResult> AtualizarCardapioAsync(int id, [FromBody]AtualizarCardapioDto dto)
         {
             var atualizarDto = dto with { Id = id };
 
@@ -47,7 +54,7 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarAsync([FromRoute]int id)
+        public async Task<IActionResult> DeletarAsync(int id)
         {
             await _cardapioService.DeletarAsync(id);
             return NoContent();

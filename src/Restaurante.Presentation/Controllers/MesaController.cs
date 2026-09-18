@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Restaurante.Services.DTOs.Mesa;
 using Restaurante.Services.Interfaces;
 
@@ -23,11 +22,19 @@ namespace Restaurante.Presentation.Controllers
             return Ok(mesas);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> ObterPorIdAsyc([FromRoute] int id)
+        public async Task<IActionResult> ObterPorIdAsyc(int id)
         {
             var mesas = await _mesaService.ObterPorIdAsync(id);
             return Ok(mesas);
         }
+
+        [HttpGet("restaurante/{restauranteId}")]
+        public async Task<IActionResult> ObterPorRestauranteIdAsync(int restauranteId)
+        {
+            var mesas = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
+            return Ok(mesas);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CriarAsync([FromBody] CriarMesaDto dto)
         {
@@ -36,7 +43,7 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarMesaDto dto)
+        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarMesaDto dto)
         {
             var atualizarDtoMesa = dto with { Id = id };
             await _mesaService.AtualizarAsync(atualizarDtoMesa);

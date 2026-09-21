@@ -31,7 +31,7 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody]CriarPedidoDto dto)
         {
             var pedidos = await _pedidoService.CriarAsync(dto);
-            return CreatedAtAction(nameof(CriarAsync), new { Id = pedidos.Dados }, pedidos);
+            return CreatedAtAction(nameof(ObterPorIdAsync), new { Id = pedidos.Dados }, pedidos);
         }
 
         [HttpPatch]

@@ -36,7 +36,7 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarMesaDto dto)
         {
             var mesa = await _mesaService.CriarAsync(dto);
-            return CreatedAtAction(nameof(CriarAsync), new { Id = mesa.Dados }, mesa);
+            return CreatedAtAction(nameof(ObterPorIdAsyc), new { Id = mesa.Dados }, mesa);
         }
 
         [HttpPut]

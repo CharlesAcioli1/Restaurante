@@ -32,7 +32,7 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarGarcomAsync([FromBody] CriarGarcomDto dto)
         {
             var garcons = await _garcomService.CriarAsync(dto);
-            return CreatedAtAction(nameof(CriarGarcomAsync), new {id = garcons.Dados}, garcons);
+            return CreatedAtAction(nameof(ObterPorIdAsync), new {id = garcons.Dados}, garcons);
 
         }
 

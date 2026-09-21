@@ -30,7 +30,7 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarRestauranteDto dto)
         {
             var restaurantes = await _restauranteService.CriarAsync(dto);
-            return CreatedAtAction(nameof(CriarAsync), new { Id = restaurantes.Dados }, restaurantes);
+            return CreatedAtAction(nameof(ObterPorIdAsync), new { Id = restaurantes.Dados }, restaurantes);
         }
 
         [HttpPut]

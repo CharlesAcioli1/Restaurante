@@ -8,27 +8,24 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GarcomController : ControllerBase
+    public class GarcomController(IGarcomService garcomService) : ControllerBase
     {
-        private readonly IGarcomService _garcomService;
-
-        public GarcomController(IGarcomService garcomService)
-        {
-            _garcomService = garcomService;
-        }
+        private readonly IGarcomService _garcomService = garcomService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
         {
-            var garcons = await _garcomService.ObterTodosAsync();
-            return Ok(garcons);
+            var resultado = await _garcomService.ObterTodosAsync();
+            if (resultado.Erro is not null)
+                return NotFound(resultado);
+            return Ok(resultado);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
-            var garcons = await _garcomService.ObterPorIdAsync(id);
-            return Ok(garcons);
+            await _garcomService.ObterPorIdAsync(id);
+            return Ok();
         }
 
         [HttpPost]
@@ -39,15 +36,14 @@ namespace Restaurante.Presentation.Controllers
 
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarGarcomDto dto)
+        [HttpPut]
+        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarGarcomDto dto)
         {
-            var atualizarDtoGarcom = dto with { Id = id };
-            await _garcomService.AtualizarAsync(atualizarDtoGarcom);
+            await _garcomService.AtualizarAsync(dto);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             await _garcomService.DeletarAsync(id);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Restaurante.Domain.Compartilhar;
 using Restaurante.Services.DTOs.Restaurante;
 using Restaurante.Services.Interfaces;
 
@@ -6,26 +7,23 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RestauranteController : ControllerBase
+    public class RestauranteController(IRestauranteService restauranteService) : ControllerBase
     {
-        private readonly IRestauranteService _restauranteService;
-
-        public RestauranteController(IRestauranteService restauranteService)
-        {
-            _restauranteService = restauranteService;
-        }
+        private readonly IRestauranteService _restauranteService = restauranteService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
         {
-            var restaurantes =  await _restauranteService.ObterTodosAsync();
-            return Ok(restaurantes);
+            var resultado = await _restauranteService.ObterTodosAsync();
+            if (resultado.Erro is not null)
+                return NotFound(resultado);
+            return Ok(resultado);
         }
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
-            var restaurantes = await _restauranteService.ObterPorIdAsync(id);
-            return Ok(restaurantes);
+            await _restauranteService.ObterPorIdAsync(id);
+            return Ok();
         }
 
         [HttpPost]
@@ -35,15 +33,14 @@ namespace Restaurante.Presentation.Controllers
             return CreatedAtAction(nameof(CriarAsync), new { Id = restaurantes.Dados }, restaurantes);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarRestauranteDto dto)
+        [HttpPut]
+        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarRestauranteDto dto)
         {
-            var atualizarDtoRestaurante = dto with { Id = id };
-            await _restauranteService.AtualizarAsync(atualizarDtoRestaurante);
+            await _restauranteService.AtualizarAsync(dto);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             await _restauranteService.DeletarAsync(id);

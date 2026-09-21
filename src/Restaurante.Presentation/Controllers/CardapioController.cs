@@ -7,34 +7,31 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CardapioController : ControllerBase
+    public class CardapioController(ICardapioService cardapioService) : ControllerBase
     {
-        private readonly ICardapioService _cardapioService;
-
-        public CardapioController(ICardapioService cardapioService)
-        {
-            _cardapioService = cardapioService;
-        }
+        private readonly ICardapioService _cardapioService = cardapioService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
         {
-            var cardapios = await _cardapioService.ObterTodosAsync();
-            return Ok(cardapios);
+            var resultado = await _cardapioService.ObterTodosAsync();
+            if (resultado.Erro is not null)
+                return NotFound(resultado);
+            return Ok(resultado);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
-            var cardapios = await _cardapioService.ObterPorIdAsync(id);
-            return Ok(cardapios);
+            await _cardapioService.ObterPorIdAsync(id);
+            return Ok();
         }
 
-        [HttpGet("restaurante/{restauranteId}")]
+        [HttpGet]
         public async Task<IActionResult> ObterPorCardapioId(int restauranteId)
         {
-            var cardapios = await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
-            return Ok(cardapios);
+            await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
+            return Ok();
         }
 
         [HttpPost]
@@ -44,16 +41,14 @@ namespace Restaurante.Presentation.Controllers
             return CreatedAtAction(nameof(ObterPorIdAsync), new { id = novoCardapio.Dados }, novoCardapio);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarCardapioAsync(int id, [FromBody]AtualizarCardapioDto dto)
+        [HttpPut]
+        public async Task<IActionResult> AtualizarCardapioAsync([FromBody]AtualizarCardapioDto dto)
         {
-            var atualizarDto = dto with { Id = id };
-
-            await _cardapioService.AtualizarCardapioAsync(atualizarDto);
+            await _cardapioService.AtualizarCardapioAsync(dto);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             await _cardapioService.DeletarAsync(id);

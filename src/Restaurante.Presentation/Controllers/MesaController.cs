@@ -6,29 +6,26 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MesaController : ControllerBase
+    public class MesaController(IMesaService mesaService) : ControllerBase
     {
-        private readonly IMesaService _mesaService;
-
-        public MesaController(IMesaService mesaService)
-        {
-            _mesaService = mesaService;
-        }
+        private readonly IMesaService _mesaService = mesaService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
         {
-            var mesas = await _mesaService.ObterTodosAsync();
-            return Ok(mesas);
+            var resultado = await _mesaService.ObterTodosAsync();
+            if (resultado.Erro is not null)
+                return NotFound(resultado);
+            return Ok(resultado);
         }
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> ObterPorIdAsyc(int id)
         {
             var mesas = await _mesaService.ObterPorIdAsync(id);
             return Ok(mesas);
         }
 
-        [HttpGet("restaurante/{restauranteId}")]
+        [HttpGet]
         public async Task<IActionResult> ObterPorRestauranteIdAsync(int restauranteId)
         {
             var mesas = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
@@ -42,16 +39,15 @@ namespace Restaurante.Presentation.Controllers
             return CreatedAtAction(nameof(CriarAsync), new { Id = mesa.Dados }, mesa);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarMesaDto dto)
+        [HttpPut]
+        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarMesaDto dto)
         {
-            var atualizarDtoMesa = dto with { Id = id };
-            await _mesaService.AtualizarAsync(atualizarDtoMesa);
+            await _mesaService.AtualizarAsync(dto);
             return NoContent();
 
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             await _mesaService.DeletarAsync(id);

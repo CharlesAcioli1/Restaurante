@@ -20,14 +20,14 @@ namespace Restaurante.Presentation.Controllers
             return Ok(resultado);
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             await _cardapioService.ObterPorIdAsync(id);
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("{restauranteId}")]
         public async Task<IActionResult> ObterPorCardapioId(int restauranteId)
         {
             await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);

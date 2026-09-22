@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Configurations;
 
@@ -22,8 +21,6 @@ public class FilaPedidoConfiguration : IEntityTypeConfiguration<Domain.FilaPedid
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(fp => fp.DataHoraEntrada)
-            .IsRequired()
-            .HasColumnType("DATETIME2")
-            .HasDefaultValueSql("GETUTCDATE()");
+            .IsRequired();
     }
 }

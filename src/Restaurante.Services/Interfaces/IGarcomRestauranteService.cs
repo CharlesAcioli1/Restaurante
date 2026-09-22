@@ -2,7 +2,7 @@
 
 namespace Restaurante.Services.Interfaces
 {
-    public interface IGarcomRestauranteRepository
+    public interface IGarcomRestauranteService
     {
         Task<Resultado> ObterPorGarcomId(int id);
         Task<Resultado> ObterPorRestauranteId(int id);

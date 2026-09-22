@@ -6,13 +6,9 @@ using Restaurante.Infrastructure.Repositories.Interfaces;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class FilaPedidoRepository : IFilaPedidoRepository
+    public class FilaPedidoRepository(RestauranteDbContext context) : IFilaPedidoRepository
     {
-        private readonly RestauranteDbContext _context;
-        public FilaPedidoRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> ObterPorData(DateTime dateUtc)
         {
@@ -92,7 +88,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var filaPedido = await _context.FilaPedidos
                .AsNoTracking()
-               .Where(fp => fp.Prioridade.ToLower() == prioridade.ToLower())
+               .Where(fp => fp.Prioridade.Equals(prioridade, StringComparison.CurrentCultureIgnoreCase))
                .OrderBy(fp => fp.DataHoraEntrada)
                .ToListAsync();
                 return Resultado.Success(filaPedido);

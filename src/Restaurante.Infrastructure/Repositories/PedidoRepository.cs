@@ -3,17 +3,12 @@ using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories.Interfaces;
-using Dom = Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    internal class PedidoRepository : IPedidoRepository
+    internal class PedidoRepository(RestauranteDbContext context) : IPedidoRepository
     {
-        private readonly RestauranteDbContext _context;
-        public PedidoRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> AtualizarAsync(Pedido pedido)
         {

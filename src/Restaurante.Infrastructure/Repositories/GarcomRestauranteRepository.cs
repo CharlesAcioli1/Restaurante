@@ -6,14 +6,9 @@ using Restaurante.Infrastructure.Repositories.Interfaces;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class GarcomRestauranteRepository : IGarcomRestauranteRepository
+    public class GarcomRestauranteRepository(RestauranteDbContext context) : IGarcomRestauranteRepository
     {
-        private readonly RestauranteDbContext _context;
-
-        public GarcomRestauranteRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> ObterPorData(DateTime dateUtc)
         {

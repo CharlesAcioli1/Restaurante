@@ -52,7 +52,7 @@ namespace Restaurante.Services.Implementations
             return deletarItemPedido;
         }
 
-        public async Task<Resultado> ObterPorItemIdAsync(int pedidoId, int itemId, int statusId)
+        public async Task<Resultado> ObterPorIdAsync(int pedidoId, int itemId, int statusId)
         {
             var obterId = await _itemPedidoRepository.ObterPorIdAsync(pedidoId, itemId, statusId);
             if (!obterId.PossuiDados)

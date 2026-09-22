@@ -20,7 +20,7 @@ namespace Restaurante.Presentation.Controllers
             return Ok(resultado);
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             await _pedidoService.ObterPorIdAsync(id);

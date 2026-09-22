@@ -6,9 +6,7 @@ namespace Restaurante.Services.Interfaces
 {
     public interface IItemPedidoService
     {
-        Task<Resultado> ObterPorPedidoIdAsync(int id);
-        Task<Resultado> ObterPorItemIdAsync(int id);
-        Task<Resultado> ObterPorStatusId(int id);
+        Task<Resultado> ObterPorIdAsync(int pedidoId, int itemId, int statusId);
 
         Task<Resultado> CriarAsync(ItemPedido itemPedido);
         Task<Resultado> AtualizarAsync(ItemPedido itemPedido);

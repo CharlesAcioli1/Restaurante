@@ -20,14 +20,14 @@ namespace Restaurante.Presentation.Controllers
             return Ok(resultado);
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             await _itemService.ObterPorIdAsync(id);
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("{cozinhaId}")]
         public async Task<IActionResult> ObterPorCozinhaIdAsync(int cozinhaId)
         {
             await _itemService.ObterCozinhaIdAsync(cozinhaId);
@@ -41,7 +41,7 @@ namespace Restaurante.Presentation.Controllers
             return CreatedAtAction(nameof(ObterPorIdAsync), new { Id = itens.Dados }, itens);
         }
 
-        [HttpPut]
+        [HttpPatch]
         public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarItemDto dto)
         {
             await _itemService.AtualizarAsync(dto);

@@ -6,13 +6,9 @@ using Dom = Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class GarcomMesaRepository : IMesaGarcomRepository
+    public class GarcomMesaRepository(RestauranteDbContext context) : IMesaGarcomRepository
     {
-        private readonly RestauranteDbContext _context;
-        public GarcomMesaRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> ObterPorIdGarcom(int id)
         {

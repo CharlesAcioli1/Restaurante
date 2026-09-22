@@ -6,13 +6,9 @@ using Dom = Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class RestauranteRepository : IRestauranteRepository
+    public class RestauranteRepository(RestauranteDbContext context) : IRestauranteRepository
     {
-        private readonly RestauranteDbContext _context;
-        public RestauranteRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> AtualizarAsync(Dom.Restaurante AtualizarRestaurante)
         {

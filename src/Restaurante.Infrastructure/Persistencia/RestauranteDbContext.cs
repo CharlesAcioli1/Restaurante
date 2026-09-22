@@ -4,12 +4,8 @@ using Restaurante.Infrastructure.Configurations;
 
 namespace Restaurante.Infrastructure.Persistencia;
 
-public class RestauranteDbContext : DbContext
+public class RestauranteDbContext(DbContextOptions<RestauranteDbContext> options) : DbContext(options)
 {
-    public RestauranteDbContext(DbContextOptions<RestauranteDbContext> options) : base(options)
-    {
-
-    }
 
     // Mapeia a tabela no banco de dados e também constrói
     public DbSet<Domain.Restaurante> Restaurantes { get; set; }

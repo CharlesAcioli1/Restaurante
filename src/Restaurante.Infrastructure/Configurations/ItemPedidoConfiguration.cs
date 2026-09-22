@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Configurations;
 
@@ -10,7 +9,7 @@ public class ItemPedidoConfiguration : IEntityTypeConfiguration<Domain.ItemPedid
     {
         builder.ToTable("ItemPedido");
 
-        builder.HasKey(ip => new {ip.PedidoId, ip.ItemId});
+        builder.HasKey(ip => new { ip.PedidoId, ip.ItemId });
 
         builder.Property(ip => ip.Quantidade)
             .IsRequired()

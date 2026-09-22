@@ -4,16 +4,15 @@ using System.Text.Json;
 
 namespace Restaurante.Presentation.Middlewares
 {
-    public class ExceptionHandlingMiddleware
+    public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private readonly RequestDelegate _next = next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger = logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+        private static readonly JsonSerializerOptions _jsonOptions = new()
         {
-            _next = next;
-            _logger = logger;
-        }
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
 
         public async Task InvokeAsync(HttpContext context)
         {
@@ -33,17 +32,10 @@ namespace Restaurante.Presentation.Middlewares
         private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             context.Response.ContentType = "application/json";
-
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
             var response = Resultado.Falha($"Ocorreu um erro interno no servidor: {ex.Message}");
-
-            var jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-
-            var jsonResponse = JsonSerializer.Serialize(response, jsonOptions);
+            var jsonResponse = JsonSerializer.Serialize(response, _jsonOptions);
 
             await context.Response.WriteAsync(jsonResponse);
         }

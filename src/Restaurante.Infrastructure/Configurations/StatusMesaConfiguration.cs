@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Configurations;
 
@@ -17,8 +16,6 @@ public class StatusMesaConfiguration : IEntityTypeConfiguration<Domain.StatusMes
             .HasColumnType("VARCHAR(150)");
 
         builder.Property(sm => sm.DataHora)
-            .IsRequired()
-            .HasColumnType("DATETIME2")
-            .HasDefaultValueSql("GETUTCDATE()");
+            .IsRequired();
     }
 }

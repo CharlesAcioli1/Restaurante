@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Configurations;
 
@@ -9,9 +8,9 @@ public class GarcomRestauranteConfiguration : IEntityTypeConfiguration<Domain.Ga
     public void Configure(EntityTypeBuilder<Domain.GarcomRestaurante> builder)
     {
         builder.ToTable("GarcomRestaurante");
-        
+
         //O uso de new é para criar as chaves compostas.
-        builder.HasKey(gr => new {gr.GarcomId, gr.RestauranteId});
+        builder.HasKey(gr => new { gr.GarcomId, gr.RestauranteId });
 
         builder.Property(gr => gr.DataInicio)
             .IsRequired();
@@ -20,7 +19,7 @@ public class GarcomRestauranteConfiguration : IEntityTypeConfiguration<Domain.Ga
         .WithMany()//<--Signica que o Status pode estar em vários garçons ao mesmo tempo
         .HasForeignKey(gr => gr.StatusId)//<--Aponta a chave estrangeira a esta classe
         .OnDelete(DeleteBehavior.Restrict);
-          // └── Impede a exclusão acidental do Status no banco(RESTRICT).
+        // └── Impede a exclusão acidental do Status no banco(RESTRICT).
 
         builder.HasOne(gr => gr.Garcom)
             .WithMany()

@@ -7,13 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class ItemPedidoRepository : IItemPedidoRepository
+    public class ItemPedidoRepository(RestauranteDbContext context) : IItemPedidoRepository
     {
-        private readonly RestauranteDbContext _context;
-        public ItemPedidoRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> AtualizarAsync(Dom.ItemPedido itemPedido)
         {
@@ -60,54 +56,20 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
-        public async Task<Resultado> ObterPorItemIdAsync(int id)
-        {
-            try
-            {
-                var itemPedido = await _context.ItemPedidos
-                .AsNoTracking()
-                .Where(ip => ip.ItemId == id)
-                .ToListAsync();
-                return Resultado.Success(itemPedido);
-            }
-            catch (Exception)
-            {
-
-                return Resultado.Falha("Não foi possível obter ID do item do pedido no banco de dados!");
-            }
-        }
-
-        public async Task<Resultado> ObterPorPedidoIdAsync(int id)
-        {
-            try
-            {
-                var itemPedido = await _context.ItemPedidos
-                .AsNoTracking()
-                .Where(ip => ip.PedidoId == id)
-                .ToListAsync();
-                return Resultado.Success(itemPedido);
-            }
-            catch (Exception)
-            {
-
-                return Resultado.Falha("Não foi possível obter ID do pedido dos itens pedidos no banco de dados!");
-            }
-        }
-
-        public async Task<Resultado> ObterPorStatusId(int id)
+        public async Task<Resultado> ObterPorIdAsync(int pedidoId, int itemId, int statusId)
         {
             try
             {
                 var itemPedido = await _context.ItemPedidos
                     .AsNoTracking()
-                    .Where (ip => ip.StatusId == id)
+                    .Where(ip => ip.PedidoId == pedidoId && ip.ItemId ==itemId && ip.StatusId == statusId)
                     .ToListAsync();
                 return Resultado.Success(itemPedido);
             }
             catch (Exception)
             {
 
-                return Resultado.Falha("Não foi possível obter Status dos itens pedidos no banco de dados");
+                return Resultado.Falha("Não foi possível obter resultados de status de itens pedidos no banco de dados!");
             }
         }
 

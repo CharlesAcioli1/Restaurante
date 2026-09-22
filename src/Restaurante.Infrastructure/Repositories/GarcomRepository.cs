@@ -6,13 +6,9 @@ using Restaurante.Infrastructure.Repositories.Interfaces;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class GarcomRepository : IGarcomRepository
+    public class GarcomRepository(RestauranteDbContext context) : IGarcomRepository
     {
-        private readonly RestauranteDbContext _context;
-        public GarcomRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> AtualizarAsync(Dom.Garcom garcom)
         {

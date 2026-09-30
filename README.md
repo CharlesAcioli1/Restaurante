@@ -1,8 +1,8 @@
-#🍽️ Restaurante API
+🍽️ #Restaurante API#
 
 API REST para gerenciamento de um sistema de restaurante, desenvolvida em C# com .NET, utilizando Entity Framework Core para persistência de dados.
 
-##🏗️ Arquitetura
+🏗️ ##Arquitetura
 
 O projeto utiliza principalmente Arquitetura em Camadas, organizada em:
 
@@ -30,14 +30,14 @@ Entity Framework Core
 
 O projeto possui elementos compatíveis com Clean Architecture, mas não é documentado aqui como uma implementação completa de Clean Architecture.
 
-###📁 Estrutura do projeto
+📁 ###Estrutura do projeto
 src/
 ├── Restaurante.Domain/
 ├── Restaurante.Infrastructure/
 ├── Restaurante.Presentation/
 └── Restaurante.Services/
 
-##🔄 Fluxo principal
+🔄 ##Fluxo principal
 Cliente
    ↓
 Controller
@@ -66,7 +66,7 @@ Git / GitHub
 
 Bruno API Client para testes dos endpoints
 
-##📋 Requisitos
+📋 ##Requisitos
 
 Para executar o projeto, é necessário ter instalado:
 
@@ -90,7 +90,7 @@ Caso o comando dotnet ef não esteja disponível:
 
 dotnet tool install --global dotnet-ef
 
-##🗄️ Configuração do banco de dados
+🗄️ ##Configuração do banco de dados
 
 A aplicação utiliza o RestauranteDbContext, localizado no projeto:
 
@@ -101,7 +101,7 @@ Antes de executar a aplicação, é necessário verificar a connection string e 
 
 A configuração deve estar de acordo com o ambiente local de execução.
 
-##🔄 Migrations
+🔄 ##Migrations
 
 As migrations ficam localizadas em:
 
@@ -133,7 +133,7 @@ Importante: uma nova migration deve ser criada quando houver alteração no mode
 
 Alterações somente em Controllers, Services, DTOs ou Repositories não exigem uma nova migration.
 
-##▶️ Executando o projeto
+▶️ ##Executando o projeto
 
 Na raiz da solução, restaure as dependências:
 
@@ -152,7 +152,7 @@ Execute a API:
 
 A URL utilizada pela API será apresentada no terminal após a inicialização da aplicação.
 
-##🌐 Endpoints
+🌐 ##Endpoints
 
 A aplicação possui Controllers para diferentes recursos do sistema:
 
@@ -184,7 +184,7 @@ GET /api/Cardapio/12/Restaurantes
 
 Retorna os cardápios relacionados ao restaurante de ID 12, conforme a rota implementada no Controller.
 
-##📦 Git
+📦 ##Git
 
 Para obter o projeto:
 
@@ -205,7 +205,7 @@ Execute a aplicação:
 
 dotnet run --project src/Restaurante.Presentation
 
-##📚 Referências
+📚 ##Referências
 
 [Documentação do ASP.NET Core](https://learn.microsoft.com/aspnet/core/)
 
@@ -217,8 +217,12 @@ dotnet run --project src/Restaurante.Presentation
 
 [ASP.NET Core Web API — Microsoft](https://learn.microsoft.com/pt-br/aspnet/core/web-api/?view=aspnetcore-10.0)
 
-##📝 Observações
+📝 ##Observações
 
 As informações deste README refletem a estrutura e os recursos apresentados no projeto.
 
 Recursos não identificados no código não são considerados parte da implementação atual.
+
+❌ #Problemática:
+###Banco de dados:
+com uso de OnRestrict, tive que buscar outras soluções para não deletar essa parte, pois usei para que as classes durante toda a construção, ficasse dependente umas das outras, pensando em erros humanos durante o uso de um sistema, ou seja, caso alguém tentasse excluir de alguma forma o restaurante, pós cardápios criado, já não será mais possível. Ao buscar soluções para instanciar algumas classes, como item, só é possível se cozinha for criada primeiramente, não sendo possível a criação de itens, sem cozinha. O sistema em si foi pensado nas falhas humanas ou em tentativa de testes intencionais ou esporádica.

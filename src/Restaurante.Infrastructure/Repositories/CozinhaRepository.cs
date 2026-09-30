@@ -32,9 +32,10 @@ namespace Restaurante.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return Resultado.Success(cozinha);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Resultado.Falha("Não foi possível adicionar cozinha no banco de dados!");
+                var mensagem = ex.InnerException?.Message ?? ex.Message;
+                return Resultado.Falha($"Erro de Banco: {mensagem}");
             }
         }
 

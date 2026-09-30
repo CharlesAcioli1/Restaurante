@@ -23,6 +23,7 @@ public class CozinhaConfiguration : IEntityTypeConfiguration<Domain.Cozinha>
         builder.HasOne(cz => cz.StatusCozinha)
             .WithMany()
             .HasForeignKey(cz => cz.StatusId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

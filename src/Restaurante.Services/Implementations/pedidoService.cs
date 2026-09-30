@@ -10,13 +10,17 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IPedidoRepository _pedidoRepository = pedidoRepository;
 
-        public async Task<Resultado> AtualizarAsync(AtualizarPedidoDto dto)
+        public async Task<Resultado> AtualizarAsync(int id, AtualizarPedidoDto dto)
         {
-            var obterId = await _pedidoRepository.ObterPorIdAsync(dto.Id);
+            var obterId = await _pedidoRepository.ObterPorIdAsync(id);
             if (!obterId.PossuiDados)
                 return obterId;
 
             var pedido = (Pedido)obterId.Dados!;
+
+            pedido.IdMesa = dto.IdMesa;
+            pedido.StatusId = dto.StatusId;
+
             var atualizarPedido = await _pedidoRepository.AtualizarAsync(pedido);
             return atualizarPedido;
         }

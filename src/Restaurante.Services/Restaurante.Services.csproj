@@ -1,6 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="DTOs\MesaGarcom\**" />
+    <EmbeddedResource Remove="DTOs\MesaGarcom\**" />
+    <None Remove="DTOs\MesaGarcom\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="DTOs\GarcomRestauranteDto.cs" />
     <Compile Remove="Implementations\cardapio.Service.cs" />
   </ItemGroup>
@@ -8,11 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Restaurante.Domain\Restaurante.Domain.csproj" />
     <ProjectReference Include="..\Restaurante.Infrastructure\Restaurante.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTOs\FilaPedido\" />
-    <Folder Include="DTOs\MesaGarcom\" />
   </ItemGroup>
 
   <PropertyGroup>

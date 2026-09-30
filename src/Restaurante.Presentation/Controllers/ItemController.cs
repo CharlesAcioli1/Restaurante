@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Restaurante.Services.DTOs.ItemDto;
 using Restaurante.Services.Interfaces;
 
@@ -7,52 +6,62 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemController(IItemService itemService) : ControllerBase
+    public class ItemController(IItemService itemService, ICardapioService cardapioService) : ControllerBase
     {
         private readonly IItemService _itemService = itemService;
+        private readonly ICardapioService _cardapioService = cardapioService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _itemService.ObterTodosAsync();
-            if (resultado.Erro is not null)
-                return NotFound(resultado);
-            return Ok(resultado);
+            return Ok(resultado.Dados);
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
-            await _itemService.ObterPorIdAsync(id);
-            return Ok();
+            var obterId = await _itemService.ObterPorIdAsync(id);
+            return Ok(obterId.Dados);
         }
 
-        [HttpGet]
+        [HttpGet("{cozinhaId:int}/cozinhas")]
         public async Task<IActionResult> ObterPorCozinhaIdAsync(int cozinhaId)
         {
-            await _itemService.ObterCozinhaIdAsync(cozinhaId);
-            return Ok();
+            var resultado = await _itemService.ObterCozinhaIdAsync(cozinhaId);
+            return Ok(resultado.Dados);
+        }
+
+        [HttpGet("{cardapioId}/cardapios")]
+        public async Task<IActionResult> ObterPorCardapioIdAsync(int cardapioId)
+        {
+            var cardapios = await _cardapioService.ObterPorIdAsync(cardapioId);
+            return Ok(cardapios.Dados);
         }
 
         [HttpPost]
         public async Task<IActionResult> CriarAsync([FromBody] CriarItemDto dto)
         {
             var itens = await _itemService.CriarAsync(dto);
-            return CreatedAtAction(nameof(ObterPorIdAsync), new { Id = itens.Dados }, itens);
+            return Ok(itens.Dados);
         }
 
-        [HttpPut]
+        [HttpPatch]
         public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarItemDto dto)
         {
-            await _itemService.AtualizarAsync(dto);
-            return NoContent();
+            var atualizar = await _itemService.AtualizarAsync(dto);
+
+            if (atualizar.Erro is not null)
+                return StatusCode(500, atualizar);
+
+            return Ok(atualizar.Dados);
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeletarAsync(int id)
         {
-            await _itemService.DeletarAsync(id);
-            return NoContent();
+            var deletar = await _itemService.DeletarAsync(id);
+            return Ok(deletar);
         }
     }
 }

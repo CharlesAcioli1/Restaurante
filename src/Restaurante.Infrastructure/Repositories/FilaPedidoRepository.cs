@@ -1,18 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Dom = Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class FilaPedidoRepository : IFilaPedidoRepository
+    public class FilaPedidoRepository(RestauranteDbContext context) : IFilaPedidoRepository
     {
-        private readonly RestauranteDbContext _context;
-        public FilaPedidoRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> ObterPorData(DateTime dateUtc)
         {
@@ -40,8 +35,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var filaPedido = await _context.FilaPedidos
                     .AsNoTracking()
-                    .Where(fp => fp.Id == id)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(fp => fp.Id == id);
                 return Resultado.Success(filaPedido);
             }
             catch (Exception)
@@ -57,8 +51,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var filaPedido = await _context.FilaPedidos
                 .AsNoTracking()
-                .Where(fp => fp.Id == id)
-                .ToListAsync();
+                .FirstOrDefaultAsync(fp => fp.PedidoId == id);
                 return Resultado.Success(filaPedido);
             }
             catch (Exception)
@@ -68,39 +61,20 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
-        public async Task<Resultado> ObterPosicaoAsync(int id)
+        public async Task<Resultado> ObterTodosAsync()
         {
             try
             {
-                var filaPedido = await _context.FilaPedidos
-                    .AsNoTracking()
-                    .Where(fp => fp.Id == id)
-                    .Select(fp => fp.Id)
-                    .ToListAsync();
-                return Resultado.Success(filaPedido);
+                var filaPedidos = await _context.FilaPedidos
+                .AsNoTracking()
+                .ToListAsync();
+
+                return Resultado.Success(filaPedidos);
             }
             catch (Exception)
             {
 
-                return Resultado.Falha("Não foi possível posição do pedido no banco de dados!");
-            }
-        }
-
-        public async Task<Resultado> ObterPrioridadeAsync(string prioridade)
-        {
-            try
-            {
-                var filaPedido = await _context.FilaPedidos
-               .AsNoTracking()
-               .Where(fp => fp.Prioridade.ToLower() == prioridade.ToLower())
-               .OrderBy(fp => fp.DataHoraEntrada)
-               .ToListAsync();
-                return Resultado.Success(filaPedido);
-            }
-            catch (Exception)
-            {
-
-                return Resultado.Falha("Não foi possível obter prioridade de pedidos do banco de dados!");
+                return Resultado.Falha("Não foi póssível obter fila de pedidos no banco de dados!");
             }
         }
     }

@@ -11,6 +11,6 @@ public interface IPedidoService
     Task<Resultado> ObterPorStatusIdAsync(int statusPedido);
     Task<Resultado> ObterPorDataAsync(DateTime dateUtc);
     Task<Resultado> CriarAsync(CriarPedidoDto dto);
-    Task<Resultado> AtualizarAsync(AtualizarPedidoDto dto);
+    Task<Resultado> AtualizarAsync(int id, AtualizarPedidoDto dto);
     Task<Resultado> DeletarAsync(int id);
 }

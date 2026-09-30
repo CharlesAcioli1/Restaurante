@@ -6,20 +6,14 @@ using Restaurante.Infrastructure.Repositories.Interfaces;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class CardapioRepository : ICardapioRepository
+    public class CardapioRepository(RestauranteDbContext context) : ICardapioRepository
     {
-        private readonly RestauranteDbContext _context;
-
-        public CardapioRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> AtualizarCardapioAsync(Cardapio cardapio)
         {
             try
             {
-                _context.Cardapios.Update(cardapio);
                 await _context.SaveChangesAsync();
                 return Resultado.Success(cardapio);
             }
@@ -65,7 +59,6 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var cardapio = await _context.Cardapios
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
                 return Resultado.Success(cardapio);
             }

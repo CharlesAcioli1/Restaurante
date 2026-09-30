@@ -6,19 +6,14 @@ using Dom = Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class RestauranteRepository : IRestauranteRepository
+    public class RestauranteRepository(RestauranteDbContext context) : IRestauranteRepository
     {
-        private readonly RestauranteDbContext _context;
-        public RestauranteRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> AtualizarAsync(Dom.Restaurante AtualizarRestaurante)
         {
             try
             {
-                _context.Restaurantes.Update(AtualizarRestaurante);
                 await _context.SaveChangesAsync();
                 return Resultado.Success(AtualizarRestaurante);
             }
@@ -64,7 +59,6 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var restaurante = await _context.Restaurantes
-                    .AsNoTracking()
                     .FirstOrDefaultAsync(r => r.Id == id);
                 return Resultado.Success(restaurante);
 

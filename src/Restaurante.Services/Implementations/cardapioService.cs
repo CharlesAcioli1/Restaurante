@@ -43,9 +43,11 @@ namespace Restaurante.Services.Implementations
             if (!resultado.PossuiDados)
                 return resultado;
 
-            var retorno = CardapioResponseDto.CardapioToDto((Cardapio)resultado.Dados!);
+            var listaCardapio = (List<Cardapio>)resultado.Dados!;
 
-            return Resultado.Success(retorno);
+            var listaDto = listaCardapio.Select(CardapioResponseDto.CardapioToDto);
+
+            return Resultado.Success(listaDto);
         }
 
         public async Task<Resultado> CriarCardapioAsync(CriarCardapioDto dto)
@@ -80,14 +82,15 @@ namespace Restaurante.Services.Implementations
             return resultadoDeletar;
         }
 
-        public async Task<Resultado> AtualizarCardapioAsync(AtualizarCardapioDto dto)
+        public async Task<Resultado> AtualizarCardapioAsync(int id, AtualizarCardapioDto dto)
         {
-            var resultadoBusca = await _cardapioRepository.ObterPorIdAsync(dto.Id);
+            var resultadoBusca = await _cardapioRepository.ObterPorIdAsync(id);
 
             if (!resultadoBusca.PossuiDados)
                 return resultadoBusca;
 
             var cardapio = (Cardapio)resultadoBusca.Dados!;
+            cardapio.Nome = dto.Nome;
 
             var resultadoAtualizar = await _cardapioRepository.AtualizarCardapioAsync(cardapio);
 

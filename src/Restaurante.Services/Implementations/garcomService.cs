@@ -1,7 +1,6 @@
 using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Repositories.Interfaces;
-using Restaurante.Services.DTOs;
 using Restaurante.Services.DTOs.Garcom;
 using Restaurante.Services.Interfaces;
 
@@ -55,6 +54,10 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var garcom = (Garcom)obterId.Dados!;
+            garcom.Nome = dto.Nome;
+            garcom.Cpf = dto.Cpf;
+            garcom.Telefone = dto.Telefone;
+
             var atualizarGarcom = await _garcomRepository.AtualizarAsync(garcom);
             return atualizarGarcom;
         }

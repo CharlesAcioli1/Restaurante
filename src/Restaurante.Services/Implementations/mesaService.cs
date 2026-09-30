@@ -11,13 +11,17 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IMesaRepository _mesaRepository = mesaRepository;
 
-        public async Task<Resultado> AtualizarAsync(AtualizarMesaDto dto)
+        public async Task<Resultado> AtualizarAsync(int id,AtualizarMesaDto dto)
         {
-            var obterId = await _mesaRepository.ObterPorIdAsync(dto.Id);
+            var obterId = await _mesaRepository.ObterPorIdAsync(id);
+
             if (!obterId.PossuiDados)
                 return obterId;
 
             var mesa = (Mesa)obterId.Dados!;
+            mesa.Numero = dto.Numero;
+            mesa.StatusId = dto.StatusId;
+
             var atualizarMesa = await _mesaRepository.AtualizarAsync(mesa);
             return atualizarMesa;
         }

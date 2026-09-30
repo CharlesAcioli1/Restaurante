@@ -1,17 +1,20 @@
+using Restaurante.Domain.Validacoes;
 namespace Restaurante.Domain;
 
-public sealed class Restaurante
+public sealed partial class Restaurante
 {
     //PROPRIEDADES
     public int Id { get; set; }
-    public string? Nome { get; set; }
-    public string? Cnpj { get; set; }
-    public string? Email { get; set; }
-    public string? Endereco { get; set; }
-    public string? Telefone { get; set; }
+    public string Nome { get; set; } = default!;
+    public string Cnpj { get; set; } = default!;
+    public string Email { get; set; } = default!;
+    public string Endereco { get; set; } = default!;
+    public string Telefone { get; set; } = default!;
     public bool Ativo { get; set; } = true;
 
     //CONSTRUTOR
+    public Restaurante() { }
+
     public Restaurante(string nome, string cnpj, string email, string endereco, string telefone)
     {
         if (string.IsNullOrWhiteSpace(nome) ||
@@ -32,15 +35,33 @@ public sealed class Restaurante
     private void ValidarAtualizacao()
     {
         if (!Ativo)
-            throw new InvalidOperationException("Este espaço está vazio ou você está alterando algum dado inativo.");
+            throw new InvalidOperationException("Este restaurante está inativo, não é possível fazer alterações.");
+    }
+
+    public void AtualizarNome(string novoNome)
+    {
+        ValidarAtualizacao();
+
+        if (string.IsNullOrWhiteSpace(novoNome))
+            throw new ArgumentException("Este espaço não pode ser vazio!");
+        Nome = novoNome;
     }
 
     public void AtualizarEmail(string novoEmail)
     {
         ValidarAtualizacao();
-        if (string.IsNullOrWhiteSpace(novoEmail))
+
+        if (!ValidarEmail.EmailValido(novoEmail))
             throw new ArgumentException("Este espaço não pode ser vazio!");
         Email = novoEmail;
+    }
+
+    public void AtualizarCnpj(string novoCnpj)
+    {
+        ValidarAtualizacao();
+        if (!ValidarCnpj.CnpjValido(novoCnpj))
+            throw new ArgumentException("Este espaço não pode ser vazio!");
+        Cnpj = novoCnpj;
     }
 
     public void AtualizarTelefone(string novoTelefone)
@@ -51,5 +72,6 @@ public sealed class Restaurante
         Telefone = novoTelefone;
     }
 
-    public Restaurante() { }
+    public void Desativar() => Ativo = false;
+    public void Aivar() => Ativo = true;
 }

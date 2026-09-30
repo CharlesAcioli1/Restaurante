@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Configurations;
 
@@ -23,7 +22,7 @@ public class MesaConfiguration : IEntityTypeConfiguration<Domain.Mesa>
 
         builder.HasOne(m => m.Status)
             .WithMany()
-            .HasForeignKey(m =>m.StatusId)
+            .HasForeignKey(m => m.StatusId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

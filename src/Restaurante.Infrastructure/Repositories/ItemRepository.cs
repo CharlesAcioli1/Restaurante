@@ -6,13 +6,9 @@ using Restaurante.Infrastructure.Repositories.Interfaces;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    public class ItemRepository : IItemRepository
+    public class ItemRepository(RestauranteDbContext context) : IItemRepository
     {
-        private readonly RestauranteDbContext _context;
-        public ItemRepository(RestauranteDbContext context)
-        {
-            _context = context;
-        }
+        private readonly RestauranteDbContext _context = context;
 
         public async Task<Resultado> AtualizarAsync(Dom.Item item)
         {

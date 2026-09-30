@@ -17,6 +17,9 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var atualizar = (Item)obterId.Dados!;
+            atualizar.Nome = dto.Nome;
+            atualizar.Descricao = dto.Descricao;
+
             var atualizarItem = await _itemRepository.AtualizarAsync(atualizar);
             return atualizarItem;
         }

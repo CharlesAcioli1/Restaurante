@@ -16,10 +16,6 @@
     <ProjectReference Include="..\Restaurante.Infrastructure\Restaurante.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\FilaPedido\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

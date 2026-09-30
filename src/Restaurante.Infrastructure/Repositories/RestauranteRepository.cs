@@ -14,7 +14,6 @@ namespace Restaurante.Infrastructure.Repositories
         {
             try
             {
-                _context.Restaurantes.Update(AtualizarRestaurante);
                 await _context.SaveChangesAsync();
                 return Resultado.Success(AtualizarRestaurante);
             }
@@ -60,7 +59,6 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var restaurante = await _context.Restaurantes
-                    .AsNoTracking()
                     .FirstOrDefaultAsync(r => r.Id == id);
                 return Resultado.Success(restaurante);
 

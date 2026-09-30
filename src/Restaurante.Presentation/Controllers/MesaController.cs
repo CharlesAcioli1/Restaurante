@@ -6,52 +6,78 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MesaController(IMesaService mesaService) : ControllerBase
+    public class MesaController(IMesaService mesaService,
+        IGarcomService garcomService,
+        ICardapioService cardapioService,
+        IItemService itemService) : ControllerBase
     {
         private readonly IMesaService _mesaService = mesaService;
+        private readonly IGarcomService _garcomService = garcomService;
+        private readonly ICardapioService _cardapioService = cardapioService;
+        private readonly IItemService _itemService = itemService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _mesaService.ObterTodosAsync();
-            if (resultado.Erro is not null)
-                return NotFound(resultado);
-            return Ok(resultado);
+            return Ok(resultado.Dados);
         }
+
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> ObterPorIdAsyc(int id)
+        public async Task<IActionResult> ObterPorIdAsyc([FromRoute] int id)
         {
             var mesas = await _mesaService.ObterPorIdAsync(id);
-            return Ok(mesas);
+            return Ok(mesas.Dados);
         }
 
         [HttpGet("{restauranteId}")]
-        public async Task<IActionResult> ObterPorRestauranteIdAsync(int restauranteId)
+        public async Task<IActionResult> ObterPorRestauranteIdAsync([FromRoute] int restauranteId)
         {
-            var mesas = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
-            return Ok(mesas);
+            var restaurantes = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
+            return Ok(restaurantes.Dados);
+        }
+
+        [HttpGet("{garcomId}/garcons")]
+        public async Task<IActionResult> ObterGarcomPorIdAsync([FromRoute] int garcomId)
+        {
+            var garcons = await _garcomService.ObterPorIdAsync(garcomId);
+            return Ok(garcons.Dados);
+        }
+
+        [HttpGet("{cardapioId}/cardapios")]
+        public async Task<IActionResult> ObterPorCardapioIdAsync([FromRoute] int cardapioId)
+        {
+            var cardapios = await _cardapioService.ObterPorIdAsync(cardapioId);
+            return Ok(cardapios.Dados);
+        }
+
+        [HttpGet("{itemId}/itens")]
+        public async Task<IActionResult> ObterPorItemIDAsync([FromRoute] int itemId)
+        {
+            var itens = await _itemService.ObterPorIdAsync(itemId);
+            return Ok(itens.Dados);
         }
 
         [HttpPost]
         public async Task<IActionResult> CriarAsync([FromBody] CriarMesaDto dto)
         {
             var mesa = await _mesaService.CriarAsync(dto);
-            return CreatedAtAction(nameof(ObterPorIdAsyc), new { Id = mesa.Dados }, mesa);
+            return Ok(mesa.Dados);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarMesaDto dto)
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarMesaDto dto)
         {
-            await _mesaService.AtualizarAsync(dto);
-            return NoContent();
+            var mesa = await _mesaService.AtualizarAsync(id, dto);
+            return Ok(mesa.Dados);
 
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeletarAsync(int id)
         {
-            await _mesaService.DeletarAsync(id);
-            return NoContent();
+            var mesa = await _mesaService.DeletarAsync(id);
+            return Ok(mesa);
         }
     }
 }

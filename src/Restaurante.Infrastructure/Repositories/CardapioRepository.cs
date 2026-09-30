@@ -14,7 +14,6 @@ namespace Restaurante.Infrastructure.Repositories
         {
             try
             {
-                _context.Cardapios.Update(cardapio);
                 await _context.SaveChangesAsync();
                 return Resultado.Success(cardapio);
             }
@@ -60,7 +59,6 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var cardapio = await _context.Cardapios
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
                 return Resultado.Success(cardapio);
             }

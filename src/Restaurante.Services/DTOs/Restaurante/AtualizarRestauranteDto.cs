@@ -8,5 +8,5 @@ public sealed record AtualizarRestauranteDto
     public string? Email { get; init; }
     public string? Endereco { get; init; }
     public string? Telefone { get; init; }
-    public string? Ativo { get; init; }
+    public bool? Ativo { get; init; }
 }

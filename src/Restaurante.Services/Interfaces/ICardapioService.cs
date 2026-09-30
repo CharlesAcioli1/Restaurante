@@ -9,7 +9,7 @@ namespace Restaurante.Services.Interfaces
         Task<Resultado> ObterPorIdAsync(int id);
         Task<Resultado> ObterPorRestauranteIdAsync(int restauranteId);
         Task<Resultado> CriarCardapioAsync(CriarCardapioDto dto);
-        Task<Resultado> AtualizarCardapioAsync(AtualizarCardapioDto dto);
+        Task<Resultado> AtualizarCardapioAsync(int id, AtualizarCardapioDto dto);
         Task<Resultado> DeletarAsync(int id);
     }
 }

@@ -9,6 +9,6 @@ public interface IMesaService
     Task<Resultado> ObterPorIdAsync(int id);
     Task<Resultado> ObterPorRestauranteIdAsync(int restauranteId);
     Task<Resultado> CriarAsync(CriarMesaDto dto);
-    Task<Resultado> AtualizarAsync(AtualizarMesaDto dto);
+    Task<Resultado> AtualizarAsync(int id, AtualizarMesaDto dto);
     Task<Resultado> DeletarAsync(int id);
 }

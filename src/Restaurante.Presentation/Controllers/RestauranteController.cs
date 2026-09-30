@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Restaurante.Domain.Compartilhar;
 using Restaurante.Services.DTOs.Restaurante;
 using Restaurante.Services.Interfaces;
 
@@ -7,44 +6,50 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RestauranteController(IRestauranteService restauranteService) : ControllerBase
+    public class RestauranteController(IRestauranteService restauranteService, ICardapioService cardapioService) : ControllerBase
     {
         private readonly IRestauranteService _restauranteService = restauranteService;
+        private readonly ICardapioService _cardapioService = cardapioService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _restauranteService.ObterTodosAsync();
-            if (resultado.Erro is not null)
-                return NotFound(resultado);
-            return Ok(resultado);
+            return Ok(resultado.Dados);
         }
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
-            await _restauranteService.ObterPorIdAsync(id);
-            return Ok();
+            var restaurante = await _restauranteService.ObterPorIdAsync(id);
+            return Ok(restaurante.Dados);
+        }
+
+        [HttpGet("{restauranteId}/cardapios")]
+        public async Task<IActionResult> ObterCardapiosPorRestauranteIdAsync(int restauranteId)
+        {
+            var cardapios = await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
+            return Ok(cardapios.Dados);
         }
 
         [HttpPost]
         public async Task<IActionResult> CriarAsync([FromBody] CriarRestauranteDto dto)
         {
             var restaurantes = await _restauranteService.CriarAsync(dto);
-            return CreatedAtAction(nameof(ObterPorIdAsync), new { Id = restaurantes.Dados }, restaurantes);
+            return Ok(restaurantes.Dados);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarRestauranteDto dto)
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarRestauranteDto dto)
         {
-            await _restauranteService.AtualizarAsync(dto);
-            return NoContent();
+            var atualizar = await _restauranteService.AtualizarAsync(id, dto);
+            return Ok(atualizar.Dados);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
-            await _restauranteService.DeletarAsync(id);
-            return NoContent();
+            var resultado = await _restauranteService.DeletarAsync(id);
+            return Ok(resultado);
         }
     }
 }

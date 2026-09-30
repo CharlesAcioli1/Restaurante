@@ -9,11 +9,7 @@ public class FilaPedidoConfiguration : IEntityTypeConfiguration<Domain.FilaPedid
     {
         builder.ToTable("FilaPedido");
 
-        builder.HasKey(fp => fp.Id);
-
-        builder.Property(fp => fp.Prioridade)
-            .IsRequired()
-            .HasColumnType("VARCHAR(150)");
+        builder.HasKey(fp => fp.Id);        
 
         builder.HasOne(fp => fp.Pedido)
             .WithMany()

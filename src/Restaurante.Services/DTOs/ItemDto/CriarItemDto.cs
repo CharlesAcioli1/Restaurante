@@ -4,6 +4,6 @@
     {
         public string Nome { get; init; } = default!;
         public string Descricao { get; init; } = default!;
-        public int CozinhaId { get; init; }
+        public int? CozinhaId { get; init; }
     }
 }

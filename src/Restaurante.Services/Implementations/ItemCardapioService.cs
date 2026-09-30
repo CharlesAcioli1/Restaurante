@@ -17,6 +17,7 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var atualizar = (ItemCardapio)obterId.Dados!;
+            atualizar.Preco = dto.Preco;
             var atualizarItemcardapio = await _itemCardapioRepository.AtualizarAsync(atualizar);
             return atualizarItemcardapio;
         }

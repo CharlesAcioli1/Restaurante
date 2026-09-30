@@ -1,15 +1,13 @@
-﻿using Dom = Restaurante.Domain;
-using Restaurante.Domain.Compartilhar;
+﻿using Restaurante.Domain.Compartilhar;
 
 namespace Restaurante.Infrastructure.Repositories.Interfaces
 {
     public interface IFilaPedidoRepository
     {
-        Task<Resultado> ObterPosicaoAsync(int id);
-        Task<Resultado> ObterPrioridadeAsync(string prioridade);
         Task<Resultado> ObterPorIdAsync(int id);
         Task<Resultado> ObterPorPedidoId(int id);
         Task<Resultado> ObterPorData(DateTime dateUtc);
+        Task<Resultado> ObterTodosAsync();
     }
 }
 

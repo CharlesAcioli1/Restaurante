@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Restaurante.Services.DTOs.Cardapio;
 using Restaurante.Services.Interfaces;
 
@@ -15,44 +14,42 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _cardapioService.ObterTodosAsync();
-            if (resultado.Erro is not null)
-                return NotFound(resultado);
-            return Ok(resultado);
+            return Ok(resultado.Dados);
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
-            await _cardapioService.ObterPorIdAsync(id);
-            return Ok();
+            var cardapio = await _cardapioService.ObterPorIdAsync(id);
+            return Ok(cardapio.Dados);
         }
 
-        [HttpGet("{restauranteId}")]
-        public async Task<IActionResult> ObterPorCardapioId(int restauranteId)
+        [HttpGet("{restauranteId:int}/Restaurantes")]
+        public async Task<IActionResult> ObterPorRestauranteIdAsync([FromRoute] int restauranteId)
         {
-            await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
-            return Ok();
+            var restaurantes = await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
+            return Ok(restaurantes.Dados);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarCardapioAsync([FromBody]CriarCardapioDto dto)
+        public async Task<IActionResult> CriarCardapioAsync([FromBody] CriarCardapioDto dto)
         {
             var novoCardapio = await _cardapioService.CriarCardapioAsync(dto);
-            return CreatedAtAction(nameof(ObterPorIdAsync), new { id = novoCardapio.Dados }, novoCardapio);
+            return Ok(novoCardapio.Dados);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> AtualizarCardapioAsync([FromBody]AtualizarCardapioDto dto)
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> AtualizarCardapioAsync([FromRoute] int id, [FromBody] AtualizarCardapioDto dto)
         {
-            await _cardapioService.AtualizarCardapioAsync(dto);
-            return NoContent();
+            var atualizar = await _cardapioService.AtualizarCardapioAsync(id, dto);
+            return Ok(atualizar.Dados);
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeletarAsync(int id)
         {
-            await _cardapioService.DeletarAsync(id);
-            return NoContent();
+            var deletar = await _cardapioService.DeletarAsync(id);
+            return Ok(deletar);
         }
     }
 }

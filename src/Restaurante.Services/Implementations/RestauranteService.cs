@@ -10,16 +10,36 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IRestauranteRepository _restauranteRepository = restauranteRepository;
 
-        public async Task<Resultado> AtualizarAsync(AtualizarRestauranteDto dto)
+        public async Task<Resultado> AtualizarAsync(int id, AtualizarRestauranteDto dto)
         {
-            var obterId = await _restauranteRepository.ObterPorIdAsync(dto.Id);
+            var obterId = await _restauranteRepository.ObterPorIdAsync(id);
             if (!obterId.PossuiDados)
                 return obterId;
 
             var resultado = (Dom.Restaurante)obterId.Dados!;
-            var atualizarRestaurante = await _restauranteRepository.AtualizarAsync(resultado);
-            return atualizarRestaurante;
+            if (!string.IsNullOrWhiteSpace(dto.Nome))
+                resultado.AtualizarNome(dto.Nome);
+            if (!string.IsNullOrWhiteSpace(dto.Email))
+                resultado.AtualizarEmail(dto.Email);
+            if (!string.IsNullOrWhiteSpace(dto.Cnpj))
+                resultado.AtualizarCnpj(dto.Cnpj);
+            if (!string.IsNullOrWhiteSpace(dto.Telefone))
+                resultado.AtualizarTelefone(dto.Telefone);
 
+            var atualizarRestaurante = await _restauranteRepository.AtualizarAsync(resultado);
+            if(atualizarRestaurante.Erro is not null)
+                return atualizarRestaurante;
+
+            var responseDto = new RestauranteResponseDto
+            {
+                Id = resultado.Id,
+                Nome = resultado.Nome,
+                Email = resultado.Email,
+                Cnpj = resultado.Cnpj,
+                Telefone = resultado.Telefone
+            };
+
+            return Resultado.Success(responseDto);
         }
 
         public async Task<Resultado> CriarAsync(CriarRestauranteDto dto)
@@ -71,11 +91,8 @@ namespace Restaurante.Services.Implementations
 
             var listaRestaurante = (List<Dom.Restaurante>)obterTodos.Dados!;
             var listaDto = listaRestaurante.Select(RestauranteResponseDto.RestauranteToDto);
-            return Resultado.Success(listaRestaurante);
+
+            return Resultado.Success(listaDto);
         }
     }
 }
-
-
-
-

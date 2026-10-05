@@ -1,7 +1,9 @@
 using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
+using Restaurante.Infrastructure.Repositories;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Cardapio;
+using Restaurante.Services.DTOs.ItemDto;
 using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Services.Implementations

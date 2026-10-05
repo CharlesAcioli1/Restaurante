@@ -17,9 +17,5 @@ public class StatusCozinhaConfiguration : IEntityTypeConfiguration<Domain.Status
 
         builder.Property(sc => sc.DataHora)
             .IsRequired();
-        builder.HasOne(sc => sc.Cozinha)
-            .WithMany()
-            .HasForeignKey(sc => sc.CozinhaId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -10,9 +10,21 @@ namespace Restaurante.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Cozinha_StatusCozinha_StatusId",
+                table: "Cozinha");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Cozinha_StatusId",
+                table: "Cozinha");
+
             migrationBuilder.DropColumn(
                 name: "Descricao",
                 table: "StatusCozinha");
+
+            migrationBuilder.DropColumn(
+                name: "StatusId",
+                table: "Cozinha");
 
             migrationBuilder.AddColumn<int>(
                 name: "CozinhaId",
@@ -28,16 +40,6 @@ namespace Restaurante.Infrastructure.Migrations
                 nullable: false,
                 defaultValue: 0);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "StatusId",
-                table: "Cozinha",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(int),
-                oldType: "integer",
-                oldNullable: true);
-
             migrationBuilder.CreateIndex(
                 name: "IX_StatusCozinha_CozinhaId",
                 table: "StatusCozinha",
@@ -49,7 +51,7 @@ namespace Restaurante.Infrastructure.Migrations
                 column: "CozinhaId",
                 principalTable: "Cozinha",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
@@ -78,13 +80,24 @@ namespace Restaurante.Infrastructure.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AlterColumn<int>(
+            migrationBuilder.AddColumn<int>(
                 name: "StatusId",
                 table: "Cozinha",
                 type: "integer",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "integer");
+                nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cozinha_StatusId",
+                table: "Cozinha",
+                column: "StatusId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Cozinha_StatusCozinha_StatusId",
+                table: "Cozinha",
+                column: "StatusId",
+                principalTable: "StatusCozinha",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
     }
 }

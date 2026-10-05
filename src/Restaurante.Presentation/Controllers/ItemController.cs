@@ -50,10 +50,6 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarItemDto dto)
         {
             var atualizar = await _itemService.AtualizarAsync(dto);
-
-            if (atualizar.Erro is not null)
-                return StatusCode(500, atualizar);
-
             return Ok(atualizar.Dados);
         }
 

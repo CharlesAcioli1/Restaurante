@@ -58,6 +58,7 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var cozinha = await _context.Cozinhas
+                    .Include(c => c.StatusCozinha)
                     .FirstOrDefaultAsync(c => c.Id == id);
                 return Resultado.Success(cozinha);
             }
@@ -73,6 +74,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var cozinhas = await _context.Cozinhas
                     .AsNoTracking()
+                    .Include(c => c.StatusCozinha)
                     .Where(c => c.RestauranteId == restauranteId)
                     .ToListAsync();
                 return Resultado.Success(cozinhas);
@@ -83,12 +85,31 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
+        public async Task<Resultado> ObterStatusAtualAsync(int cozinhaId)
+        {
+            try
+            {
+                var status = await _context.StatusCozinhas
+                    .Where(sc => sc.CozinhaId == cozinhaId)
+                    .OrderByDescending(sc => sc.DataHora)
+                    .FirstOrDefaultAsync();
+
+                return Resultado.Success(status);
+            }
+            catch (Exception)
+            {
+                return Resultado.Falha(
+                    "Não foi possível obter o status atual da cozinha!");
+            }
+        }
+
         public async Task<Resultado> ObterTodosAsync()
         {
             try
             {
                 var lista = await _context.Cozinhas
                     .AsNoTracking()
+                    .Include(c => c.StatusCozinha)
                     .ToListAsync();
                 return Resultado.Success(lista);
             }

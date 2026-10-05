@@ -17,11 +17,24 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var atualizar = (Item)obterId.Dados!;
-            atualizar.Nome = dto.Nome;
-            atualizar.Descricao = dto.Descricao;
+
+            if(!string.IsNullOrWhiteSpace(dto.Nome))
+                atualizar.Nome = dto.Nome;
+
+            if(!string.IsNullOrWhiteSpace(dto.Descricao))
+                atualizar.Descricao = dto.Descricao;
+
+            if(dto.CardapioId.HasValue && dto.CardapioId.Value > 0)
+                atualizar.CardapioId = dto.CardapioId.Value;
+
+            if(dto.CozinhaId.HasValue && dto.CozinhaId.Value > 0)
+                atualizar.CozinhaId = dto.CozinhaId.Value;
 
             var atualizarItem = await _itemRepository.AtualizarAsync(atualizar);
-            return atualizarItem;
+            if(!atualizarItem.PossuiDados)
+                return atualizarItem;
+
+            return Resultado.Success(ItemResponseDto.ItemToDto(atualizar));
         }
 
         public async Task<Resultado> CriarAsync(CriarItemDto dto)
@@ -30,15 +43,16 @@ namespace Restaurante.Services.Implementations
             {
                 Nome = dto.Nome,
                 Descricao = dto.Descricao,
-                CozinhaId = dto.CozinhaId
+                CozinhaId = dto.CozinhaId,
+                CardapioId = dto.CardapioId
             };
 
             var resultado = await _itemRepository.CriarAsync(novoItem);
             if(!resultado.PossuiDados)
                 return resultado;
 
-            var item = ItemResponseDto.ItemToDto(novoItem);
-            return Resultado.Success(item);
+            var item = (Item)resultado.Dados!;
+            return Resultado.Success(ItemResponseDto.ItemToDto(item));
         }
 
         public async Task<Resultado> DeletarAsync(int id)
@@ -81,8 +95,8 @@ namespace Restaurante.Services.Implementations
                 return obterTodos;
 
             var listaItem = (List<Item>)obterTodos.Dados!;
-            var listaDto = listaItem.Select(ItemResponseDto.ItemToDto);
-            return Resultado.Success(listaItem);
+            var listaDto = listaItem.Select(ItemResponseDto.ItemToDto).ToList();
+            return Resultado.Success(listaDto);
 
         }
     }

@@ -78,8 +78,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var item = await _context.Items
                 .AsNoTracking()
-                .Where(cz => cz.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cz => cz.Id == id);
                 return Resultado.Success(item);
             }
             catch (Exception)

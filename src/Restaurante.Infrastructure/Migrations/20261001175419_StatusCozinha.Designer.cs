@@ -12,7 +12,7 @@ using Restaurante.Infrastructure.Persistencia;
 namespace Restaurante.Infrastructure.Migrations
 {
     [DbContext(typeof(RestauranteDbContext))]
-    [Migration("20260930175450_StatusCozinha")]
+    [Migration("20261001175419_StatusCozinha")]
     partial class StatusCozinha
     {
         /// <inheritdoc />
@@ -62,14 +62,9 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Property<int>("RestauranteId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RestauranteId");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("Cozinha", (string)null);
                 });
@@ -445,15 +440,7 @@ namespace Restaurante.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Restaurante.Domain.StatusCozinha", "StatusCozinha")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Restaurante");
-
-                    b.Navigation("StatusCozinha");
                 });
 
             modelBuilder.Entity("Restaurante.Domain.FilaPedido", b =>
@@ -610,12 +597,17 @@ namespace Restaurante.Infrastructure.Migrations
             modelBuilder.Entity("Restaurante.Domain.StatusCozinha", b =>
                 {
                     b.HasOne("Restaurante.Domain.Cozinha", "Cozinha")
-                        .WithMany()
+                        .WithMany("StatusCozinha")
                         .HasForeignKey("CozinhaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Cozinha");
+                });
+
+            modelBuilder.Entity("Restaurante.Domain.Cozinha", b =>
+                {
+                    b.Navigation("StatusCozinha");
                 });
 #pragma warning restore 612, 618
         }

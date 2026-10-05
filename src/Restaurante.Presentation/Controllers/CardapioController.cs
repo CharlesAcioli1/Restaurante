@@ -17,14 +17,14 @@ namespace Restaurante.Presentation.Controllers
             return Ok(resultado.Dados);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var cardapio = await _cardapioService.ObterPorIdAsync(id);
             return Ok(cardapio.Dados);
         }
 
-        [HttpGet("{restauranteId:int}/Restaurantes")]
+        [HttpGet("{restauranteId}/Restaurantes")]
         public async Task<IActionResult> ObterPorRestauranteIdAsync([FromRoute] int restauranteId)
         {
             var restaurantes = await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
@@ -38,14 +38,14 @@ namespace Restaurante.Presentation.Controllers
             return Ok(novoCardapio.Dados);
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> AtualizarCardapioAsync([FromRoute] int id, [FromBody] AtualizarCardapioDto dto)
         {
             var atualizar = await _cardapioService.AtualizarCardapioAsync(id, dto);
             return Ok(atualizar.Dados);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _cardapioService.DeletarAsync(id);
@@ -53,3 +53,10 @@ namespace Restaurante.Presentation.Controllers
         }
     }
 }
+
+
+//FALTANDO ENDPOINT
+//CRIAR ITENS DO CARDAPIO
+//OBTER ITENS
+//CADASTRAR ITENS
+//

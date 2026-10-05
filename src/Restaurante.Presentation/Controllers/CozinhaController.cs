@@ -49,7 +49,7 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var resultado = await _cozinhaService.DeletarAsync(id);
-            return Ok(resultado);
+            return Ok(resultado.Dados);
         }
     }
 }

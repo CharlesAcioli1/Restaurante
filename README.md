@@ -1,4 +1,4 @@
-🍽️ #Restaurante API#
+#🍽️ Restaurante API
 
 API REST para gerenciamento de um sistema de restaurante, desenvolvida em C# com .NET, utilizando Entity Framework Core para persistência de dados.
 

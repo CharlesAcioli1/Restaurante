@@ -156,7 +156,9 @@ options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnectio
 ```
 
 **Restaure as dependências e compile:**
+
 ```dotnet restore```
+
 ```dotnet build```
 
 **Faça a migration**

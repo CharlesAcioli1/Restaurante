@@ -92,14 +92,19 @@ src/
 # 🔄 Fluxo principal
 Cliente
 ↓
+
 Controller
 ↓
+
 Service
 ↓
+
 Repository
 ↓
+
 Entity Framework Core
 ↓
+
 Banco de dados
 
 # 🛠️ Tecnologias

@@ -129,10 +129,13 @@ Bruno API Client para testes dos endpoints
 **Para executar o projeto, é necessário ter instalado:**
 
 .NET SDK, compatível com a versão utilizada pelo projeto.(Neste projeto usei a versão .NET 8)
+
 ```dotnet tool install --global dotnet-ef --version 8.0.0```
 
 **Clone o repositório para a sua máquina:**
+
 ```git clone -b Developer https://github.com/CharlesAcioli1/Restaurante.git```
+
 Pelo terminal git, vá até a pasta do projeto: cd <NOME_DA_PASTA_DO_PROJETO>
 
 Instale e configure em sua máquina o banco de dados [Postgre](https://www.postgresql.org/download/), escolha o seu sistema operacional, baixe e instale em sua máquina. Ao configurar o banco de dados, lembre a senha criada por você durante a configuração.
@@ -140,13 +143,17 @@ Instale e configure em sua máquina o banco de dados [Postgre](https://www.postg
 Vá até: Restaurante.Presentation, clique em appsettings.json.
 
 Em:
+```csharp
 "ConnectionStrings": {
   "PostgreSQLConnection": "Host=localhost;Port=5432;Database=restaurante_db;Username=Informe o usuário do banco definido por você;Password=Senha criada por você"
 }
+```
 
 Verifique em Program.cs, se o Postgre está informado na configuração:
+```csharp
 builder.Services.AddDbContext<RestauranteDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection"))); <- Caso não esteja como esse exemplo, fazer a devida modificação.
+```
 
 **Restaure as dependências e compile:**
 ```dotnet restore```

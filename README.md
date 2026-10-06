@@ -26,8 +26,11 @@ catch (Exception)
 ```
 
 * **L - Liskov Substitution Principle (Princípio da Substituição de Liskov)**
+* 
 [Digital Ocean](https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design-pt#principio-da-substituicao-de-liskov)
+
 [Entenda o LSP (Liskov Substitution Principle) - Canal Balta.io](https://www.youtube.com/watch?v=kt1AqWcxoA0)
+
 As implementações de repositórios (CardapioRepository) respeita o contrato da interface (ICardapioRepository).
 
 * **I - Interface Segregation Principle (Princípio da Segregação de Interfaces)**

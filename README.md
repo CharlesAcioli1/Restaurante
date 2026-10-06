@@ -166,6 +166,7 @@ options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnectio
 ```dotnet ef database update --project src/Restaurante.Infrastructure --startup-project src/Restaurante.Presentation```
 
 **Execute a aplicação:**
+
 ```dotnet run --project src/Restaurante.Presentation```
 
 
@@ -199,6 +200,7 @@ Após alterações no modelo do Entity Framework:
 ```dotnet ef migrations add NomeDaMigration \  --project src/Restaurante.Infrastructure \  --startup-project src/Restaurante.Presentation```
 
 **Aplicar migrations ao banco**
+
 ```dotnet ef database update \  --project src/Restaurante.Infrastructure \  --startup-project src/Restaurante.Presentation```
 
 
@@ -247,10 +249,12 @@ Informe a URL com porta/api/Cozinha
 Os endpoints podem ser testados utilizando Bruno, Postman ou outro cliente HTTP.
 
 **Exemplo — listar cardápios**
+
 GET Informe a URL com porta/api/Cardapio
 **Retorna os cardápios cadastrados.**
 
 **Exemplo — buscar cardápios por restaurante**
+
 GET /api/Cardapio/12/Restaurantes
 Retorna os cardápios relacionados ao restaurante de ID 12, conforme a rota implementada no Controller.
 
@@ -269,7 +273,7 @@ Retorna os cardápios relacionados ao restaurante de ID 12, conforme a rota impl
 
 
 
-📝 ##Observações
+## 📝 Observações
 
 - As informações deste README refletem a estrutura e os recursos apresentados no projeto.
 - Recursos não identificados no código não são considerados parte da implementação atual.
@@ -278,10 +282,12 @@ Retorna os cardápios relacionados ao restaurante de ID 12, conforme a rota impl
 **Ex:** Regra para CNPJ, sobre o formato ser no formato a seguir: 00.000.000/0000-00, não será possível, pois não aceitará ".","/" e "-".
   Apesar da implementação da regra, o banco de dados foi projetado para aceitar apenas 14 caracteres.
 
-❌ #Problemática:
+## ❌ Problemática:
+
 ###Banco de dados:
 com uso de OnRestrict, tive que buscar outras soluções para não deletar essa parte, pois usei para que as classes durante toda a construção, ficasse dependente umas das outras, pensando em erros humanos durante o uso de um sistema, ou seja, caso alguém tentasse excluir de alguma forma o restaurante, pós cardápios criado, já não será mais possível. Ao buscar soluções para instanciar algumas classes, como item, só é possível se cozinha for criada primeiramente, não sendo possível a criação de itens, sem cozinha. O sistema em si foi pensado nas falhas humanas ou em tentativa de testes intencionais ou esporádica.
 
-##🔒Motivo do uso OnRestrict no banco de dados:
+## 🔒Motivo do uso OnRestrict no banco de dados:
+
 Usuário do sistema, querer fazer testes de usabilidade.
 Possíveis hackers. Caso venha tentar deletar o restaurante de forma maliciosa, não será possível, pois, terá de ser excluído tudo o que estará ligado a ele. Caso algum item exista, não será possível. Foi pensado na segurança do sistema.

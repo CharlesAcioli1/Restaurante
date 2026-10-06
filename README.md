@@ -80,9 +80,13 @@ O projeto possui elementos compatíveis com Clean Architecture.
 
 # 📁 Estrutura do projeto
 src/
+
 ├── Restaurante.Domain/         **Entidades, Enums e Objeto de Valor (Resultado)**
+
 ├── Restaurante.Infrastructure/ **DbContext, Migrations e Mapeamentos com EF Core**
+
 ├── Restaurante.Services/       **Regras de Negócio, Interfaces e DTOs**
+
 └── Restaurante.Presentation/   **Controllers, Endpoints HTTP e Configurações (appsettings)**
 
 # 🔄 Fluxo principal

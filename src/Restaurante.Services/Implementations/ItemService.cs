@@ -10,9 +10,9 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IItemRepository _itemRepository = itemRepository;
 
-        public async Task<Resultado> AtualizarAsync(AtualizarItemDto dto)
+        public async Task<Resultado> AtualizarAsync(int id, AtualizarItemDto dto)
         {
-            var obterId = await _itemRepository.ObterPorIdAsync(dto.Id);
+            var obterId = await _itemRepository.ObterPorIdAsync(id);
             if (!obterId.PossuiDados)
                 return obterId;
 
@@ -51,8 +51,8 @@ namespace Restaurante.Services.Implementations
             if(!resultado.PossuiDados)
                 return resultado;
 
-            var item = (Item)resultado.Dados!;
-            return Resultado.Success(ItemResponseDto.ItemToDto(item));
+            var item = ItemResponseDto.ItemToDto(novoItem);
+            return Resultado.Success(item);
         }
 
         public async Task<Resultado> DeletarAsync(int id)

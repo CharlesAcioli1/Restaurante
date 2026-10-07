@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Restaurante.Infrastructure.Persistencia;
@@ -11,9 +12,11 @@ using Restaurante.Infrastructure.Persistencia;
 namespace Restaurante.Infrastructure.Migrations
 {
     [DbContext(typeof(RestauranteDbContext))]
-    partial class RestauranteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260930143655_PermitirStatusCozinhaNulo")]
+    partial class PermitirStatusCozinhaNulo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,9 +62,14 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Property<int>("RestauranteId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("StatusId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RestauranteId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Cozinha", (string)null);
                 });
@@ -158,9 +166,6 @@ namespace Restaurante.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CardapioId")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("CozinhaId")
                         .HasColumnType("integer");
 
@@ -173,8 +178,6 @@ namespace Restaurante.Infrastructure.Migrations
                         .HasColumnType("VARCHAR(150)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CardapioId");
 
                     b.HasIndex("CozinhaId");
 
@@ -327,18 +330,14 @@ namespace Restaurante.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CozinhaId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(250)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CozinhaId");
 
                     b.ToTable("StatusCozinha", (string)null);
                 });
@@ -442,7 +441,14 @@ namespace Restaurante.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Restaurante.Domain.StatusCozinha", "StatusCozinha")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Restaurante");
+
+                    b.Navigation("StatusCozinha");
                 });
 
             modelBuilder.Entity("Restaurante.Domain.FilaPedido", b =>
@@ -504,18 +510,10 @@ namespace Restaurante.Infrastructure.Migrations
 
             modelBuilder.Entity("Restaurante.Domain.Item", b =>
                 {
-                    b.HasOne("Restaurante.Domain.Cardapio", "Cardapio")
-                        .WithMany()
-                        .HasForeignKey("CardapioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Restaurante.Domain.Cozinha", "Cozinha")
                         .WithMany()
                         .HasForeignKey("CozinhaId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Cardapio");
 
                     b.Navigation("Cozinha");
                 });
@@ -602,22 +600,6 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Navigation("Mesa");
 
                     b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.StatusCozinha", b =>
-                {
-                    b.HasOne("Restaurante.Domain.Cozinha", "Cozinha")
-                        .WithMany("StatusCozinha")
-                        .HasForeignKey("CozinhaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cozinha");
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.Cozinha", b =>
-                {
-                    b.Navigation("StatusCozinha");
                 });
 #pragma warning restore 612, 618
         }

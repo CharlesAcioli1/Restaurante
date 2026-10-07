@@ -17,7 +17,7 @@ namespace Restaurante.Services.Implementations
 
             var listaGarcom = (List<Garcom>)resultado.Dados!;
             var listaDto = listaGarcom.Select(GarcomResponseDto.GarcomToDto);
-            return Resultado.Success(listaGarcom);
+            return Resultado.Success(listaDto);
         }
         public async Task<Resultado> ObterPorIdAsync(int id)
         {

@@ -3,9 +3,9 @@ namespace Restaurante.Services.DTOs.Garcom;
 public sealed record GarcomResponseDto
 {
     public int Id { get; init; }
-    public string Nome { get; init; } = string.Empty;
-    public string Cpf { get; init; } = string.Empty;
-    public string? Telefone { get; init; } = string.Empty;
+    public string Nome { get; init; } = default!;
+    public string Cpf { get; init; } = default!;
+    public string? Telefone { get; init; }
 
     public static GarcomResponseDto GarcomToDto(Dom.Garcom garcom)
         => new()

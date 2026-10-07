@@ -11,9 +11,9 @@ public class StatusCozinhaConfiguration : IEntityTypeConfiguration<Domain.Status
 
         builder.HasKey(sc => sc.Id);
 
-        builder.Property(sc => sc.Descricao)
+        builder.Property(sc => sc.Status)
             .IsRequired()
-            .HasColumnType("VARCHAR(250)");
+            .HasConversion<int>();
 
         builder.Property(sc => sc.DataHora)
             .IsRequired();

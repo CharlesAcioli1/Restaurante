@@ -50,7 +50,10 @@ namespace Restaurante.Services.Implementations
 
             var pedido = (Pedido)obterId.Dados!;
             var deletarPedido =  await _pedidoRepository.DeletarAsync(pedido);
-            return deletarPedido;
+
+            if(!deletarPedido.Sucesso)
+                return deletarPedido;
+            return Resultado.Success(null);
         }
 
         public async Task<Resultado> ObterPorDataAsync(DateTime dateUtc)

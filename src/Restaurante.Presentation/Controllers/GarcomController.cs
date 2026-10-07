@@ -70,7 +70,7 @@ namespace Restaurante.Presentation.Controllers
             return Ok(atualizar);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _garcomService.DeletarAsync(id);

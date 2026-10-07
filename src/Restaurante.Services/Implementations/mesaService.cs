@@ -51,7 +51,10 @@ namespace Restaurante.Services.Implementations
 
             var mesa = (Mesa)obterId.Dados!;
             var deletarMesa = await _mesaRepository.DeletarAsync(mesa);
-            return deletarMesa;
+
+            if(!deletarMesa.Sucesso)
+                return deletarMesa;
+            return Resultado.Success(null);
 
         }
 

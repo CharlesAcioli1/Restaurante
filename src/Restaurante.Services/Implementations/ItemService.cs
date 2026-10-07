@@ -10,18 +10,31 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IItemRepository _itemRepository = itemRepository;
 
-        public async Task<Resultado> AtualizarAsync(AtualizarItemDto dto)
+        public async Task<Resultado> AtualizarAsync(int id, AtualizarItemDto dto)
         {
-            var obterId = await _itemRepository.ObterPorIdAsync(dto.Id);
+            var obterId = await _itemRepository.ObterPorIdAsync(id);
             if (!obterId.PossuiDados)
                 return obterId;
 
             var atualizar = (Item)obterId.Dados!;
-            atualizar.Nome = dto.Nome;
-            atualizar.Descricao = dto.Descricao;
+
+            if(!string.IsNullOrWhiteSpace(dto.Nome))
+                atualizar.Nome = dto.Nome;
+
+            if(!string.IsNullOrWhiteSpace(dto.Descricao))
+                atualizar.Descricao = dto.Descricao;
+
+            if(dto.CardapioId.HasValue && dto.CardapioId.Value > 0)
+                atualizar.CardapioId = dto.CardapioId.Value;
+
+            if(dto.CozinhaId.HasValue && dto.CozinhaId.Value > 0)
+                atualizar.CozinhaId = dto.CozinhaId.Value;
 
             var atualizarItem = await _itemRepository.AtualizarAsync(atualizar);
-            return atualizarItem;
+            if(!atualizarItem.PossuiDados)
+                return atualizarItem;
+
+            return Resultado.Success(ItemResponseDto.ItemToDto(atualizar));
         }
 
         public async Task<Resultado> CriarAsync(CriarItemDto dto)
@@ -30,7 +43,8 @@ namespace Restaurante.Services.Implementations
             {
                 Nome = dto.Nome,
                 Descricao = dto.Descricao,
-                CozinhaId = dto.CozinhaId
+                CozinhaId = dto.CozinhaId,
+                CardapioId = dto.CardapioId
             };
 
             var resultado = await _itemRepository.CriarAsync(novoItem);
@@ -49,9 +63,11 @@ namespace Restaurante.Services.Implementations
 
             var item = (Item)obterId.Dados!;
             var deletarItem = await _itemRepository.DeletarAsync(item);
-            return deletarItem;
 
+            if(!deletarItem.Sucesso)
+                return deletarItem;
 
+            return Resultado.Success(null);
         }
         public async Task<Resultado> ObterCozinhaIdAsync(int cozinhaId)
         {
@@ -81,8 +97,8 @@ namespace Restaurante.Services.Implementations
                 return obterTodos;
 
             var listaItem = (List<Item>)obterTodos.Dados!;
-            var listaDto = listaItem.Select(ItemResponseDto.ItemToDto);
-            return Resultado.Success(listaItem);
+            var listaDto = listaItem.Select(ItemResponseDto.ItemToDto).ToList();
+            return Resultado.Success(listaDto);
 
         }
     }

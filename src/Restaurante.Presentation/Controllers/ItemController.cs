@@ -43,25 +43,27 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarItemDto dto)
         {
             var itens = await _itemService.CriarAsync(dto);
+            if (!itens.PossuiDados)
+                return BadRequest(itens);
             return Ok(itens.Dados);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarItemDto dto)
+        [HttpPatch ("{id}")]
+        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarItemDto dto)
         {
-            var atualizar = await _itemService.AtualizarAsync(dto);
-
-            if (atualizar.Erro is not null)
-                return StatusCode(500, atualizar);
-
+            var atualizar = await _itemService.AtualizarAsync(id, dto);
             return Ok(atualizar.Dados);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _itemService.DeletarAsync(id);
-            return Ok(deletar);
+
+            if (!deletar.Sucesso)
+                return Ok(deletar);
+
+            return Ok();
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Restaurante.Presentation.Controllers
             return Ok(atualizar.Dados);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _pedidoService.DeletarAsync(id);

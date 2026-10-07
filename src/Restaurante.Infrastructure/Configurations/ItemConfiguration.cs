@@ -19,6 +19,11 @@ public class ItemConfiguration : IEntityTypeConfiguration<Domain.Item>
             .IsRequired()
             .HasColumnType("VARCHAR(450)");
 
+        builder.HasOne(i => i.Cardapio)
+            .WithMany()
+            .HasForeignKey(i => i.CardapioId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasOne(i => i.Cozinha)
             .WithMany()
             .HasForeignKey(i => i.CozinhaId)

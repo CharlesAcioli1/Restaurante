@@ -33,10 +33,10 @@ namespace Restaurante.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return Resultado.Success(item);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return Resultado.Falha("Não foi possível adicionar item no banco de dados!");
+                var erro = ex.InnerException?.Message ?? ex.Message;
+                return Resultado.Falha($"Não foi possível adicionar item no banco de dados!Motivo:{erro}");
             }
         }
 
@@ -78,8 +78,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var item = await _context.Items
                 .AsNoTracking()
-                .Where(cz => cz.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cz => cz.Id == id);
                 return Resultado.Success(item);
             }
             catch (Exception)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Restaurante.Infrastructure.Persistencia;
@@ -11,9 +12,11 @@ using Restaurante.Infrastructure.Persistencia;
 namespace Restaurante.Infrastructure.Migrations
 {
     [DbContext(typeof(RestauranteDbContext))]
-    partial class RestauranteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261001175419_StatusCozinha")]
+    partial class StatusCozinha
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,9 +161,6 @@ namespace Restaurante.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CardapioId")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("CozinhaId")
                         .HasColumnType("integer");
 
@@ -173,8 +173,6 @@ namespace Restaurante.Infrastructure.Migrations
                         .HasColumnType("VARCHAR(150)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CardapioId");
 
                     b.HasIndex("CozinhaId");
 
@@ -504,18 +502,10 @@ namespace Restaurante.Infrastructure.Migrations
 
             modelBuilder.Entity("Restaurante.Domain.Item", b =>
                 {
-                    b.HasOne("Restaurante.Domain.Cardapio", "Cardapio")
-                        .WithMany()
-                        .HasForeignKey("CardapioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Restaurante.Domain.Cozinha", "Cozinha")
                         .WithMany()
                         .HasForeignKey("CozinhaId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Cardapio");
 
                     b.Navigation("Cozinha");
                 });

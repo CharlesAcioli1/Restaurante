@@ -48,18 +48,22 @@ namespace Restaurante.Presentation.Controllers
             return Ok(itens.Dados);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarItemDto dto)
+        [HttpPatch ("{id}")]
+        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarItemDto dto)
         {
-            var atualizar = await _itemService.AtualizarAsync(dto);
+            var atualizar = await _itemService.AtualizarAsync(id, dto);
             return Ok(atualizar.Dados);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _itemService.DeletarAsync(id);
-            return Ok(deletar);
+
+            if (!deletar.Sucesso)
+                return Ok(deletar);
+
+            return Ok();
         }
     }
 }

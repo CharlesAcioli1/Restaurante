@@ -63,9 +63,11 @@ namespace Restaurante.Services.Implementations
 
             var item = (Item)obterId.Dados!;
             var deletarItem = await _itemRepository.DeletarAsync(item);
-            return deletarItem;
 
+            if(!deletarItem.Sucesso)
+                return deletarItem;
 
+            return Resultado.Success(null);
         }
         public async Task<Resultado> ObterCozinhaIdAsync(int cozinhaId)
         {

@@ -70,7 +70,10 @@ namespace Restaurante.Services.Implementations
 
             var restaurante = (Dom.Restaurante)obterId.Dados!;
             var deletarRestaurante = await _restauranteRepository.DeletarAsync(restaurante);
-            return deletarRestaurante;
+
+            if (!deletarRestaurante.Sucesso)
+                return deletarRestaurante;
+            return Resultado.Success(null);
         }
 
         public async Task<Resultado> ObterPorIdAsync(int id)

@@ -65,7 +65,7 @@ namespace Restaurante.Presentation.Controllers
             return Ok(mesa.Dados);
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarMesaDto dto)
         {
             var mesa = await _mesaService.AtualizarAsync(id, dto);
@@ -73,11 +73,15 @@ namespace Restaurante.Presentation.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var mesa = await _mesaService.DeletarAsync(id);
-            return Ok(mesa);
+
+            if(!mesa.Sucesso)
+                return Ok(mesa);
+
+            return Ok();
         }
     }
 }

@@ -23,14 +23,14 @@ namespace Restaurante.Presentation.Controllers
             return Ok(resultado.Dados);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorIdAsyc([FromRoute] int id)
         {
             var mesas = await _mesaService.ObterPorIdAsync(id);
             return Ok(mesas.Dados);
         }
 
-        [HttpGet("{restauranteId}")]
+        [HttpGet("restaurante/{restauranteId}")]
         public async Task<IActionResult> ObterPorRestauranteIdAsync([FromRoute] int restauranteId)
         {
             var restaurantes = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);

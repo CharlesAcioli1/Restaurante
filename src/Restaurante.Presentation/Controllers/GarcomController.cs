@@ -20,61 +20,60 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _garcomService.ObterTodosAsync();
-            return Ok(resultado);
+            return Ok(resultado.Dados);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var obterId = await _garcomService.ObterPorIdAsync(id);
-
-            if (obterId.Erro is not null)
-                return BadRequest(obterId);
-
-            return Ok(obterId);
+            return Ok(obterId.Dados);
         }
 
         [HttpGet("{itemId}/itens")]
         public async Task<IActionResult> ObterPorItemIDAsync(int itemId)
         {
             var itens = await _itemService.ObterPorIdAsync(itemId);
-            return Ok(itens);
+            return Ok(itens.Dados);
         }
 
         [HttpGet("{mesaId}/mesas")]
         public async Task<IActionResult> ObterPorMesaIdAsync(int mesaId)
         {
             var mesas = await _mesaService.ObterPorIdAsync(mesaId);
-            return Ok(mesas);
+            return Ok(mesas.Dados);
         }
 
         [HttpGet("{filaId}/filas")]
         public async Task<IActionResult> ObterPorFilaIdAsync(int filaId)
         {
             var filas = await _filaPedidoService.ObterPorIdAsync(filaId);
-            return Ok(filas);
+            return Ok(filas.Dados);
         }
 
         [HttpPost]
         public async Task<IActionResult> CriarGarcomAsync([FromBody] CriarGarcomDto dto)
         {
             var garcons = await _garcomService.CriarAsync(dto);
-            return Ok(garcons);
+            return Ok(garcons.Dados);
 
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> AtualizarAsync([FromBody] AtualizarGarcomDto dto)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarGarcomDto dto)
         {
-            var atualizar = await _garcomService.AtualizarAsync(dto);
-            return Ok(atualizar);
+            var atualizar = await _garcomService.AtualizarAsync(id, dto);
+            return Ok(atualizar.Dados);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _garcomService.DeletarAsync(id);
-            return Ok(deletar);
+            if(!deletar.Sucesso)
+                return Ok(deletar);
+
+            return Ok();
         }
     }
 }

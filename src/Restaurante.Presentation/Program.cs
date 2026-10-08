@@ -45,6 +45,7 @@ builder.Services.AddScoped<IGarcomService, GarcomService>();
 builder.Services.AddScoped<IMesaService, MesaService>();
 builder.Services.AddScoped<IRestauranteService, RestauranteService>();
 builder.Services.AddScoped<ICozinhaService, CozinhaService>();
+builder.Services.AddScoped<IFilaPedidoService, FilaPedidoService>();
 //builder.Services.AddScoped<IGarcomRestauranteService, GarcomRestaurante>();
 
 var app = builder.Build();

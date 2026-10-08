@@ -23,8 +23,10 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var atualizar = (Cozinha)obterId.Dados!;
+
             if(dto.Nome is not null)
                 atualizar.Nome = dto.Nome;
+
             if(dto.RestauranteId.HasValue)
                 atualizar.RestauranteId = dto.RestauranteId.Value;
 

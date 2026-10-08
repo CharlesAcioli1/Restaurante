@@ -19,11 +19,22 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var mesa = (Mesa)obterId.Dados!;
-            mesa.Numero = dto.Numero;
-            mesa.StatusId = dto.StatusId;
+
+            if(!string.IsNullOrWhiteSpace(dto.Numero))
+                mesa.Numero = dto.Numero;
+
+            if(dto.StatusId.HasValue)
+                mesa.StatusId = dto.StatusId;
+
+            if (dto.RestauranteID.HasValue)
+                mesa.RestauranteId = dto.RestauranteID.Value;
 
             var atualizarMesa = await _mesaRepository.AtualizarAsync(mesa);
-            return atualizarMesa;
+            if(!atualizarMesa.Sucesso)
+                return atualizarMesa;
+
+            var mesaDto = MesaResponseDto.MesaToDto(mesa);
+            return Resultado.Success(mesaDto);
         }
 
         public async Task<Resultado> CriarAsync(CriarMesaDto dto)
@@ -31,12 +42,13 @@ namespace Restaurante.Services.Implementations
             var novaMesa = new Mesa
             {
                 Numero = dto.Numero,
-                StatusId = dto.StatusId,
-                RestauranteId = dto.RestauranteId
+                RestauranteId = dto.RestauranteId,
+                StatusId = dto.StatusId
             };
 
             var resultado = await _mesaRepository.CriarAsync(novaMesa);
-            if (!resultado.PossuiDados)
+
+            if (!resultado.Sucesso)
                 return resultado;
 
             var mesa = MesaResponseDto.MesaToDto(novaMesa);
@@ -74,7 +86,9 @@ namespace Restaurante.Services.Implementations
             if (!resultado.PossuiDados)
                 return resultado;
 
-            var obterIdRestaurante = MesaResponseDto.MesaToDto((Mesa)resultado.Dados!);
+            var listaMesas = (List<Mesa>)resultado.Dados!;
+            var obterIdRestaurante = listaMesas.Select(MesaResponseDto.MesaToDto).ToList();
+
             return Resultado.Success(obterIdRestaurante);
         }
 
@@ -85,8 +99,8 @@ namespace Restaurante.Services.Implementations
                 return obterTodos;
 
             var listaMesa = (List<Mesa>)obterTodos.Dados!;
-            var listaDto = listaMesa.Select(MesaResponseDto.MesaToDto);
-            return Resultado.Success(listaMesa);
+            var listaDto = listaMesa.Select(MesaResponseDto.MesaToDto).ToList();
+            return Resultado.Success(listaDto);
         }
     }
 }

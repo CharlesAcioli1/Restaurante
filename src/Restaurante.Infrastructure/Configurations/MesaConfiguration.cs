@@ -13,7 +13,7 @@ public class MesaConfiguration : IEntityTypeConfiguration<Domain.Mesa>
 
         builder.Property(m => m.Numero)
             .IsRequired()
-            .HasColumnType("INT");
+            .HasMaxLength(3);
 
         builder.HasOne(m => m.Restaurante)
             .WithMany()

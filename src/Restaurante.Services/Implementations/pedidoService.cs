@@ -30,7 +30,6 @@ namespace Restaurante.Services.Implementations
             var novoPedido = new Pedido
             {
                 IdMesa = dto.IdMesa,
-                StatusId = dto.StatusId,
                 DataCriacao = dto.DataCriacao
             };
 

@@ -17,7 +17,7 @@ namespace Restaurante.Presentation.Controllers
             var resultado = await _restauranteService.ObterTodosAsync();
             return Ok(resultado.Dados);
         }
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var restaurante = await _restauranteService.ObterPorIdAsync(id);
@@ -38,7 +38,7 @@ namespace Restaurante.Presentation.Controllers
             return Ok(restaurantes.Dados);
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarRestauranteDto dto)
         {
             var atualizar = await _restauranteService.AtualizarAsync(id, dto);
@@ -49,7 +49,11 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var resultado = await _restauranteService.DeletarAsync(id);
-            return Ok(resultado);
+
+            if(!resultado.Sucesso)
+                return BadRequest(resultado);
+
+            return Ok();
         }
     }
 }

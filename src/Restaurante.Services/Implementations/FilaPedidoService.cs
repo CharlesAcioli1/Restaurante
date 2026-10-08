@@ -1,13 +1,12 @@
 ﻿using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
-using Restaurante.Infrastructure.Repositories;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.FilaPedido;
 using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Services.Implementations
 {
-    internal class FilaPedidoService(IFilaPedidoRepository filaPedidoRepository) : IFilaPedidoService
+    public class FilaPedidoService(IFilaPedidoRepository filaPedidoRepository) : IFilaPedidoService
     {
         private readonly IFilaPedidoRepository _filaPedidoRepository = filaPedidoRepository;
 

@@ -79,7 +79,7 @@ namespace Restaurante.Presentation.Controllers
             var mesa = await _mesaService.DeletarAsync(id);
 
             if(!mesa.Sucesso)
-                return Ok(mesa);
+                return BadRequest(mesa);
 
             return Ok();
         }

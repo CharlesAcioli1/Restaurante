@@ -71,7 +71,7 @@ namespace Restaurante.Presentation.Controllers
             var deletar = await _pedidoService.DeletarAsync(id);
 
             if(!deletar.Sucesso)
-                return Ok(deletar);
+                return BadRequest(deletar);
 
             return Ok();
         }

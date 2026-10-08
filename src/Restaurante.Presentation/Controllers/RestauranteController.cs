@@ -51,7 +51,7 @@ namespace Restaurante.Presentation.Controllers
             var resultado = await _restauranteService.DeletarAsync(id);
 
             if(!resultado.Sucesso)
-                return Ok(resultado);
+                return BadRequest(resultado);
 
             return Ok();
         }

@@ -51,16 +51,9 @@ namespace Restaurante.Presentation.Controllers
             var deletar = await _cardapioService.DeletarAsync(id);
 
             if(!deletar.Sucesso)
-                return Ok(deletar);
+                return BadRequest(deletar);
 
             return Ok();
         }
     }
 }
-
-
-//FALTANDO ENDPOINT
-//CRIAR ITENS DO CARDAPIO
-//OBTER ITENS
-//CADASTRAR ITENS
-//

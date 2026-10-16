@@ -4,5 +4,5 @@ public sealed record CriarMesaDto
 {
     public string Numero { get; init; } = default!;
     public int RestauranteId { get; init; }
-    public int? StatusId { get; init; }
+    public int StatusMesaId { get; init; }
 }

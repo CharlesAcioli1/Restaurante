@@ -3,6 +3,7 @@ using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Mesa;
 using Restaurante.Services.Interfaces;
+using Restaurante.Domain.Validacoes;
 
 
 namespace Restaurante.Services.Implementations
@@ -23,8 +24,11 @@ namespace Restaurante.Services.Implementations
             if(!string.IsNullOrWhiteSpace(dto.Numero))
                 mesa.Numero = dto.Numero;
 
-            if(dto.StatusId.HasValue)
-                mesa.StatusId = dto.StatusId;
+            if (dto.StatusMesaId.HasValue)
+            {
+                StatusMesaValidacao.Validar(dto.StatusMesaId.Value);
+                mesa.StatusMesaId = dto.StatusMesaId.Value;
+            }
 
             if (dto.RestauranteID.HasValue)
                 mesa.RestauranteId = dto.RestauranteID.Value;
@@ -39,11 +43,13 @@ namespace Restaurante.Services.Implementations
 
         public async Task<Resultado> CriarAsync(CriarMesaDto dto)
         {
+            StatusMesaValidacao.Validar(dto.StatusMesaId);
+
             var novaMesa = new Mesa
             {
                 Numero = dto.Numero,
                 RestauranteId = dto.RestauranteId,
-                StatusId = dto.StatusId
+                StatusMesaId = dto.StatusMesaId
             };
 
             var resultado = await _mesaRepository.CriarAsync(novaMesa);

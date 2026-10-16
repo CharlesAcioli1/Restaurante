@@ -1,5 +1,4 @@
 using Restaurante.Domain.Compartilhar;
-using Restaurante.Services.DTOs;
 using Restaurante.Services.DTOs.Garcom;
 
 namespace Restaurante.Services.Interfaces

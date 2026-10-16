@@ -25,13 +25,6 @@ namespace Restaurante.Presentation.Controllers
             return Ok(obterId.Dados);
         }
 
-        [HttpGet("{cozinhaId}/cozinhas")]
-        public async Task<IActionResult> ObterPorCozinhaIdAsync(int cozinhaId)
-        {
-            var resultado = await _itemService.ObterCozinhaIdAsync(cozinhaId);
-            return Ok(resultado.Dados);
-        }
-
         [HttpGet("{cardapioId}/cardapios")]
         public async Task<IActionResult> ObterPorCardapioIdAsync(int cardapioId)
         {

@@ -17,9 +17,13 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var atualizar = (ItemPedido)obterId.Dados!;
-            atualizar.Descricao = itemPedido.Descricao;
-            atualizar.Quantidade = itemPedido.Quantidade;
-            atualizar.StatusId = itemPedido.StatusId;
+
+            if (!string.IsNullOrWhiteSpace(itemPedido.Observacao))
+                atualizar.Observacao = itemPedido.Observacao;
+            if (itemPedido.Quantidade > 0)
+                atualizar.Quantidade = itemPedido.Quantidade;
+            if (itemPedido.StatusId > 0)
+                atualizar.StatusId = itemPedido.StatusId;
 
             var atualizarItemPedido = await _itemPedidoRepository.AtualizarAsync(atualizar);
             return atualizarItemPedido;
@@ -32,8 +36,9 @@ namespace Restaurante.Services.Implementations
                 PedidoId = itemPedido.PedidoId,
                 ItemId = itemPedido.ItemId,
                 StatusId = itemPedido.StatusId,
-                Descricao = itemPedido.Descricao,
-                Quantidade = itemPedido.Quantidade
+                Observacao = itemPedido.Observacao,
+                Quantidade = itemPedido.Quantidade,
+                PrecoUnitario = itemPedido.PrecoUnitario
             };
 
             var resultado = await _itemPedidoRepository.CriarAsync(novoItemPedido);
@@ -73,7 +78,7 @@ namespace Restaurante.Services.Implementations
                 return obterTodos;
 
             var listaItemPedido = (List<ItemPedido>)obterTodos.Dados!;
-            var listaDto = listaItemPedido.Select(ItemPedidoResponseDto.ItemPedidoToDto);
+            var listaDto = listaItemPedido.Select(ItemPedidoResponseDto.ItemPedidoToDto).ToList();
             return Resultado.Success(listaDto);
         }
     }

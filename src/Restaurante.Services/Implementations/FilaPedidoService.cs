@@ -13,6 +13,7 @@ namespace Restaurante.Services.Implementations
         public async Task<Resultado> ObterPorData(DateTime dateUtc)
         {
             var obterData = await _filaPedidoRepository.ObterPorData(dateUtc);
+
             if (!obterData.PossuiDados)
                 return obterData;
 

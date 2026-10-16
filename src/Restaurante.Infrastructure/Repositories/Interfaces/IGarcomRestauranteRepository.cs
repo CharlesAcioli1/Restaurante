@@ -7,7 +7,6 @@ namespace Restaurante.Infrastructure.Repositories.Interfaces
     {
         Task<Resultado> ObterPorGarcomId(int id);
         Task<Resultado> ObterPorRestauranteId(int id);
-        Task<Resultado> ObterPorStatusId(int id);
         Task<Resultado> ObterPorData(DateTime dateUtc);
     }
 }

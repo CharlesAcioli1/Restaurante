@@ -61,9 +61,10 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var itemPedido = await _context.ItemPedidos
+                    .Include(ip => ip.Item)
+                    .Include(ip => ip.Status)
                     .AsNoTracking()
-                    .Where(ip => ip.PedidoId == pedidoId && ip.ItemId ==itemId && ip.StatusId == statusId)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(ip => ip.PedidoId == pedidoId && ip.ItemId == itemId && ip.StatusId == statusId);
                 return Resultado.Success(itemPedido);
             }
             catch (Exception)
@@ -78,8 +79,9 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var itemPedido = await _context.ItemPedidos
-                .AsNoTracking()
-                .ToListAsync();
+                    .Include (ip => ip.Item)
+                    .AsNoTracking()
+                    .ToListAsync();
                 return Resultado.Success(itemPedido);
             }
             catch (Exception)

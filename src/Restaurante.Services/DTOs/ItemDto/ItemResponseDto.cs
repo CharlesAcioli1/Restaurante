@@ -12,7 +12,6 @@ public static ItemResponseDto ItemToDto(Item item)
     {
         Id = item.Id,
         Nome = item.Nome,
-        Descricao = item.Descricao,
-        CardapioId = item.CardapioId
+        Descricao = item.Descricao
     };
 }

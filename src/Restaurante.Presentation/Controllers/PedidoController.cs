@@ -55,6 +55,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarPedidoDto dto)
         {
             var pedidos = await _pedidoService.CriarAsync(dto);
+
+            if (!pedidos.Sucesso)
+                return BadRequest(pedidos);
+
             return Ok(pedidos.Dados);
         }
 

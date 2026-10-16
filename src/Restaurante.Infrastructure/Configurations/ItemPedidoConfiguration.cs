@@ -15,8 +15,12 @@ public class ItemPedidoConfiguration : IEntityTypeConfiguration<Domain.ItemPedid
             .IsRequired()
             .HasColumnType("INT");
 
-        builder.Property(ip => ip.Descricao)
-            .HasColumnType("VARCHAR(250)");
+        builder.Property(ip => ip.PrecoUnitario)
+            .HasPrecision(18,2)
+            .IsRequired();
+
+        builder.Property(ip => ip.Observacao)
+            .HasMaxLength(500);
 
         builder.HasOne(ip => ip.Pedido)
             .WithMany()

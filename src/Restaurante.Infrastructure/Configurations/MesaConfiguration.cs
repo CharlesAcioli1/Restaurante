@@ -15,14 +15,17 @@ public class MesaConfiguration : IEntityTypeConfiguration<Domain.Mesa>
             .IsRequired()
             .HasMaxLength(3);
 
+        builder.Property(m => m.StatusMesaId)
+            .IsRequired();
+
         builder.HasOne(m => m.Restaurante)
             .WithMany()
             .HasForeignKey(m => m.RestauranteId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(m => m.Status)
+        builder.HasOne(m => m.StatusMesa)
             .WithMany()
-            .HasForeignKey(m => m.StatusId)
+            .HasForeignKey(m => m.StatusMesaId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

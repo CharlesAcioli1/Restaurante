@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Dom = Restaurante.Domain;
+using Restaurante.Domain.Enums;
 
 namespace Restaurante.Infrastructure.Configurations;
 
@@ -11,11 +13,13 @@ public class StatusMesaConfiguration : IEntityTypeConfiguration<Domain.StatusMes
 
         builder.HasKey(sm => sm.Id);
 
-        builder.Property(sm => sm.Descricao)
-            .IsRequired()
-            .HasColumnType("VARCHAR(150)");
-
-        builder.Property(sm => sm.DataHora)
+        builder.Property(sm => sm.StatusId)
+            .HasConversion<string>()
             .IsRequired();
+
+        builder.HasData(
+            new Dom.StatusMesa { Id = 1, StatusId = StatusMesaEnum.Desocupada},
+            new Dom.StatusMesa { Id = 2, StatusId = StatusMesaEnum.Ocupada}
+            );
     }
 }

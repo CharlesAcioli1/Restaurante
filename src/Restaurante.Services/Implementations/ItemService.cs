@@ -24,12 +24,6 @@ namespace Restaurante.Services.Implementations
             if(!string.IsNullOrWhiteSpace(dto.Descricao))
                 atualizar.Descricao = dto.Descricao;
 
-            if(dto.CardapioId.HasValue && dto.CardapioId.Value > 0)
-                atualizar.CardapioId = dto.CardapioId.Value;
-
-            if(dto.CozinhaId.HasValue && dto.CozinhaId.Value > 0)
-                atualizar.CozinhaId = dto.CozinhaId.Value;
-
             var atualizarItem = await _itemRepository.AtualizarAsync(atualizar);
             if(!atualizarItem.PossuiDados)
                 return atualizarItem;
@@ -42,9 +36,7 @@ namespace Restaurante.Services.Implementations
             var novoItem = new Item
             {
                 Nome = dto.Nome,
-                Descricao = dto.Descricao,
-                CozinhaId = dto.CozinhaId,
-                CardapioId = dto.CardapioId
+                Descricao = dto.Descricao
             };
 
             var resultado = await _itemRepository.CriarAsync(novoItem);
@@ -68,15 +60,6 @@ namespace Restaurante.Services.Implementations
                 return deletarItem;
 
             return Resultado.Success(null);
-        }
-        public async Task<Resultado> ObterCozinhaIdAsync(int cozinhaId)
-        {
-            var obterId = await _itemRepository.ObterPorCozinhaId(cozinhaId);
-            if (!obterId.PossuiDados)
-                return obterId;
-
-            var obterIdCozinha = ItemResponseDto.ItemToDto((Item)obterId.Dados!);
-            return Resultado.Success(obterIdCozinha);
         }
 
         public async Task<Resultado> ObterPorIdAsync(int id)

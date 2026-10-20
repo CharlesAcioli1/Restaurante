@@ -23,14 +23,14 @@ namespace Restaurante.Presentation.Controllers
             return Ok(resultado.Dados);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorIdAsyc([FromRoute] int id)
         {
             var mesas = await _mesaService.ObterPorIdAsync(id);
             return Ok(mesas.Dados);
         }
 
-        [HttpGet("{restauranteId}")]
+        [HttpGet("restaurante/{restauranteId}")]
         public async Task<IActionResult> ObterPorRestauranteIdAsync([FromRoute] int restauranteId)
         {
             var restaurantes = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
@@ -79,7 +79,7 @@ namespace Restaurante.Presentation.Controllers
             var mesa = await _mesaService.DeletarAsync(id);
 
             if(!mesa.Sucesso)
-                return Ok(mesa);
+                return BadRequest(mesa);
 
             return Ok();
         }

@@ -60,7 +60,7 @@ public sealed partial class Restaurante
     {
         ValidarAtualizacao();
         if (!ValidarCnpj.CnpjValido(novoCnpj))
-            throw new ArgumentException("Este espaço não pode ser vazio!");
+            throw new ArgumentException("Formato inválido!");
         Cnpj = novoCnpj;
     }
 

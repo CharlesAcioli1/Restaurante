@@ -18,18 +18,11 @@ namespace Restaurante.Presentation.Controllers
             return Ok(resultado.Dados);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var obterId = await _itemService.ObterPorIdAsync(id);
             return Ok(obterId.Dados);
-        }
-
-        [HttpGet("{cozinhaId:int}/cozinhas")]
-        public async Task<IActionResult> ObterPorCozinhaIdAsync(int cozinhaId)
-        {
-            var resultado = await _itemService.ObterCozinhaIdAsync(cozinhaId);
-            return Ok(resultado.Dados);
         }
 
         [HttpGet("{cardapioId}/cardapios")]
@@ -43,8 +36,6 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarItemDto dto)
         {
             var itens = await _itemService.CriarAsync(dto);
-            if (!itens.PossuiDados)
-                return BadRequest(itens);
             return Ok(itens.Dados);
         }
 
@@ -61,7 +52,7 @@ namespace Restaurante.Presentation.Controllers
             var deletar = await _itemService.DeletarAsync(id);
 
             if (!deletar.Sucesso)
-                return Ok(deletar);
+                return BadRequest(deletar);
 
             return Ok();
         }

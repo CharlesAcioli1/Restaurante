@@ -62,6 +62,7 @@ namespace Restaurante.Infrastructure.Repositories
                 var garcom = await _context.Garcons
                 .AsNoTracking()
                 .FirstOrDefaultAsync(g => g.Id == id);
+
                 return Resultado.Success(garcom);
             }
             catch (Exception)

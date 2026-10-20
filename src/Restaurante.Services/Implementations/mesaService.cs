@@ -3,6 +3,7 @@ using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Mesa;
 using Restaurante.Services.Interfaces;
+using Restaurante.Domain.Validacoes;
 
 
 namespace Restaurante.Services.Implementations
@@ -19,24 +20,41 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var mesa = (Mesa)obterId.Dados!;
-            mesa.Numero = dto.Numero;
-            mesa.StatusId = dto.StatusId;
+
+            if(!string.IsNullOrWhiteSpace(dto.Numero))
+                mesa.Numero = dto.Numero;
+
+            if (dto.StatusMesaId.HasValue)
+            {
+                StatusMesaValidacao.Validar(dto.StatusMesaId.Value);
+                mesa.StatusMesaId = dto.StatusMesaId.Value;
+            }
+
+            if (dto.RestauranteID.HasValue)
+                mesa.RestauranteId = dto.RestauranteID.Value;
 
             var atualizarMesa = await _mesaRepository.AtualizarAsync(mesa);
-            return atualizarMesa;
+            if(!atualizarMesa.Sucesso)
+                return atualizarMesa;
+
+            var mesaDto = MesaResponseDto.MesaToDto(mesa);
+            return Resultado.Success(mesaDto);
         }
 
         public async Task<Resultado> CriarAsync(CriarMesaDto dto)
         {
+            StatusMesaValidacao.Validar(dto.StatusMesaId);
+
             var novaMesa = new Mesa
             {
                 Numero = dto.Numero,
-                StatusId = dto.StatusId,
-                RestauranteId = dto.RestauranteId
+                RestauranteId = dto.RestauranteId,
+                StatusMesaId = dto.StatusMesaId
             };
 
             var resultado = await _mesaRepository.CriarAsync(novaMesa);
-            if (!resultado.PossuiDados)
+
+            if (!resultado.Sucesso)
                 return resultado;
 
             var mesa = MesaResponseDto.MesaToDto(novaMesa);
@@ -74,7 +92,9 @@ namespace Restaurante.Services.Implementations
             if (!resultado.PossuiDados)
                 return resultado;
 
-            var obterIdRestaurante = MesaResponseDto.MesaToDto((Mesa)resultado.Dados!);
+            var listaMesas = (List<Mesa>)resultado.Dados!;
+            var obterIdRestaurante = listaMesas.Select(MesaResponseDto.MesaToDto).ToList();
+
             return Resultado.Success(obterIdRestaurante);
         }
 
@@ -85,8 +105,8 @@ namespace Restaurante.Services.Implementations
                 return obterTodos;
 
             var listaMesa = (List<Mesa>)obterTodos.Dados!;
-            var listaDto = listaMesa.Select(MesaResponseDto.MesaToDto);
-            return Resultado.Success(listaMesa);
+            var listaDto = listaMesa.Select(MesaResponseDto.MesaToDto).ToList();
+            return Resultado.Success(listaDto);
         }
     }
 }

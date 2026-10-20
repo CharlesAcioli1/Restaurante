@@ -6,7 +6,7 @@ namespace Restaurante.Services.Interfaces
     {
         Task<Resultado> ObterTodosAsync();
         Task<Resultado> ObterPorIdAsync(int id);
-        Task<Resultado> ObterPorPedidoId(int id);
+        Task<Resultado> ObterPorPedidoId(int pedidoId);
         Task<Resultado> ObterPorData(DateTime dateUtc);
     }
 }

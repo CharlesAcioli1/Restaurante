@@ -1,6 +1,6 @@
 ﻿namespace Restaurante.Services.DTOs.ItemCardapio
 {
-    public class CriarItemCardapioDto
+    public sealed record CriarItemCardapioDto
     {
         public int CardapioId { get; init; }
         public int ItemId { get; init; }

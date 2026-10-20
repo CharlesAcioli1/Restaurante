@@ -55,23 +55,6 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
-        public async Task<Resultado> ObterPorCozinhaId(int id)
-        {
-            try
-            {
-                var cozinhaId = await _context.Items
-                    .AsNoTracking()
-                    .Where(cz => cz.CozinhaId == id)
-                    .ToListAsync();
-                return Resultado.Success(cozinhaId);
-            }
-            catch (Exception)
-            {
-
-                return Resultado.Falha("Não é possível obter ID da cozinha do item!");
-            }
-        }
-
         public async Task<Resultado> ObterPorIdAsync(int id)
         {
             try

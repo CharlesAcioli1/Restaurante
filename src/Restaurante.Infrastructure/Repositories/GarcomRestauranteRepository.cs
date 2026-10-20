@@ -61,23 +61,6 @@ namespace Restaurante.Infrastructure.Repositories
 
                 return Resultado.Falha("Não foi possível obter informações de restaurantes para garçom!");
             }
-        }
-
-        public async Task<Resultado> ObterPorStatusId(int id)
-        {
-            try
-            {
-                var garcomRestaurante = await _context.GarcomRestaurantes
-                .AsNoTracking()
-                .Where(gr => gr.StatusId == id)
-                .ToListAsync();
-                return Resultado.Success(garcomRestaurante);
-            }
-            catch (Exception)
-            {
-
-                return Resultado.Falha("Não foi possível obter Status do garçom e mesa!");
-            }
-        }
+        }        
     }
 }

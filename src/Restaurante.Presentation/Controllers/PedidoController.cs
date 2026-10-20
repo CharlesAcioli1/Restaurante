@@ -55,6 +55,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarPedidoDto dto)
         {
             var pedidos = await _pedidoService.CriarAsync(dto);
+
+            if (!pedidos.Sucesso)
+                return BadRequest(pedidos);
+
             return Ok(pedidos.Dados);
         }
 
@@ -69,7 +73,11 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _pedidoService.DeletarAsync(id);
-            return Ok(deletar);
+
+            if(!deletar.Sucesso)
+                return BadRequest(deletar);
+
+            return Ok();
         }
     }
 }

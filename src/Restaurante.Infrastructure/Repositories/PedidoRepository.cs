@@ -6,7 +6,7 @@ using Restaurante.Infrastructure.Repositories.Interfaces;
 
 namespace Restaurante.Infrastructure.Repositories
 {
-    internal class PedidoRepository(RestauranteDbContext context) : IPedidoRepository
+    public class PedidoRepository(RestauranteDbContext context) : IPedidoRepository
     {
         private readonly RestauranteDbContext _context = context;
 
@@ -33,10 +33,11 @@ namespace Restaurante.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return Resultado.Success(pedido);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return Resultado.Falha("Não foi possível criar novo pedido no banco de dados!");
+                var erro = ex.ToString();
+                Console.WriteLine(erro);
+                return Resultado.Falha($"Erro ao criar pedido: {ex.GetBaseException().Message}");
             }
         }
 
@@ -79,10 +80,9 @@ namespace Restaurante.Infrastructure.Repositories
         {
             try
             {
-                var pedido = _context.Pedidos
+                var pedido = await _context.Pedidos
                 .AsNoTracking()
-                .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(p => p.Id == id);
                 return Resultado.Success(pedido);
             }
             catch (Exception)

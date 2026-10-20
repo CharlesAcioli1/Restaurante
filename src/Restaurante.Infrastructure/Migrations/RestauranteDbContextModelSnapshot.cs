@@ -17,7 +17,7 @@ namespace Restaurante.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.31")
+                .HasAnnotation("ProductVersion", "8.0.32")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -42,28 +42,6 @@ namespace Restaurante.Infrastructure.Migrations
                     b.HasIndex("RestauranteId");
 
                     b.ToTable("Cardapio", (string)null);
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.Cozinha", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(50)");
-
-                    b.Property<int>("RestauranteId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RestauranteId");
-
-                    b.ToTable("Cozinha", (string)null);
                 });
 
             modelBuilder.Entity("Restaurante.Domain.FilaPedido", b =>
@@ -138,14 +116,9 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Property<DateTime>("DataInicio")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("integer");
-
                     b.HasKey("GarcomId", "RestauranteId");
 
                     b.HasIndex("RestauranteId");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("GarcomRestaurante", (string)null);
                 });
@@ -158,12 +131,6 @@ namespace Restaurante.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CardapioId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("CozinhaId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("VARCHAR(450)");
@@ -173,10 +140,6 @@ namespace Restaurante.Infrastructure.Migrations
                         .HasColumnType("VARCHAR(150)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CardapioId");
-
-                    b.HasIndex("CozinhaId");
 
                     b.ToTable("Item", (string)null);
                 });
@@ -207,8 +170,13 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Descricao")
-                        .HasColumnType("VARCHAR(250)");
+                    b.Property<string>("Observacao")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal>("PrecoUnitario")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("INT");
@@ -233,20 +201,22 @@ namespace Restaurante.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Numero")
-                        .HasColumnType("INT");
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
 
                     b.Property<int>("RestauranteId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StatusId")
+                    b.Property<int>("StatusMesaId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RestauranteId");
 
-                    b.HasIndex("StatusId");
+                    b.HasIndex("StatusMesaId");
 
                     b.ToTable("Mesa", (string)null);
                 });
@@ -319,50 +289,6 @@ namespace Restaurante.Infrastructure.Migrations
                     b.ToTable("Restaurante", (string)null);
                 });
 
-            modelBuilder.Entity("Restaurante.Domain.StatusCozinha", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CozinhaId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("DataHora")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CozinhaId");
-
-                    b.ToTable("StatusCozinha", (string)null);
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.StatusGarcom", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataHora")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StatusGarcom", (string)null);
-                });
-
             modelBuilder.Entity("Restaurante.Domain.StatusItemPedido", b =>
                 {
                     b.Property<int>("Id")
@@ -374,13 +300,27 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Descricao")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("VARCHAR(150)");
 
                     b.HasKey("Id");
 
                     b.ToTable("StatusItemPedido", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(1621),
+                            Status = "NaoEntregue"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(1624),
+                            Status = "Entregue"
+                        });
                 });
 
             modelBuilder.Entity("Restaurante.Domain.StatusMesa", b =>
@@ -391,16 +331,25 @@ namespace Restaurante.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataHora")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Descricao")
+                    b.Property<string>("StatusId")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(150)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("StatusMesa", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            StatusId = "Desocupada"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            StatusId = "Ocupada"
+                        });
                 });
 
             modelBuilder.Entity("Restaurante.Domain.StatusPedido", b =>
@@ -414,27 +363,36 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Property<DateTime>("DataHora")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Descricao")
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(150)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("StatusPedido", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(5227),
+                            Status = "Enviado"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(5229),
+                            Status = "Preparo"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(5230),
+                            Status = "Recebido"
+                        });
                 });
 
             modelBuilder.Entity("Restaurante.Domain.Cardapio", b =>
-                {
-                    b.HasOne("Restaurante.Domain.Restaurante", "Restaurante")
-                        .WithMany()
-                        .HasForeignKey("RestauranteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Restaurante");
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.Cozinha", b =>
                 {
                     b.HasOne("Restaurante.Domain.Restaurante", "Restaurante")
                         .WithMany()
@@ -489,35 +447,9 @@ namespace Restaurante.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Restaurante.Domain.StatusGarcom", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Garcom");
 
                     b.Navigation("Restaurante");
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.Item", b =>
-                {
-                    b.HasOne("Restaurante.Domain.Cardapio", "Cardapio")
-                        .WithMany()
-                        .HasForeignKey("CardapioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Restaurante.Domain.Cozinha", "Cozinha")
-                        .WithMany()
-                        .HasForeignKey("CozinhaId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Cardapio");
-
-                    b.Navigation("Cozinha");
                 });
 
             modelBuilder.Entity("Restaurante.Domain.ItemCardapio", b =>
@@ -574,15 +506,15 @@ namespace Restaurante.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Restaurante.Domain.StatusMesa", "Status")
+                    b.HasOne("Restaurante.Domain.StatusMesa", "StatusMesa")
                         .WithMany()
-                        .HasForeignKey("StatusId")
+                        .HasForeignKey("StatusMesaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Restaurante");
 
-                    b.Navigation("Status");
+                    b.Navigation("StatusMesa");
                 });
 
             modelBuilder.Entity("Restaurante.Domain.Pedido", b =>
@@ -602,22 +534,6 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Navigation("Mesa");
 
                     b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.StatusCozinha", b =>
-                {
-                    b.HasOne("Restaurante.Domain.Cozinha", "Cozinha")
-                        .WithMany("StatusCozinha")
-                        .HasForeignKey("CozinhaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cozinha");
-                });
-
-            modelBuilder.Entity("Restaurante.Domain.Cozinha", b =>
-                {
-                    b.Navigation("StatusCozinha");
                 });
 #pragma warning restore 612, 618
         }

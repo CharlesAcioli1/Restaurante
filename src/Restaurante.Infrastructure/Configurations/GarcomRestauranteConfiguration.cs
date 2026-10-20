@@ -15,15 +15,8 @@ public class GarcomRestauranteConfiguration : IEntityTypeConfiguration<Domain.Ga
         builder.Property(gr => gr.DataInicio)
             .IsRequired();
 
-        builder.HasOne(gr => gr.Status) //<--Garçomrestaurante, tem 1 Status
-        .WithMany()//<--Signica que o Status pode estar em vários garçons ao mesmo tempo
-        .HasForeignKey(gr => gr.StatusId)//<--Aponta a chave estrangeira a esta classe
-        .OnDelete(DeleteBehavior.Restrict);
-        // └── Impede a exclusão acidental do Status no banco(RESTRICT).
-
         builder.HasOne(gr => gr.Garcom)
             .WithMany()
-            // └── Avisa que 1 Garçom pode ter várias conexões com restaurantes.
             .HasForeignKey(gr => gr.GarcomId)
             .OnDelete(deleteBehavior: DeleteBehavior.Restrict);
 

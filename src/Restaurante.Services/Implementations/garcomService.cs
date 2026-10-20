@@ -46,9 +46,9 @@ namespace Restaurante.Services.Implementations
             return Resultado.Success(garcomDto);
         }
 
-        public async Task<Resultado> AtualizarAsync(AtualizarGarcomDto dto)
+        public async Task<Resultado> AtualizarAsync(int id, AtualizarGarcomDto dto)
         {
-            var obterId = await _garcomRepository.ObterPorIdAsync(dto.Id);
+            var obterId = await _garcomRepository.ObterPorIdAsync(id);
 
             if (!obterId.PossuiDados)
                 return obterId;

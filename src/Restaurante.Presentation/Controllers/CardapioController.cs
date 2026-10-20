@@ -49,14 +49,11 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> DeletarAsync(int id)
         {
             var deletar = await _cardapioService.DeletarAsync(id);
-            return Ok(deletar);
+
+            if(!deletar.Sucesso)
+                return BadRequest(deletar);
+
+            return Ok();
         }
     }
 }
-
-
-//FALTANDO ENDPOINT
-//CRIAR ITENS DO CARDAPIO
-//OBTER ITENS
-//CADASTRAR ITENS
-//

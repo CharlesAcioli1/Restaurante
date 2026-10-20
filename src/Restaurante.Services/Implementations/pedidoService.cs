@@ -1,5 +1,6 @@
 using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
+using Restaurante.Domain.Enums;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Pedido;
 using Restaurante.Services.Interfaces;
@@ -18,6 +19,11 @@ namespace Restaurante.Services.Implementations
 
             var pedido = (Pedido)obterId.Dados!;
 
+            if(pedido.StatusId == (int)(StatusPedidoEnum)2 || pedido.StatusId == (int)(StatusPedidoEnum)3)
+            {
+                return Resultado.Falha("O pedido ja está em preparo ou foi entregue e não pode ser alterado!");
+            }
+
             pedido.IdMesa = dto.IdMesa;
             pedido.StatusId = dto.StatusId;
 
@@ -30,8 +36,7 @@ namespace Restaurante.Services.Implementations
             var novoPedido = new Pedido
             {
                 IdMesa = dto.IdMesa,
-                StatusId = dto.StatusId,
-                DataCriacao = dto.DataCriacao
+                StatusId = dto.StatusId
             };
 
             var criarPedido = await _pedidoRepository.CriarAsync(novoPedido);
@@ -49,6 +54,12 @@ namespace Restaurante.Services.Implementations
                 return obterId;
 
             var pedido = (Pedido)obterId.Dados!;
+
+            if(pedido.StatusId != (int)(StatusPedidoEnum)1)
+            {
+                return Resultado.Falha("Apenas pedidos que ainda não estão em preparo podem ser cancelados!");
+            }
+
             var deletarPedido =  await _pedidoRepository.DeletarAsync(pedido);
 
             if(!deletarPedido.Sucesso)
@@ -66,8 +77,8 @@ namespace Restaurante.Services.Implementations
                 return resultado;
 
             var listaDataPedido = (List<Pedido>)resultado.Dados!;
-            var listaDto = listaDataPedido.Select(PedidoResponseDto.PedidoToDto);
-            return Resultado.Success(listaDataPedido);
+            var listaDto = listaDataPedido.Select(PedidoResponseDto.PedidoToDto).ToList();
+            return Resultado.Success(listaDto);
         }
 
         public async Task<Resultado> ObterPorIdAsync(int id)
@@ -86,8 +97,9 @@ namespace Restaurante.Services.Implementations
             if (!resultado.PossuiDados)
                 return resultado;
 
-            var IdMesa = PedidoResponseDto.PedidoToDto((Pedido)resultado.Dados!);
-            return Resultado.Success(IdMesa);
+            var IdMesa = (List<Pedido>)resultado.Dados!;
+            var listaDto = IdMesa.Select(PedidoResponseDto.PedidoToDto).ToList();
+            return Resultado.Success(listaDto);
         }
 
         public async Task<Resultado> ObterPorStatusIdAsync(int statusPedido)
@@ -96,8 +108,9 @@ namespace Restaurante.Services.Implementations
             if(!status.PossuiDados)
                 return status;
 
-            var pedido = PedidoResponseDto.PedidoToDto((Pedido)status.Dados!);
-            return Resultado.Success(pedido);
+            var pedido = (List<Pedido>)status.Dados!;
+            var listaDto = pedido.Select(PedidoResponseDto.PedidoToDto).ToList();
+            return Resultado.Success(listaDto);
         }
 
         public async Task<Resultado> ObterTodosAsync()
@@ -107,7 +120,7 @@ namespace Restaurante.Services.Implementations
                 return obterTodos;
 
             var listaPedido = (List<Pedido>)obterTodos.Dados!;
-            var listaDto = listaPedido.Select(PedidoResponseDto.PedidoToDto);
+            var listaDto = listaPedido.Select(PedidoResponseDto.PedidoToDto).ToList();
             return Resultado.Success(listaPedido);
         }
     }

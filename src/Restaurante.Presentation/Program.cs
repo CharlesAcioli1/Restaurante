@@ -35,7 +35,7 @@ builder.Services.AddScoped<IRestauranteRepository, RestauranteRepository>();
 builder.Services.AddScoped<IFilaPedidoRepository, FilaPedidoRepository>();
 builder.Services.AddScoped<IMesaGarcomRepository, GarcomMesaRepository>();
 builder.Services.AddScoped<IGarcomRestauranteRepository, GarcomRestauranteRepository>();
-builder.Services.AddScoped<ICozinhaRepository, CozinhaRepository>();
+builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 
 builder.Services.AddScoped<ICardapioService, CardapioService>();
 builder.Services.AddScoped<IItemService, ItemService>();
@@ -44,8 +44,9 @@ builder.Services.AddScoped<IItemPedidoService, ItemPedidoService>();
 builder.Services.AddScoped<IGarcomService, GarcomService>();
 builder.Services.AddScoped<IMesaService, MesaService>();
 builder.Services.AddScoped<IRestauranteService, RestauranteService>();
-builder.Services.AddScoped<ICozinhaService, CozinhaService>();
-//builder.Services.AddScoped<IGarcomRestauranteService, GarcomRestaurante>();
+builder.Services.AddScoped<IFilaPedidoService, FilaPedidoService>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<IGarcomRestauranteService, GarcomRestauranteService>();
 
 var app = builder.Build();
 

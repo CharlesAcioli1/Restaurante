@@ -5,7 +5,7 @@
     {
         public int Id { get; init; }
         public int IdMesa { get; init; }
-        public int StatusId { get; init; }
+        public int? StatusId { get; init; }
         public DateTime DataCriacao { get; init; }
 
         public static PedidoResponseDto PedidoToDto(Dom.Pedido pedido)

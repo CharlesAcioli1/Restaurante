@@ -1,7 +1,7 @@
 ﻿using Dom = Restaurante.Domain;
 namespace Restaurante.Services.DTOs.ItemCardapio;
 
-public class ItemCardapioResponseDto
+public sealed record ItemCardapioResponseDto
 {
     public int CardapioId { get; init; }
     public int ItemId { get; init; }

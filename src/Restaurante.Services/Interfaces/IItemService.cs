@@ -7,7 +7,6 @@ namespace Restaurante.Services.Interfaces
     {
         Task<Resultado> ObterTodosAsync();
         Task<Resultado> ObterPorIdAsync(int id);
-        Task<Resultado> ObterCozinhaIdAsync(int cozinhaId);
         Task<Resultado> CriarAsync(CriarItemDto dto);
         Task<Resultado> AtualizarAsync(int id, AtualizarItemDto dto);
         Task<Resultado> DeletarAsync(int id);

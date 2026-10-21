@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Restaurante.Domain.Compartilhar;
-using Restaurante.Services.DTOs.FilaPedido;
 using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Presentation.Controllers
@@ -15,7 +13,7 @@ namespace Restaurante.Presentation.Controllers
         {
             var obterTodos = await _filaPedidoService.ObterTodosAsync();
 
-            if(!obterTodos.PossuiDados)
+            if (!obterTodos.PossuiDados)
                 return BadRequest(obterTodos);
 
             return Ok(obterTodos.Dados);
@@ -26,7 +24,7 @@ namespace Restaurante.Presentation.Controllers
         {
             var obterId = await _filaPedidoService.ObterPorIdAsync(id);
 
-            if(!obterId.PossuiDados)
+            if (!obterId.PossuiDados)
                 return NotFound(obterId);
 
             return Ok(obterId.Dados);
@@ -37,7 +35,7 @@ namespace Restaurante.Presentation.Controllers
         {
             var obterIdPedido = await _filaPedidoService.ObterPorPedidoId(pedidoId);
 
-            if(!obterIdPedido.PossuiDados)
+            if (!obterIdPedido.PossuiDados)
                 return NotFound(obterIdPedido);
 
             return Ok(obterIdPedido.Dados);

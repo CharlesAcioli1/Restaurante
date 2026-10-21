@@ -6,15 +6,9 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GarcomController(IGarcomService garcomService,
-        IItemService itemService,
-        IMesaService mesaService,
-        IFilaPedidoService filaPedidoService) : ControllerBase
+    public class GarcomController(IGarcomService garcomService) : ControllerBase
     {
         private readonly IGarcomService _garcomService = garcomService;
-        private readonly IItemService _itemService = itemService;
-        private readonly IMesaService _mesaService = mesaService;
-        private readonly IFilaPedidoService _filaPedidoService = filaPedidoService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
@@ -28,27 +22,6 @@ namespace Restaurante.Presentation.Controllers
         {
             var obterId = await _garcomService.ObterPorIdAsync(id);
             return Ok(obterId.Dados);
-        }
-
-        [HttpGet("{itemId}/itens")]
-        public async Task<IActionResult> ObterPorItemIDAsync(int itemId)
-        {
-            var itens = await _itemService.ObterPorIdAsync(itemId);
-            return Ok(itens.Dados);
-        }
-
-        [HttpGet("{mesaId}/mesas")]
-        public async Task<IActionResult> ObterPorMesaIdAsync(int mesaId)
-        {
-            var mesas = await _mesaService.ObterPorIdAsync(mesaId);
-            return Ok(mesas.Dados);
-        }
-
-        [HttpGet("{filaId}/filas")]
-        public async Task<IActionResult> ObterPorFilaIdAsync(int filaId)
-        {
-            var filas = await _filaPedidoService.ObterPorIdAsync(filaId);
-            return Ok(filas.Dados);
         }
 
         [HttpPost]

@@ -2,6 +2,7 @@ namespace Restaurante.Domain;
 
 public sealed class ItemCardapio
 {
+    public int Id { get; set; }
     public int CardapioId { get; set; }
     public int ItemId { get; set; }
     public decimal Preco { get; set; }

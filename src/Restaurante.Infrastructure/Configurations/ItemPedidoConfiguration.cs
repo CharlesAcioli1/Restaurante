@@ -36,5 +36,10 @@ public class ItemPedidoConfiguration : IEntityTypeConfiguration<Domain.ItemPedid
             .WithMany()
             .HasForeignKey(ip => ip.StatusId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(ip => ip.ItemCardapio)
+            .WithMany()
+            .HasForeignKey(ip => ip.ItemCardapioId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

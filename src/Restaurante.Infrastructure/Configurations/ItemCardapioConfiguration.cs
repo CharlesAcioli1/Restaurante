@@ -9,7 +9,9 @@ public class ItemCardapioConfiguration : IEntityTypeConfiguration<Domain.ItemCar
     {
         builder.ToTable("ItemCardapio");
 
-        builder.HasKey(ic => new { ic.CardapioId, ic.ItemId });
+        builder.HasKey(ic => ic.Id);
+
+        builder.HasIndex(ic => new { ic.CardapioId, ic.ItemId });
 
         builder.Property(ic => ic.Preco)
             .IsRequired()

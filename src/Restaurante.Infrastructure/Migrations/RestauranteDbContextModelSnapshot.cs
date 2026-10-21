@@ -146,6 +146,12 @@ namespace Restaurante.Infrastructure.Migrations
 
             modelBuilder.Entity("Restaurante.Domain.ItemCardapio", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<int>("CardapioId")
                         .HasColumnType("integer");
 
@@ -155,9 +161,11 @@ namespace Restaurante.Infrastructure.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("DECIMAL(18,2)");
 
-                    b.HasKey("CardapioId", "ItemId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("CardapioId", "ItemId");
 
                     b.ToTable("ItemCardapio", (string)null);
                 });
@@ -168,6 +176,9 @@ namespace Restaurante.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("ItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ItemCardapioId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Observacao")
@@ -185,6 +196,8 @@ namespace Restaurante.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("PedidoId", "ItemId");
+
+                    b.HasIndex("ItemCardapioId");
 
                     b.HasIndex("ItemId");
 
@@ -312,13 +325,13 @@ namespace Restaurante.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(1621),
+                            DataHora = new DateTime(2026, 10, 21, 17, 14, 16, 8, DateTimeKind.Utc).AddTicks(8927),
                             Status = "NaoEntregue"
                         },
                         new
                         {
                             Id = 2,
-                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(1624),
+                            DataHora = new DateTime(2026, 10, 21, 17, 14, 16, 8, DateTimeKind.Utc).AddTicks(8929),
                             Status = "Entregue"
                         });
                 });
@@ -375,19 +388,19 @@ namespace Restaurante.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(5227),
+                            DataHora = new DateTime(2026, 10, 21, 17, 14, 16, 9, DateTimeKind.Utc).AddTicks(2368),
                             Status = "Enviado"
                         },
                         new
                         {
                             Id = 2,
-                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(5229),
+                            DataHora = new DateTime(2026, 10, 21, 17, 14, 16, 9, DateTimeKind.Utc).AddTicks(2370),
                             Status = "Preparo"
                         },
                         new
                         {
                             Id = 3,
-                            DataHora = new DateTime(2026, 10, 16, 17, 31, 16, 227, DateTimeKind.Utc).AddTicks(5230),
+                            DataHora = new DateTime(2026, 10, 21, 17, 14, 16, 9, DateTimeKind.Utc).AddTicks(2371),
                             Status = "Recebido"
                         });
                 });
@@ -473,6 +486,12 @@ namespace Restaurante.Infrastructure.Migrations
 
             modelBuilder.Entity("Restaurante.Domain.ItemPedido", b =>
                 {
+                    b.HasOne("Restaurante.Domain.ItemCardapio", "ItemCardapio")
+                        .WithMany()
+                        .HasForeignKey("ItemCardapioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Restaurante.Domain.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
@@ -492,6 +511,8 @@ namespace Restaurante.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Item");
+
+                    b.Navigation("ItemCardapio");
 
                     b.Navigation("Pedido");
 

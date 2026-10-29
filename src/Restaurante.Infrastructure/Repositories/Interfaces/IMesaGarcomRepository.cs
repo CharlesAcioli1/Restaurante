@@ -1,5 +1,4 @@
-﻿using Dom = Restaurante.Domain;
-using Restaurante.Domain.Compartilhar;
+﻿using Restaurante.Domain.Compartilhar;
 
 namespace Restaurante.Infrastructure.Repositories.Interfaces
 {

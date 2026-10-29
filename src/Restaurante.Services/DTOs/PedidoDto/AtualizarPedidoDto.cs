@@ -1,5 +1,4 @@
-using Dom = Restaurante.Domain;
-namespace Restaurante.Services.DTOs.Pedido;
+namespace Restaurante.Services.DTOs.PedidoDto;
 
 public sealed record AtualizarPedidoDto
 {

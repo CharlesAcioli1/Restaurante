@@ -9,7 +9,6 @@ public class GarcomRestauranteConfiguration : IEntityTypeConfiguration<Domain.Ga
     {
         builder.ToTable("GarcomRestaurante");
 
-        //O uso de new é para criar as chaves compostas.
         builder.HasKey(gr => new { gr.GarcomId, gr.RestauranteId });
 
         builder.Property(gr => gr.DataInicio)

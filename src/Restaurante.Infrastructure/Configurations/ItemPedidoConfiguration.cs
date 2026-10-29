@@ -9,7 +9,7 @@ public class ItemPedidoConfiguration : IEntityTypeConfiguration<Domain.ItemPedid
     {
         builder.ToTable("ItemPedido");
 
-        builder.HasKey(ip => new { ip.PedidoId, ip.ItemId });
+        builder.HasKey(ip => new { ip.PedidoId, ip.ItemCardapioId });
 
         builder.Property(ip => ip.Quantidade)
             .IsRequired()
@@ -23,13 +23,8 @@ public class ItemPedidoConfiguration : IEntityTypeConfiguration<Domain.ItemPedid
             .HasMaxLength(500);
 
         builder.HasOne(ip => ip.Pedido)
-            .WithMany()
+            .WithMany(p => p.Itens)
             .HasForeignKey(ip => ip.PedidoId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(ip => ip.Item)
-            .WithMany()
-            .HasForeignKey(ip => ip.ItemId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(ip => ip.Status)

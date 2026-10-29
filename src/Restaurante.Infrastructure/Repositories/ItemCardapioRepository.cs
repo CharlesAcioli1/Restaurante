@@ -72,12 +72,12 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
-        public async Task<Resultado> ObterPorIdAsync(int cardpioId, int itemId)
+        public async Task<Resultado> ObterPorIdAsync(int cardapioId, int itemId)
         {
             try
             {
                 var item = await _context.ItemCardapios
-                .FirstOrDefaultAsync(i => i.CardapioId == cardpioId && i.ItemId == itemId);
+                .FirstOrDefaultAsync(i => i.CardapioId == cardapioId && i.ItemId == itemId);
                 return Resultado.Success(item);
             }
             catch (Exception)
@@ -102,6 +102,26 @@ namespace Restaurante.Infrastructure.Repositories
             {
 
                 return Resultado.Falha("Não foi póssível obter preço dos itens do cardápio no banco de dados!");
+            }
+        }
+
+        public async Task<Resultado> ObterItensPorCardapioIdAsync(int cardapioId)
+        {
+            try
+            {
+                var itens = await _context.ItemCardapios
+                    .AsNoTracking()
+                    .Include(ic => ic.Item)
+                    .Include(ic => ic.Cardapio)
+                    .Where(ic => ic.CardapioId == cardapioId)
+                    .ToListAsync();
+
+                return Resultado.Success(itens);
+            }
+            catch (Exception)
+            {
+
+                return Resultado.Falha("Não foi possível obter os itens do cardapio no banco de dados!");
             }
         }
 

@@ -52,6 +52,28 @@ namespace Restaurante.Services.Implementations
 
         }
 
+        public async Task<Resultado> ObterPorCardapioIdAsync(int cardapioId)
+        {
+            var obterId = await _itemCardapioRepository.ObterItensPorCardapioIdAsync(cardapioId);
+
+            if (!obterId.PossuiDados)
+                return obterId;
+
+            var listaItens = (IEnumerable<ItemCardapio>)obterId.Dados!;
+
+            var listaItensCardapio = new
+            {
+               CardapioId = cardapioId,
+               Itens = listaItens.Select(ic => new
+               {
+                   ic.Item?.Nome,
+                   ic.Item?.Descricao,
+                   ic.Preco
+               }).ToList()
+            };
+            return Resultado.Success(listaItensCardapio);
+        }
+
         public async Task<Resultado> ObterPorIdAsync(int cardapioId, int itemId)
         {
             var obterId = await _itemCardapioRepository.ObterPorIdAsync(cardapioId, itemId);

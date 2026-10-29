@@ -56,16 +56,13 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
-        public async Task<Resultado> ObterPorDataAsync(DateTime dataUtc)
+        public async Task<Resultado> ObterPorDataAsync(PeriodoPedidoDto datas)
         {
             try
             {
-                var inicioDoDia = dataUtc.Date;
-                var fimDoDia = dataUtc.Date.AddDays(1).AddTicks(-1);
-
                 var pedidos = await _context.Pedidos
                     .AsNoTracking()
-                    .Where(p => p.DataCriacao >= inicioDoDia && p.DataCriacao <= fimDoDia)
+                    .Where(p => p.DataCriacao >= datas.PedidoInicio && p.DataCriacao <= datas.PedidoFim)
                     .ToListAsync();
                 return Resultado.Success(pedidos);
             }
@@ -87,7 +84,6 @@ namespace Restaurante.Infrastructure.Repositories
             }
             catch (Exception)
             {
-
                 return Resultado.Falha("Não foi possível obter ID do pedido no banco de dados!");
             }
         }
@@ -98,6 +94,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var pedido = await _context.Pedidos
                     .AsNoTracking()
+                    .Include(p => p.Itens)
                     .Where(p => p.IdMesa == mesaId)
                     .ToListAsync();
                 return Resultado.Success(pedido);
@@ -131,6 +128,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var lista = await _context.Pedidos
                     .AsNoTracking()
+                    .Include(p => p.Itens)
                     .ToListAsync();
                 return Resultado.Success(lista);
             }

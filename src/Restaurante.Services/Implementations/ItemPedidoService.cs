@@ -6,39 +6,44 @@ using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Services.Implementations
 {
-    public class ItemPedidoService(IItemPedidoRepository itemPedidoRepository) : IItemPedidoService
+    public class ItemPedidoService(IItemPedidoRepository itemPedidoRepository, IItemCardapioRepository itemCardapioRepository) : IItemPedidoService
     {
         private readonly IItemPedidoRepository _itemPedidoRepository = itemPedidoRepository;
+        private readonly IItemCardapioRepository _itemCardapioRepository = itemCardapioRepository;
 
-        public async Task<Resultado> AtualizarAsync(ItemPedido itemPedido)
+        public async Task<Resultado> AtualizarAsync(AtualizarItemPedidoDto dto)
         {
-            var obterId = await _itemPedidoRepository.ObterPorIdAsync(itemPedido.PedidoId, itemPedido.ItemId, itemPedido.StatusId);
+            var obterId = await _itemPedidoRepository.ObterPorIdAsync(dto.PedidoId, dto.ItemCardapioId, dto.StatusId);
             if (!obterId.PossuiDados)
                 return obterId;
 
             var atualizar = (ItemPedido)obterId.Dados!;
 
-            if (!string.IsNullOrWhiteSpace(itemPedido.Observacao))
-                atualizar.Observacao = itemPedido.Observacao;
-            if (itemPedido.Quantidade > 0)
-                atualizar.Quantidade = itemPedido.Quantidade;
-            if (itemPedido.StatusId > 0)
-                atualizar.StatusId = itemPedido.StatusId;
+            if (!string.IsNullOrWhiteSpace(dto.Observacao))
+                atualizar.Observacao = dto.Observacao;
+
+            if (dto.Quantidade > 0)
+                atualizar.Quantidade = dto.Quantidade;
+
+            if (dto.StatusId > 0)
+                atualizar.StatusId = dto.StatusId;
 
             var atualizarItemPedido = await _itemPedidoRepository.AtualizarAsync(atualizar);
             return atualizarItemPedido;
         }
 
-        public async Task<Resultado> CriarAsync(ItemPedido itemPedido)
+        public async Task<Resultado> CriarAsync(CriarItemPedidoDto dto)
         {
+            var obterItemcardapio = await _itemCardapioRepository.ObterPorIdAsync(dto.PedidoId, dto.ItemCardapioId);
+            if (!obterItemcardapio.PossuiDados)
+                return Resultado.Falha("Este item do cardápio não existe!");
+
             var novoItemPedido = new ItemPedido
             {
-                PedidoId = itemPedido.PedidoId,
-                ItemId = itemPedido.ItemId,
-                StatusId = itemPedido.StatusId,
-                Observacao = itemPedido.Observacao,
-                Quantidade = itemPedido.Quantidade,
-                PrecoUnitario = itemPedido.PrecoUnitario
+                PedidoId = dto.PedidoId,
+                ItemCardapioId = dto.ItemCardapioId,
+                Observacao = dto.Observacao,
+                Quantidade = dto.Quantidade
             };
 
             var resultado = await _itemPedidoRepository.CriarAsync(novoItemPedido);
@@ -47,12 +52,11 @@ namespace Restaurante.Services.Implementations
 
             var itensPedidos = ItemPedidoResponseDto.ItemPedidoToDto(novoItemPedido);
             return Resultado.Success(itensPedidos);
-
         }
 
-        public async Task<Resultado> DeletarAsync(ItemPedido itemPedido)
+        public async Task<Resultado> DeletarAsync(int pedidoId, int itemCardapioId, int statusId)
         {
-            var obterId = await _itemPedidoRepository.ObterPorIdAsync(itemPedido.PedidoId, itemPedido.ItemId, itemPedido.StatusId);
+            var obterId = await _itemPedidoRepository.ObterPorIdAsync(pedidoId, itemCardapioId, statusId);
             if (!obterId.PossuiDados)
                 return obterId;
 
@@ -61,9 +65,9 @@ namespace Restaurante.Services.Implementations
             return deletarItemPedido;
         }
 
-        public async Task<Resultado> ObterPorIdAsync(int pedidoId, int itemId, int statusId)
+        public async Task<Resultado> ObterPorIdAsync(int pedidoId, int itemCardapioId, int statusId)
         {
-            var obterId = await _itemPedidoRepository.ObterPorIdAsync(pedidoId, itemId, statusId);
+            var obterId = await _itemPedidoRepository.ObterPorIdAsync(pedidoId, itemCardapioId, statusId);
             if (!obterId.PossuiDados)
                 return obterId;
 

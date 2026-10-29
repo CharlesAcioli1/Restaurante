@@ -6,6 +6,7 @@ namespace Restaurante.Infrastructure.Repositories.Interfaces
     public interface IItemCardapioRepository
     {
         Task<Resultado> ObterTodosAsync();
+        Task<Resultado> ObterItensPorCardapioIdAsync(int cardapioId);
         Task<Resultado> ObterPorIdAsync(int cardpioId, int itemId);
         Task<Resultado> ObterPrecoAsync(decimal preco);
         Task<Resultado> AtualizarAsync(ItemCardapio itemCardapio);

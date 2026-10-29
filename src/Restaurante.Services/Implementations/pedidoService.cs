@@ -2,7 +2,7 @@ using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Domain.Enums;
 using Restaurante.Infrastructure.Repositories.Interfaces;
-using Restaurante.Services.DTOs.Pedido;
+using Restaurante.Services.DTOs.PedidoDto;
 using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Services.Implementations
@@ -69,10 +69,9 @@ namespace Restaurante.Services.Implementations
 
         public async Task<Resultado> ObterPorDataAsync(DateTime dateUtc)
         {
-            var inicioDia = dateUtc.Date;
-            var fimDia = inicioDia.AddDays(1).AddTicks(-1);
+            var datas = new PeriodoPedidoDto(dateUtc);
 
-            var resultado = await _pedidoRepository.ObterPorDataAsync(dateUtc);
+            var resultado = await _pedidoRepository.ObterPorDataAsync(datas);
             if(!resultado.PossuiDados)
                 return resultado;
 
@@ -121,7 +120,7 @@ namespace Restaurante.Services.Implementations
 
             var listaPedido = (List<Pedido>)obterTodos.Dados!;
             var listaDto = listaPedido.Select(PedidoResponseDto.PedidoToDto).ToList();
-            return Resultado.Success(listaPedido);
+            return Resultado.Success(listaDto);
         }
     }
 }

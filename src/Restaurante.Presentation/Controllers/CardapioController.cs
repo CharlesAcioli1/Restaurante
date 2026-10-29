@@ -27,16 +27,6 @@ namespace Restaurante.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarAsync([FromBody] CriarItemCardapioDto dto)
-        {
-            var itemCardapio =  await _itemCardapioService.CriarAsync(dto);
-            if (!itemCardapio.PossuiDados)
-                return BadRequest(itemCardapio);
-
-            return Ok(itemCardapio);
-        }
-
-        [HttpPost]
         public async Task<IActionResult> CriarCardapioAsync([FromBody] CriarCardapioDto dto)
         {
             var novoCardapio = await _cardapioService.CriarCardapioAsync(dto);

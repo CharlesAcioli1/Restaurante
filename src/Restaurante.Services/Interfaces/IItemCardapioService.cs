@@ -5,6 +5,7 @@ namespace Restaurante.Services.Interfaces
 {
     public interface IItemCardapioService
     {
+        Task<Resultado> ObterPorCardapioIdAsync(int cardapioId);
         Task<Resultado> ObterPorIdAsync(int cardapioId, int itemId);
         Task<Resultado> ObterTodosAsync();
         Task<Resultado> CriarAsync(CriarItemCardapioDto dto);

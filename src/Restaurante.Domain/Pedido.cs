@@ -9,4 +9,5 @@ public sealed class Pedido
 
     public Mesa? Mesa { get; set; }
     public StatusPedido? Status { get; set; }
+    public ICollection<ItemPedido> Itens { get; set; } = [];
 }

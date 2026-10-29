@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Restaurante.Services.DTOs.Pedido;
+using Restaurante.Services.DTOs.PedidoDto;
 using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Presentation.Controllers

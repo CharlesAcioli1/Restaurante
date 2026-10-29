@@ -56,15 +56,16 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
-        public async Task<Resultado> ObterPorIdAsync(int pedidoId, int itemId, int statusId)
+        public async Task<Resultado> ObterPorIdAsync(int pedidoId, int itemCardapioId, int statusId)
         {
             try
             {
                 var itemPedido = await _context.ItemPedidos
-                    .Include(ip => ip.Item)
+                    .Include(ip => ip.ItemCardapio)
+                    .ThenInclude(ic => ic!.Item)
                     .Include(ip => ip.Status)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(ip => ip.PedidoId == pedidoId && ip.ItemId == itemId && ip.StatusId == statusId);
+                    .FirstOrDefaultAsync(ip => ip.PedidoId == pedidoId && ip.ItemCardapioId == itemCardapioId && ip.StatusId == statusId);
                 return Resultado.Success(itemPedido);
             }
             catch (Exception)
@@ -79,7 +80,9 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var itemPedido = await _context.ItemPedidos
-                    .Include (ip => ip.Item)
+                    .Include (ip => ip.ItemCardapio)
+                    .ThenInclude (ic => ic!.Item)
+                    .Include (ip => ip.Status)
                     .AsNoTracking()
                     .ToListAsync();
                 return Resultado.Success(itemPedido);

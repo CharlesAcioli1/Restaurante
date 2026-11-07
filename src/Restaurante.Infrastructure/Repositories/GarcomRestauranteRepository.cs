@@ -35,14 +35,14 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var garcomRestaurante = await _context.GarcomRestaurantes
                 .AsNoTracking()
+                .Include(gr => gr.Garcom)
                 .Where(gr => gr.GarcomId == id)
                 .ToListAsync();
                 return Resultado.Success(garcomRestaurante);
             }
             catch (Exception)
             {
-
-                return Resultado.Falha("Não foi possível obter informações de garçom para o restaurante no banco de dados!");
+                return Resultado.Falha("Não foi possível obter informações de garçom no banco de dados!");
             }
         }
 
@@ -52,6 +52,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var garcomRestaurante = await _context.GarcomRestaurantes
                 .AsNoTracking()
+                .Include(gr => gr.Garcom)
                 .Where(gr => gr.RestauranteId == id)
                 .ToListAsync();
                 return Resultado.Success(garcomRestaurante);

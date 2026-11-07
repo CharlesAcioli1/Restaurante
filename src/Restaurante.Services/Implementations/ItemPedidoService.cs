@@ -47,7 +47,7 @@ namespace Restaurante.Services.Implementations
             };
 
             var resultado = await _itemPedidoRepository.CriarAsync(novoItemPedido);
-            if (!resultado.PossuiDados)
+            if (!resultado.Sucesso)
                 return resultado;
 
             var itensPedidos = ItemPedidoResponseDto.ItemPedidoToDto(novoItemPedido);

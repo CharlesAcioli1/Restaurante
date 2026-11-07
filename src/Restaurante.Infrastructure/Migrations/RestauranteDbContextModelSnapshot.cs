@@ -165,7 +165,8 @@ namespace Restaurante.Infrastructure.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.HasIndex("CardapioId", "ItemId");
+                    b.HasIndex("CardapioId", "ItemId")
+                        .IsUnique();
 
                     b.ToTable("ItemCardapio", (string)null);
                 });
@@ -320,13 +321,13 @@ namespace Restaurante.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DataHora = new DateTime(2026, 10, 29, 16, 41, 15, 950, DateTimeKind.Utc).AddTicks(1880),
+                            DataHora = new DateTime(2026, 11, 5, 21, 38, 41, 384, DateTimeKind.Utc).AddTicks(9455),
                             Status = "NaoEntregue"
                         },
                         new
                         {
                             Id = 2,
-                            DataHora = new DateTime(2026, 10, 29, 16, 41, 15, 950, DateTimeKind.Utc).AddTicks(1885),
+                            DataHora = new DateTime(2026, 11, 5, 21, 38, 41, 384, DateTimeKind.Utc).AddTicks(9459),
                             Status = "Entregue"
                         });
                 });
@@ -383,19 +384,19 @@ namespace Restaurante.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DataHora = new DateTime(2026, 10, 29, 16, 41, 15, 950, DateTimeKind.Utc).AddTicks(8514),
+                            DataHora = new DateTime(2026, 11, 5, 21, 38, 41, 385, DateTimeKind.Utc).AddTicks(3005),
                             Status = "Enviado"
                         },
                         new
                         {
                             Id = 2,
-                            DataHora = new DateTime(2026, 10, 29, 16, 41, 15, 950, DateTimeKind.Utc).AddTicks(8520),
+                            DataHora = new DateTime(2026, 11, 5, 21, 38, 41, 385, DateTimeKind.Utc).AddTicks(3008),
                             Status = "Preparo"
                         },
                         new
                         {
                             Id = 3,
-                            DataHora = new DateTime(2026, 10, 29, 16, 41, 15, 950, DateTimeKind.Utc).AddTicks(8522),
+                            DataHora = new DateTime(2026, 11, 5, 21, 38, 41, 385, DateTimeKind.Utc).AddTicks(3009),
                             Status = "Recebido"
                         });
                 });

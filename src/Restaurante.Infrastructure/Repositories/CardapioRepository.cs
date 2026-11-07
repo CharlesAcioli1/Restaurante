@@ -49,8 +49,7 @@ namespace Restaurante.Infrastructure.Repositories
             }
             catch (Exception)
             {
-
-                return Resultado.Falha("Não é possível excluir cardápio do banco de dados!");
+                return Resultado.Falha("Não foi possível deletar cardápio do banco de dados!");
             }
         }
 
@@ -60,6 +59,10 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var cardapio = await _context.Cardapios
                 .FirstOrDefaultAsync(c => c.Id == id);
+                if (cardapio is null)
+                {
+                    Resultado.Falha("Cardápio inexistente");
+                }
                 return Resultado.Success(cardapio);
             }
             catch (Exception)

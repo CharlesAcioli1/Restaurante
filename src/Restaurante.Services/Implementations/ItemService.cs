@@ -65,8 +65,8 @@ namespace Restaurante.Services.Implementations
         public async Task<Resultado> ObterPorIdAsync(int id)
         {
             var obterId = await _itemRepository.ObterPorIdAsync(id);
-            if (!obterId.PossuiDados)
-                return obterId;
+            if (!obterId.PossuiDados || obterId.Dados == null)
+                return Resultado.Falha("Posição errada, não possui dados ou é nula!");
 
             var retornoId = ItemResponseDto.ItemToDto((Item)obterId.Dados!);
             return Resultado.Success(retornoId);
@@ -76,11 +76,15 @@ namespace Restaurante.Services.Implementations
         public async Task<Resultado> ObterTodosAsync()
         {
             var obterTodos = await _itemRepository.ObterTodasAsync();
-            if (!obterTodos.PossuiDados)
-                return obterTodos;
+            if (!obterTodos.PossuiDados || obterTodos.Dados == null)
+                return Resultado.Falha("Não possui dados, é nula ou não existe no banco de dados!");
 
-            var listaItem = (List<Item>)obterTodos.Dados!;
-            var listaDto = listaItem.Select(ItemResponseDto.ItemToDto).ToList();
+            var listaItem = (IEnumerable<Item>)obterTodos.Dados!;
+            var listaDto = listaItem.Select(ItemResponseDto.ItemToDto).Select(dto => new
+            {
+                dto.Id,
+                dto.Nome
+            }).ToList();
             return Resultado.Success(listaDto);
 
         }

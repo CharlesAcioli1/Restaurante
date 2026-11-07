@@ -8,8 +8,8 @@ namespace Restaurante.Services.Interfaces
         Task<Resultado> ObterPorCardapioIdAsync(int cardapioId);
         Task<Resultado> ObterPorIdAsync(int cardapioId, int itemId);
         Task<Resultado> ObterTodosAsync();
-        Task<Resultado> CriarAsync(CriarItemCardapioDto dto);
-        Task<Resultado> AtualizarAsync(AtualizarItemCardapioDto dto);
+        Task<Resultado> CriarAsync(int cardapioId, int itemId, CriarItemCardapioDto dto);
+        Task<Resultado> AtualizarAsync(int cardapioId, int itemId, AtualizarItemCardapioDto dto);
         Task<Resultado> DeletarAsync(int cardapioId, int itemId);
     }
 }

@@ -16,6 +16,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _cardapioService.ObterTodosAsync();
+
+            if (!resultado.PossuiDados)
+                return BadRequest(new { Error = resultado.Erro });
+
             return Ok(resultado.Dados);
         }
 
@@ -23,35 +27,87 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var cardapio = await _cardapioService.ObterPorIdAsync(id);
+
+            if (!cardapio.PossuiDados)
+                return BadRequest(new { Error = cardapio.Erro });
+
             return Ok(cardapio.Dados);
+        }
+
+        [HttpGet("restaurante/{restauranteId}")]
+        public async Task<IActionResult> ObterPorRestauranteIdAsync(int restauranteId)
+        {
+            var resultado = await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
+
+            if (!resultado.PossuiDados)
+                return BadRequest(new { Error = resultado.Erro });
+
+            return Ok(resultado.Dados);
+        }
+
+        [HttpGet("{cardapioId}/itens")]
+        public async Task<IActionResult> ObterItensPorCardapioIdAsync(int cardapioId)
+        {
+            var resultado = await _itemCardapioService.ObterPorCardapioIdAsync(cardapioId);
+            if(!resultado.PossuiDados)
+                return BadRequest(new {Error = resultado.Erro});
+
+            return Ok(resultado.Dados);
         }
 
         [HttpPost]
         public async Task<IActionResult> CriarCardapioAsync([FromBody] CriarCardapioDto dto)
         {
             var novoCardapio = await _cardapioService.CriarCardapioAsync(dto);
+
+            if (!novoCardapio.Sucesso)
+                return BadRequest(new { Error = novoCardapio.Erro });
+
             return Ok(novoCardapio.Dados);
         }
 
-        [HttpPatch("{cardapioId}/itens{itemId}")]
+        [HttpPost("{cardapioId}/itens/{itemId}/preco")]
+        public async Task<IActionResult> CriarPrecoAsync(int cardapioId, int itemId, [FromBody] CriarItemCardapioDto dto)
+        {
+            var preco = await _itemCardapioService.CriarAsync(cardapioId, itemId, dto);
+
+            if (!preco.Sucesso)
+                return BadRequest(new { Error = preco.Erro });
+
+            return Ok(preco.Dados);
+        }
+
+        [HttpPatch("{cardapioId}/itens/{itemId}")]
         public async Task<IActionResult> AtualizarAsync(int cardapioId, int itemId, [FromBody] AtualizarItemCardapioDto dto)
         {
-            if (dto.CardapioId != cardapioId || dto.ItemId != itemId)
-                return BadRequest("Rota e corpo não coincidem.");
+            var atualizaritemcardapio = await _itemCardapioService.AtualizarAsync(cardapioId, itemId, dto);
 
-            var atualizaritemcardapio = await _itemCardapioService.AtualizarAsync(dto);
+            if (!atualizaritemcardapio.Sucesso)
+                return BadRequest(new { Error = atualizaritemcardapio.Erro });
 
-            if (!atualizaritemcardapio.PossuiDados)
-                return BadRequest(atualizaritemcardapio);
-
-            return Ok(atualizaritemcardapio);
+            return Ok(atualizaritemcardapio.Dados);
         }
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> AtualizarCardapioAsync(int id, [FromBody] AtualizarCardapioDto dto)
         {
             var atualizar = await _cardapioService.AtualizarCardapioAsync(id, dto);
+
+            if (!atualizar.Sucesso)
+                return BadRequest(new { Error = atualizar.Erro });
+
             return Ok(atualizar.Dados);
+        }
+
+        [HttpDelete("{cardapioId}/itens/{itemId}")]
+        public async Task<IActionResult> DeletarAsync(int cardapioId, int itemId)
+        {
+            var deletar = await _itemCardapioService.DeletarAsync(cardapioId, itemId);
+
+            if (!deletar.Sucesso)
+                return BadRequest(new { Error = deletar.Erro });
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -59,8 +115,8 @@ namespace Restaurante.Presentation.Controllers
         {
             var deletar = await _cardapioService.DeletarAsync(id);
 
-            if(!deletar.Sucesso)
-                return BadRequest(deletar);
+            if (!deletar.Sucesso)
+                return BadRequest(new { Error = deletar.Erro });
 
             return Ok();
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories.Interfaces;
@@ -61,8 +62,9 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var mesa = await _context.Mesas
                 .AsNoTracking()
-                .Where(m => m.Id == id)
-                .FirstOrDefaultAsync();
+                .Include(m => m.Restaurante)
+                .Include(m => m.StatusMesa)
+                .FirstOrDefaultAsync(m => m.Id == id);
                 return Resultado.Success(mesa);
             }
             catch (Exception)
@@ -78,6 +80,7 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var listagem = await _context.Mesas
                 .AsNoTracking()
+                .Include(m => m.Restaurante)
                 .Where(m => m.RestauranteId == restauranteId)
                 .ToListAsync();
                 return Resultado.Success(listagem);
@@ -93,8 +96,10 @@ namespace Restaurante.Infrastructure.Repositories
         {
             try
             {
-                var lista =  await _context.Mesas
+                var lista = await _context.Mesas
                 .AsNoTracking()
+                .Include(m => m.Restaurante)
+                .Include(m => m.StatusMesa)
                 .ToListAsync();
                 return Resultado.Success(lista);
             }
@@ -102,6 +107,25 @@ namespace Restaurante.Infrastructure.Repositories
             {
 
                 return Resultado.Falha("Não foi possível obter resultados do banco de dados!");
+            }
+        }
+
+        public async Task<Resultado> ObterPorStatusAsync(int restauranteId,  int statusMesaId)
+        {
+            try
+            {
+                var listagem = await _context.Mesas
+                    .AsNoTracking()
+                    .Include(m => m.Restaurante)
+                    .Include(m => m.StatusMesa)
+                    .Where(m => m.RestauranteId == restauranteId && m.StatusMesaId == statusMesaId)
+                    .ToListAsync();
+
+                return Resultado.Success(listagem);
+            }
+            catch (Exception)
+            {
+                return Resultado.Falha("Não foi possível filtrar mesas por status no banco de dados!");
             }
         }
     }

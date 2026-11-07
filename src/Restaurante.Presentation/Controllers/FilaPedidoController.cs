@@ -14,7 +14,7 @@ namespace Restaurante.Presentation.Controllers
             var obterTodos = await _filaPedidoService.ObterTodosAsync();
 
             if (!obterTodos.PossuiDados)
-                return BadRequest(obterTodos);
+                return BadRequest(new { Error = obterTodos.Erro });
 
             return Ok(obterTodos.Dados);
         }
@@ -25,7 +25,7 @@ namespace Restaurante.Presentation.Controllers
             var obterId = await _filaPedidoService.ObterPorIdAsync(id);
 
             if (!obterId.PossuiDados)
-                return NotFound(obterId);
+                return BadRequest(new { Error = obterId.Erro });
 
             return Ok(obterId.Dados);
         }
@@ -36,7 +36,7 @@ namespace Restaurante.Presentation.Controllers
             var obterIdPedido = await _filaPedidoService.ObterPorPedidoId(pedidoId);
 
             if (!obterIdPedido.PossuiDados)
-                return NotFound(obterIdPedido);
+                return BadRequest(new { Error = obterIdPedido.Erro });
 
             return Ok(obterIdPedido.Dados);
         }
@@ -47,7 +47,7 @@ namespace Restaurante.Presentation.Controllers
             var obterData = await _filaPedidoService.ObterPorData(dateUtc);
 
             if (!obterData.PossuiDados)
-                return Ok(obterData);
+                return BadRequest(new { Error = obterData.Erro });
 
             return Ok(obterData.Dados);
         }

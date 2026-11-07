@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Restaurante.Domain.Compartilhar;
 using Restaurante.Services.DTOs.Mesa;
 using Restaurante.Services.Interfaces;
 
@@ -24,6 +25,17 @@ namespace Restaurante.Presentation.Controllers
             return Ok(mesas.Dados);
         }
 
+        [HttpGet("restaurante/{restauranteId}/status/{statusMesaId}")]
+        public async Task<IActionResult> ObterPorStatusAsync(int restauranteId, int statusMesaId)
+        {
+            var resultado = await _mesaService.ObterPorStatusAsync(restauranteId, statusMesaId);
+
+            if (!resultado.Sucesso)
+                return NotFound(resultado);
+
+            return Ok(resultado.Dados);
+        }
+
         [HttpGet("restaurante/{restauranteId}")]
         public async Task<IActionResult> ObterPorRestauranteIdAsync(int restauranteId)
         {
@@ -35,6 +47,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarMesaDto dto)
         {
             var mesa = await _mesaService.CriarAsync(dto);
+
+            if (!mesa.Sucesso)
+                return BadRequest(new {erro = mesa.Erro});
+
             return Ok(mesa.Dados);
         }
 
@@ -42,6 +58,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarMesaDto dto)
         {
             var mesa = await _mesaService.AtualizarAsync(id, dto);
+
+            if (!mesa.Sucesso)
+                return BadRequest(mesa);
+
             return Ok(mesa.Dados);
 
         }
@@ -52,7 +72,7 @@ namespace Restaurante.Presentation.Controllers
             var mesa = await _mesaService.DeletarAsync(id);
 
             if(!mesa.Sucesso)
-                return BadRequest(mesa);
+                return BadRequest(new {erro = mesa.Erro});
 
             return Ok();
         }

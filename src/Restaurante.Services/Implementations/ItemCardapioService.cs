@@ -10,34 +10,72 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IItemCardapioRepository _itemCardapioRepository = itemCardapioRepository;
 
-        public async Task<Resultado> AtualizarAsync(AtualizarItemCardapioDto dto)
+        public async Task<Resultado> AtualizarAsync(int cardapioId, int itemId, AtualizarItemCardapioDto dto)
         {
-            var obterId = await _itemCardapioRepository.ObterPorIdAsync(dto.CardapioId, dto.ItemId);
+            var obterId = await _itemCardapioRepository.ObterPorIdAsync(cardapioId, itemId);
             if (!obterId.PossuiDados)
                 return obterId;
 
             var atualizar = (ItemCardapio)obterId.Dados!;
             atualizar.Preco = dto.Preco;
+
             var atualizarItemcardapio = await _itemCardapioRepository.AtualizarAsync(atualizar);
-            return atualizarItemcardapio;
+            if (!atualizarItemcardapio.Sucesso && !atualizarItemcardapio.PossuiDados)
+                return atualizarItemcardapio;
+
+            var itemDto = ItemCardapioResponseDto.ItemCardapioToDto(atualizar);
+
+            var listaAtualizada = new
+            {
+                novoPreco = itemDto.Preco,
+                cardapio = new
+                {
+                    nomeCardapio = itemDto.NomeCardapio
+                },
+                precoItemAtualizado = new
+                {
+                    nome = itemDto.NomeItem,
+                    descricao = itemDto.DescricaoItem
+                }
+            };
+
+            return Resultado.Success(listaAtualizada);
         }
 
-        public async Task<Resultado> CriarAsync(CriarItemCardapioDto dto)
+        public async Task<Resultado> CriarAsync(int cardapioId, int itemId, CriarItemCardapioDto dto)
         {
+            
             var novoItemcardapio = new ItemCardapio
             {
-                CardapioId = dto.CardapioId,
-                ItemId = dto.ItemId,
+                CardapioId = cardapioId,
+                ItemId = itemId,
                 Preco = dto.Preco
             };
 
             var resultado = await _itemCardapioRepository.CriarAsync(novoItemcardapio);
+
             if(!resultado.PossuiDados)
                 return resultado;
 
-            var itemCardapio = ItemCardapioResponseDto.ItemCardapioToDto(novoItemcardapio);
-            return Resultado.Success(itemCardapio);
+            var obterId = await _itemCardapioRepository.ObterPorIdAsync(cardapioId,itemId);
 
+            if (!obterId.PossuiDados)
+                return obterId;
+
+            var item = (ItemCardapio)obterId.Dados!;
+            var itemDto = ItemCardapioResponseDto.ItemCardapioToDto(item);
+            var itemCardapio = new
+            {
+                itemDto.NomeCardapio,
+                Item = new
+                {
+                    itemDto.NomeItem,
+                    itemDto.DescricaoItem,
+                    itemDto.Preco
+                }
+            };
+
+            return Resultado.Success(itemCardapio);
         }
 
         public async Task<Resultado> DeletarAsync(int cardapioId, int itemId)
@@ -61,17 +99,18 @@ namespace Restaurante.Services.Implementations
 
             var listaItens = (IEnumerable<ItemCardapio>)obterId.Dados!;
 
-            var listaItensCardapio = new
+            var listaDto = listaItens.Select(ItemCardapioResponseDto.ItemCardapioToDto).ToList();
+            var resultadoLista = new
             {
-               CardapioId = cardapioId,
-               Itens = listaItens.Select(ic => new
-               {
-                   ic.Item?.Nome,
-                   ic.Item?.Descricao,
-                   ic.Preco
-               }).ToList()
+                nomeCardapio = listaDto.FirstOrDefault()?.NomeCardapio,
+                Itens = listaDto.Select(dto => new
+                {
+                    nomeItem = dto.NomeItem,
+                    descricaoItem = dto.DescricaoItem,
+                    preco = dto.Preco
+                })
             };
-            return Resultado.Success(listaItensCardapio);
+            return Resultado.Success(resultadoLista);
         }
 
         public async Task<Resultado> ObterPorIdAsync(int cardapioId, int itemId)
@@ -82,7 +121,6 @@ namespace Restaurante.Services.Implementations
 
             var retornoId = ItemCardapioResponseDto.ItemCardapioToDto((ItemCardapio)obterId.Dados!);
             return Resultado.Success(retornoId);
-
         }
 
         public async Task<Resultado> ObterTodosAsync()
@@ -91,9 +129,9 @@ namespace Restaurante.Services.Implementations
             if (!obterTodos.PossuiDados)
                 return obterTodos;
 
-            var listaItemCardapio = (List<ItemCardapio>)obterTodos.Dados!;
-            var listaDto = listaItemCardapio.Select(ItemCardapioResponseDto.ItemCardapioToDto);
-            return Resultado.Success(listaItemCardapio);
+            var listaItemCardapio = (IEnumerable<ItemCardapio>)obterTodos.Dados!;
+            var listaDto = listaItemCardapio.Select(ItemCardapioResponseDto.ItemCardapioToDto).ToList();
+            return Resultado.Success(listaDto);
         }
     }
 }

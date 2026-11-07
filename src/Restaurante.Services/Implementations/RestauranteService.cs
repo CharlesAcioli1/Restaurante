@@ -54,7 +54,8 @@ namespace Restaurante.Services.Implementations
             };
 
             var criarRestaurante = await _restauranteRepository.CriarAsync(novoRestaurante);
-            if (!criarRestaurante.PossuiDados)
+
+            if (!criarRestaurante.Sucesso)
                 return criarRestaurante;
 
             var restaurante = RestauranteResponseDto.RestauranteToDto(novoRestaurante);
@@ -79,8 +80,8 @@ namespace Restaurante.Services.Implementations
         public async Task<Resultado> ObterPorIdAsync(int id)
         {
             var obterId = await _restauranteRepository.ObterPorIdAsync(id);
-            if (!obterId.PossuiDados)
-                return obterId;
+            if (!obterId.PossuiDados || obterId.Dados == null)
+                return Resultado.Falha("Posição errada, não possui dados ou é nula!");
 
             var retornoId = RestauranteResponseDto.RestauranteToDto((Dom.Restaurante)obterId.Dados!);
             return Resultado.Success(retornoId);
@@ -89,8 +90,8 @@ namespace Restaurante.Services.Implementations
         public async Task<Resultado> ObterTodosAsync()
         {
             var obterTodos = await _restauranteRepository.ObterTodosAsync();
-            if (!obterTodos.PossuiDados)
-                return obterTodos;
+            if (!obterTodos.PossuiDados || obterTodos.Dados == null)
+                return Resultado.Falha("Não há dados ou é nulo!");
 
             var listaRestaurante = (List<Dom.Restaurante>)obterTodos.Dados!;
             var listaDto = listaRestaurante.Select(RestauranteResponseDto.RestauranteToDto);

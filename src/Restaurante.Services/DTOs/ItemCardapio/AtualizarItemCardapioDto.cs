@@ -2,8 +2,6 @@
 {
     public sealed record AtualizarItemCardapioDto
     {
-        public int CardapioId { get; init; }
-        public int ItemId { get; init; }
         public decimal Preco { get; init; }
     }
 }

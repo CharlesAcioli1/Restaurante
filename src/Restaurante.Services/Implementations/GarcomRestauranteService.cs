@@ -12,10 +12,8 @@ namespace Restaurante.Services.Implementations
 
         public async Task<Resultado> ObterPorData(DateTime dateUtc)
         {
-            var inicioDia = dateUtc.Date;
-            var fimDia = inicioDia.AddDays(1).AddTicks(-1);
-
             var resultado = await _garcomRestauranteRepository.ObterPorData(dateUtc);
+
             if(!resultado.PossuiDados)
                 return resultado;
 
@@ -30,8 +28,13 @@ namespace Restaurante.Services.Implementations
             if (!obterIdGarcom.PossuiDados)
                 return obterIdGarcom;
 
-            var obterLista = (List<GarcomRestaurante>)obterIdGarcom.Dados!;
-            var listaDto = obterLista.Select(GarcomRestauranteResponseDto.GarcomRestauranteToDo).ToList();
+            var obterLista = (IEnumerable<GarcomRestaurante>)obterIdGarcom.Dados!;
+            var listaDto = obterLista.Select(listaGarcom => new GarcomRestauranteResponseDto
+            {
+                GarcomId = listaGarcom.GarcomId,
+                NomeGarcom = listaGarcom.Garcom!.Nome
+               
+            }).ToList();
             return Resultado.Success(listaDto);
         }
 
@@ -41,8 +44,13 @@ namespace Restaurante.Services.Implementations
             if (!obterPorIdRestaurante.PossuiDados)
                 return obterPorIdRestaurante;
 
-            var obterLista = (List<GarcomRestaurante>)obterPorIdRestaurante.Dados!;
-            var listaDto = obterLista.Select(GarcomRestauranteResponseDto.GarcomRestauranteToDo).ToList();
+            var obterLista = (IEnumerable<GarcomRestaurante>)obterPorIdRestaurante.Dados!;
+            var listaDto = obterLista.Select(garcomPorRestaurante => new GarcomRestauranteResponseDto
+            {
+                RestauranteId = garcomPorRestaurante.RestauranteId,
+                NomeRestaurante = garcomPorRestaurante.Restaurante!.Nome,
+                NomeGarcom = garcomPorRestaurante.Garcom!.Nome
+            }).ToList();
             return Resultado.Success(listaDto);
         }
     }

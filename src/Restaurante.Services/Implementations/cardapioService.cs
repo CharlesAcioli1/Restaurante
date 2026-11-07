@@ -19,9 +19,13 @@ namespace Restaurante.Services.Implementations
             if (!resultado.PossuiDados)
                 return resultado;
 
-            var listaCardapio = (List<Cardapio>)resultado.Dados!;
+            var listaCardapio = (IEnumerable<Cardapio>)resultado.Dados!;
 
-            var listaDto = listaCardapio.Select(CardapioResponseDto.CardapioToDto);
+            var listaDto = listaCardapio.Select(CardapioResponseDto.CardapioToDto).Select(dto => new
+            {
+                dto.Id,
+                dto.Nome
+            }).ToList();
 
             return Resultado.Success(listaDto);
         }
@@ -45,9 +49,13 @@ namespace Restaurante.Services.Implementations
             if (!resultado.PossuiDados)
                 return resultado;
 
-            var listaCardapio = (List<Cardapio>)resultado.Dados!;
+            var listaCardapio = (IEnumerable<Cardapio>)resultado.Dados!;
 
-            var listaDto = listaCardapio.Select(CardapioResponseDto.CardapioToDto);
+            var listaDto = listaCardapio.Select(CardapioResponseDto.CardapioToDto).Select(dto => new
+            {
+                dto.Id,
+                dto.Nome
+            }).ToList();
 
             return Resultado.Success(listaDto);
         }
@@ -75,13 +83,17 @@ namespace Restaurante.Services.Implementations
             var resultadoBusca = await _cardapioRepository.ObterPorIdAsync(id);
 
             if (!resultadoBusca.PossuiDados)
-                return resultadoBusca;
+                return Resultado.Falha("Posição incorreta ou cardápio não existe mais no banco de dados!");
 
             var cardapio = (Cardapio)resultadoBusca.Dados!;
 
             var resultadoDeletar = await _cardapioRepository.DeletarAsync(cardapio);
 
-            return resultadoDeletar;
+            if (!resultadoDeletar.Sucesso)
+                return resultadoDeletar;
+
+            return Resultado.Success(null);
+
         }
 
         public async Task<Resultado> AtualizarCardapioAsync(int id, AtualizarCardapioDto dto)

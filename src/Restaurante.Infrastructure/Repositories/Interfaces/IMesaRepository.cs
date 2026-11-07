@@ -5,6 +5,7 @@ namespace Restaurante.Infrastructure.Repositories.Interfaces
     public interface IMesaRepository
     {
         Task<Resultado> ObterTodasAsync();
+        Task<Resultado> ObterPorStatusAsync(int restauranteId, int statusMesaId);
         Task<Resultado> ObterPorIdAsync(int id);
         Task<Resultado> ObterPorRestauranteIdAsync(int restauranteId);
         Task<Resultado> CriarAsync(Dom.Mesa mesa);

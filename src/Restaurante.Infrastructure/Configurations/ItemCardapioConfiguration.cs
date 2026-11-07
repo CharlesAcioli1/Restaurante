@@ -11,7 +11,8 @@ public class ItemCardapioConfiguration : IEntityTypeConfiguration<Domain.ItemCar
 
         builder.HasKey(ic => ic.Id);
 
-        builder.HasIndex(ic => new { ic.CardapioId, ic.ItemId });
+        builder.HasIndex(ic => new { ic.CardapioId, ic.ItemId })
+            .IsUnique();
 
         builder.Property(ic => ic.Preco)
             .IsRequired()

@@ -19,6 +19,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _restauranteService.ObterTodosAsync();
+
+            if (!resultado.PossuiDados)
+                return BadRequest(new { Error = resultado.Erro });
+
             return Ok(resultado.Dados);
         }
 
@@ -26,6 +30,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var restaurante = await _restauranteService.ObterPorIdAsync(id);
+
+            if (!restaurante.PossuiDados)
+                return BadRequest(new { Error = restaurante.Erro });
+
             return Ok(restaurante.Dados);
         }
 
@@ -33,6 +41,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterCardapiosPorRestauranteIdAsync(int restauranteId)
         {
             var cardapios = await _cardapioService.ObterPorRestauranteIdAsync(restauranteId);
+
+            if (!cardapios.PossuiDados)
+                return BadRequest(new { Error = cardapios.Erro });
+
             return Ok(cardapios.Dados);
         }
 
@@ -41,8 +53,8 @@ namespace Restaurante.Presentation.Controllers
         {
             var mesasRestaurante = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
 
-            if (!mesasRestaurante.Sucesso)
-                return BadRequest(mesasRestaurante.Erro);
+            if (!mesasRestaurante.PossuiDados)
+                return BadRequest(new { Error = mesasRestaurante.Erro });
 
             return Ok(mesasRestaurante.Dados);
         }
@@ -52,8 +64,8 @@ namespace Restaurante.Presentation.Controllers
         {
             var obterIdCardapio = await _itemCardapioService.ObterPorCardapioIdAsync(cardapioId);
 
-            if (!obterIdCardapio.Sucesso)
-                return BadRequest(obterIdCardapio.Erro);
+            if (!obterIdCardapio.PossuiDados)
+                return BadRequest(new { Error = obterIdCardapio.Erro });
 
             return Ok(obterIdCardapio.Dados);
         }
@@ -63,8 +75,8 @@ namespace Restaurante.Presentation.Controllers
         {
             var garcomRestaurante = await _garcomRestauranteService.ObterPorRestauranteId(restauranteId);
 
-            if (!garcomRestaurante.Sucesso)
-                return BadRequest(garcomRestaurante.Erro);
+            if (!garcomRestaurante.PossuiDados)
+                return BadRequest(new { Error = garcomRestaurante.Erro });
 
             return Ok(garcomRestaurante.Dados);
         }
@@ -72,24 +84,32 @@ namespace Restaurante.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> CriarAsync([FromBody] CriarRestauranteDto dto)
         {
-            var restaurantes = await _restauranteService.CriarAsync(dto);
-            return Ok(restaurantes.Dados);
+            var novoRestaurante = await _restauranteService.CriarAsync(dto);
+
+            if (!novoRestaurante.Sucesso)
+                return BadRequest(new { Error = novoRestaurante.Erro });
+
+            return Ok(novoRestaurante.Dados);
         }
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarRestauranteDto dto)
         {
             var atualizar = await _restauranteService.AtualizarAsync(id, dto);
+
+            if (!atualizar.Sucesso)
+                return BadRequest(new { Error = atualizar.Erro });
+
             return Ok(atualizar.Dados);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {
-            var resultado = await _restauranteService.DeletarAsync(id);
+            var deletar = await _restauranteService.DeletarAsync(id);
 
-            if (!resultado.Sucesso)
-                return BadRequest(resultado);
+            if (!deletar.Sucesso)
+                return BadRequest(new { Error = deletar.Erro });
 
             return Ok();
         }

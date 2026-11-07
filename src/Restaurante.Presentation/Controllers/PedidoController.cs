@@ -57,13 +57,13 @@ namespace Restaurante.Presentation.Controllers
             var pedidos = await _pedidoService.CriarAsync(dto);
 
             if (!pedidos.Sucesso)
-                return BadRequest(pedidos);
+                return BadRequest(new {erro = pedidos.Erro});
 
             return Ok(pedidos.Dados);
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarPedidoDto dto)
+        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarPedidoDto dto)
         {
             var atualizar = await _pedidoService.AtualizarAsync(id, dto);
             return Ok(atualizar.Dados);
@@ -75,7 +75,7 @@ namespace Restaurante.Presentation.Controllers
             var deletar = await _pedidoService.DeletarAsync(id);
 
             if(!deletar.Sucesso)
-                return BadRequest(deletar);
+                return BadRequest(new {erro = deletar.Erro});
 
             return Ok();
         }

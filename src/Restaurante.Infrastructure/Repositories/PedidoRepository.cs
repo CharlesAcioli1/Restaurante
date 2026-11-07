@@ -33,11 +33,9 @@ namespace Restaurante.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return Resultado.Success(pedido);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var erro = ex.ToString();
-                Console.WriteLine(erro);
-                return Resultado.Falha($"Erro ao criar pedido: {ex.GetBaseException().Message}");
+                return Resultado.Falha("Não foi possível criar pedido no banco de dados!");
             }
         }
 
@@ -51,8 +49,7 @@ namespace Restaurante.Infrastructure.Repositories
             }
             catch (Exception)
             {
-
-                return Resultado.Falha("Não foi possível deletar pedido do banco de dados!");
+                return Resultado.Falha("Erro ao deletar pedido no banco de dados!");
             }
         }
 

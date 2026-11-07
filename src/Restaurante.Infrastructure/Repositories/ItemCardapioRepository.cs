@@ -60,9 +60,11 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var itemCardapio = await _context.ItemCardapios
-                .AsNoTracking()
-                .Where(ic => ic.CardapioId == id)
-                .ToListAsync();
+                    .AsNoTracking()
+                    .Include(ic => ic.Item)
+                    .Include(ic => ic.Cardapio)
+                    .Where(ic => ic.CardapioId == id)
+                    .ToListAsync();
                 return Resultado.Success(itemCardapio);
             }
             catch (Exception)
@@ -77,7 +79,9 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var item = await _context.ItemCardapios
-                .FirstOrDefaultAsync(i => i.CardapioId == cardapioId && i.ItemId == itemId);
+                    .Include(ic => ic.Item)
+                    .Include(ic => ic.Cardapio)
+                    .FirstOrDefaultAsync(i => i.CardapioId == cardapioId && i.ItemId == itemId);
                 return Resultado.Success(item);
             }
             catch (Exception)
@@ -92,9 +96,9 @@ namespace Restaurante.Infrastructure.Repositories
             try
             {
                 var itens = await _context.ItemCardapios
-                .AsNoTracking()
-                .Where(ic => ic.Preco == preco)
-                .ToListAsync();
+                    .AsNoTracking()
+                    .Where(ic => ic.Preco == preco)
+                    .ToListAsync();
 
                 return Resultado.Success(itens);
             }
@@ -131,6 +135,8 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var lista = await _context.ItemCardapios
                     .AsNoTracking()
+                    .Include (ic => ic.Item)
+                    .Include(ic => ic.Cardapio)
                     .ToListAsync();
                 return Resultado.Success(lista);
             }

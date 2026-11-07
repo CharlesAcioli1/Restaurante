@@ -47,8 +47,8 @@ namespace Restaurante.Services.Implementations
             if (!obterTodos.PossuiDados)
                 return obterTodos;
 
-            var retorno = (List<FilaPedido>)obterTodos.Dados!;
-            var listaDto = retorno.Select(FilaPedidoResponseDto.FilaPedidoToDo);
+            var retorno = (IEnumerable<FilaPedido>)obterTodos.Dados!;
+            var listaDto = retorno.Select(FilaPedidoResponseDto.FilaPedidoToDo).ToList();
             return Resultado.Success(listaDto);
         }
     }

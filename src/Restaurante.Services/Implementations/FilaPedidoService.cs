@@ -17,8 +17,9 @@ namespace Restaurante.Services.Implementations
             if (!obterData.PossuiDados)
                 return obterData;
 
-            var retorno = FilaPedidoResponseDto.FilaPedidoToDo((FilaPedido)obterData.Dados!);
-            return Resultado.Success(retorno);
+            var listaFila = (IEnumerable<FilaPedido>)obterData.Dados!;
+            var listaDto = listaFila.Select(FilaPedidoResponseDto.FilaPedidoToDo).ToList();
+            return Resultado.Success(listaDto);
         }
 
         public async Task<Resultado> ObterPorIdAsync(int id)

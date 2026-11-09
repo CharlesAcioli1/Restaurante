@@ -15,6 +15,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _itemService.ObterTodosAsync();
+
+            if(!resultado.PossuiDados)
+                return BadRequest(new { Error = resultado.Erro });
+
             return Ok(resultado.Dados);
         }
 
@@ -22,6 +26,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var obterId = await _itemService.ObterPorIdAsync(id);
+
+            if(!obterId.PossuiDados)
+                return BadRequest( new { Error = obterId.Erro });
+
             return Ok(obterId.Dados);
         }
 
@@ -29,6 +37,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorCardapioIdAsync(int cardapioId)
         {
             var cardapios = await _cardapioService.ObterPorIdAsync(cardapioId);
+
+            if(!cardapios.PossuiDados)
+                return BadRequest(new { Error = cardapios.Erro});
+
             return Ok(cardapios.Dados);
         }
 
@@ -36,13 +48,21 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarAsync([FromBody] CriarItemDto dto)
         {
             var itens = await _itemService.CriarAsync(dto);
+            
+            if(!itens.Sucesso)
+                return BadRequest(new {Error = itens.Erro});
+
             return Ok(itens.Dados);
         }
 
         [HttpPatch ("{id}")]
-        public async Task<IActionResult> AtualizarAsync([FromRoute] int id, [FromBody] AtualizarItemDto dto)
+        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarItemDto dto)
         {
             var atualizar = await _itemService.AtualizarAsync(id, dto);
+
+            if(!atualizar.Sucesso)
+                return BadRequest(new { Error = atualizar.Erro});
+
             return Ok(atualizar.Dados);
         }
 

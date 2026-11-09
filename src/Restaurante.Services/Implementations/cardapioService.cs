@@ -24,7 +24,8 @@ namespace Restaurante.Services.Implementations
             var listaDto = listaCardapio.Select(CardapioResponseDto.CardapioToDto).Select(dto => new
             {
                 dto.Id,
-                dto.Nome
+                dto.Nome,
+                dto.RestauranteId
             }).ToList();
 
             return Resultado.Success(listaDto);

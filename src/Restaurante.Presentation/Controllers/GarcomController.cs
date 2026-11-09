@@ -14,6 +14,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _garcomService.ObterTodosAsync();
+
+            if(!resultado.PossuiDados)
+                return BadRequest(new { Error = resultado.Erro});
+
             return Ok(resultado.Dados);
         }
 
@@ -21,6 +25,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var obterId = await _garcomService.ObterPorIdAsync(id);
+
+            if(!obterId.PossuiDados)
+                return BadRequest(new { Error = obterId.Erro });
+
             return Ok(obterId.Dados);
         }
 
@@ -28,6 +36,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> CriarGarcomAsync([FromBody] CriarGarcomDto dto)
         {
             var garcons = await _garcomService.CriarAsync(dto);
+
+            if(!garcons.Sucesso)
+                return BadRequest(new { Error = garcons.Erro});
+
             return Ok(garcons.Dados);
 
         }
@@ -36,6 +48,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarGarcomDto dto)
         {
             var atualizar = await _garcomService.AtualizarAsync(id, dto);
+
+            if(!atualizar.Sucesso)
+                return BadRequest(new { Error = atualizar.Erro});
+
             return Ok(atualizar.Dados);
         }
 

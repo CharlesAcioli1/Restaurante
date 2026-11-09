@@ -15,6 +15,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _mesaService.ObterTodosAsync();
+
+            if(!resultado.PossuiDados)
+                return BadRequest( new { Error = resultado.Erro });
+
             return Ok(resultado.Dados);
         }
 
@@ -22,6 +26,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorIdAsyc(int id)
         {
             var mesas = await _mesaService.ObterPorIdAsync(id);
+
+            if(!mesas.PossuiDados)
+                return BadRequest( new { Error =  mesas.Erro });
+
             return Ok(mesas.Dados);
         }
 
@@ -31,7 +39,7 @@ namespace Restaurante.Presentation.Controllers
             var resultado = await _mesaService.ObterPorStatusAsync(restauranteId, statusMesaId);
 
             if (!resultado.Sucesso)
-                return NotFound(resultado);
+                return BadRequest(new {Error = resultado.Erro});
 
             return Ok(resultado.Dados);
         }
@@ -40,6 +48,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorRestauranteIdAsync(int restauranteId)
         {
             var restaurantes = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
+
+            if(!restaurantes.PossuiDados)
+                return BadRequest( new { Error =  restaurantes.Erro });
+
             return Ok(restaurantes.Dados);
         }
 
@@ -60,7 +72,7 @@ namespace Restaurante.Presentation.Controllers
             var mesa = await _mesaService.AtualizarAsync(id, dto);
 
             if (!mesa.Sucesso)
-                return BadRequest(mesa);
+                return BadRequest(new { Error = mesa.Erro});
 
             return Ok(mesa.Dados);
 

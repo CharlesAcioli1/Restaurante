@@ -20,13 +20,21 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterTodosAsync()
         {
             var resultado = await _pedidoService.ObterTodosAsync();
+
+            if (!resultado.PossuiDados)
+                return BadRequest(new { Error = resultado.Erro });
+
             return Ok(resultado.Dados);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             var obterId = await _pedidoService.ObterPorIdAsync(id);
+
+            if (!obterId.PossuiDados)
+                return BadRequest(new { Error = obterId.Erro });
+
             return Ok(obterId.Dados);
         }
 
@@ -34,6 +42,10 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorItemIdAsync(int itemId)
         {
             var itens = await _itemService.ObterPorIdAsync(itemId);
+
+            if (!itens.PossuiDados)
+                return BadRequest(new { Error = itens.Erro });
+
             return Ok(itens.Dados);
         }
 
@@ -41,13 +53,21 @@ namespace Restaurante.Presentation.Controllers
         public async Task<IActionResult> ObterPorGarcomIdAsync(int garcomId)
         {
             var garcons = await _garcomService.ObterPorIdAsync(garcomId);
+
+            if (!garcons.PossuiDados)
+                return BadRequest(new { Error = garcons.Erro });
+
             return Ok(garcons.Dados);
         }
 
-        [HttpGet("{mesaId}")]
+        [HttpGet("mesa/{mesaId}")]
         public async Task<IActionResult> ObterPorMesaId(int mesaId)
         {
             var mesas = await _mesaService.ObterPorIdAsync(mesaId);
+
+            if(!mesas.PossuiDados)
+                return BadRequest(new { Error =  mesas.Erro });
+
             return Ok(mesas.Dados);
         }
 
@@ -62,10 +82,36 @@ namespace Restaurante.Presentation.Controllers
             return Ok(pedidos.Dados);
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpGet("data")]
+        public async Task<IActionResult> ObterPorDataAsync([FromQuery] DateTime dateUtc)
+        {
+            var resultado = await _pedidoService.ObterPorDataAsync(dateUtc);
+
+            if (!resultado.Sucesso)
+                return BadRequest(new { erro = resultado.Erro });
+
+            return Ok(resultado.Dados);
+        }
+
+        [HttpGet("status/{statusId}")]
+        public async Task<IActionResult> ObterPorStatusIdAsync(int statusId)
+        {
+            var resultado = await _pedidoService.ObterPorStatusIdAsync(statusId);
+
+            if (!resultado.Sucesso)
+                return BadRequest(new { erro = resultado.Erro });
+
+            return Ok(resultado.Dados);
+        }
+
+        [HttpPatch("{id}")]
         public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarPedidoDto dto)
         {
             var atualizar = await _pedidoService.AtualizarAsync(id, dto);
+
+            if(!atualizar.Sucesso)
+                return BadRequest(new { Error = atualizar.Erro });
+
             return Ok(atualizar.Dados);
         }
 

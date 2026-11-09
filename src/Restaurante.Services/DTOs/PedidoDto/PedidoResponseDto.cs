@@ -17,7 +17,6 @@ public sealed record PedidoResponseDto
             Id = pedido.Id,
             IdMesa = pedido.IdMesa,
             StatusId = pedido.StatusId,
-            DataCriacao = pedido.DataCriacao,
-            Itens = [.. pedido.Itens.Select(ItemPedidoResponseDto.ItemPedidoToDto)]
+            DataCriacao = pedido.DataCriacao
         };
 }

@@ -79,13 +79,16 @@ namespace Restaurante.Services.Implementations
 
         public async Task<Resultado> ObterPorDataAsync(DateTime dateUtc)
         {
+            if (dateUtc == default)
+                return Resultado.Falha("A data informada é inválida ou está vazia.");
+
             var datas = new PeriodoPedidoDto(dateUtc);
 
             var resultado = await _pedidoRepository.ObterPorDataAsync(datas);
             if(!resultado.PossuiDados)
                 return resultado;
 
-            var listaDataPedido = (List<Pedido>)resultado.Dados!;
+            var listaDataPedido = (IEnumerable<Pedido>)resultado.Dados!;
             var listaDto = listaDataPedido.Select(PedidoResponseDto.PedidoToDto).ToList();
             return Resultado.Success(listaDto);
         }

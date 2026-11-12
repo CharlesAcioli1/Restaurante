@@ -1,4 +1,5 @@
 using Restaurante.Domain;
+using Restaurante.Domain.Enums;
 using Restaurante.Services.DTOs.ItemPedidoDto;
 namespace Restaurante.Services.DTOs.PedidoDto;
 
@@ -6,17 +7,24 @@ public sealed record PedidoResponseDto
 {
     public int Id { get; init; }
     public int IdMesa { get; init; }
-    public int? StatusId { get; init; }
+    public string NumeroMesa { get; init; } = default!;
+    public string NomeRestaurante { get; init; } = default!;
+    public string StatusId { get; init; } = default!;
     public DateTime DataCriacao { get; init; }
 
-    public List<ItemPedidoResponseDto> Itens { get; init; } = [];
-
     public static PedidoResponseDto PedidoToDto(Pedido pedido)
-        => new()
-        {
-            Id = pedido.Id,
-            IdMesa = pedido.IdMesa,
-            StatusId = pedido.StatusId,
-            DataCriacao = pedido.DataCriacao
-        };
+    {
+        string nomeStatus = Enum.IsDefined(typeof(StatusPedidoEnum), pedido.StatusId)
+            ? ((StatusPedidoEnum)pedido.StatusId).ToString()
+            : "Valor incorreto";
+        return new()
+           {
+               Id = pedido.Id,
+               IdMesa = pedido.IdMesa,
+               NumeroMesa = pedido.Mesa?.Numero ?? "Mesa não encontrada!",
+               NomeRestaurante = pedido.Mesa?.Restaurante?.Nome ?? "Restaurante não encontrado!",
+               StatusId = nomeStatus,
+               DataCriacao = pedido.DataCriacao
+           };
+    }
 }

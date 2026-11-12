@@ -6,14 +6,9 @@ namespace Restaurante.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PedidoController(IPedidoService pedidoService,
-        IGarcomService garcomService,
-        IItemService itemService,
-        IMesaService mesaService) : ControllerBase
+    public class PedidoController(IPedidoService pedidoService, IMesaService mesaService) : ControllerBase
     {
         private readonly IPedidoService _pedidoService = pedidoService;
-        private readonly IGarcomService _garcomService = garcomService;
-        private readonly IItemService _itemService = itemService;
         private readonly IMesaService _mesaService = mesaService;
 
         [HttpGet]
@@ -36,28 +31,6 @@ namespace Restaurante.Presentation.Controllers
                 return BadRequest(new { Error = obterId.Erro });
 
             return Ok(obterId.Dados);
-        }
-
-        [HttpGet("{itemId}/itens")]
-        public async Task<IActionResult> ObterPorItemIdAsync(int itemId)
-        {
-            var itens = await _itemService.ObterPorIdAsync(itemId);
-
-            if (!itens.PossuiDados)
-                return BadRequest(new { Error = itens.Erro });
-
-            return Ok(itens.Dados);
-        }
-
-        [HttpGet("{garcomId}/garcons")]
-        public async Task<IActionResult> ObterPorGarcomIdAsync(int garcomId)
-        {
-            var garcons = await _garcomService.ObterPorIdAsync(garcomId);
-
-            if (!garcons.PossuiDados)
-                return BadRequest(new { Error = garcons.Erro });
-
-            return Ok(garcons.Dados);
         }
 
         [HttpGet("mesa/{mesaId}")]

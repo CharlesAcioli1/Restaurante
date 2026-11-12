@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
+using Restaurante.Domain.Enums;
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Dom = Restaurante.Domain;
@@ -19,10 +20,10 @@ namespace Restaurante.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return Resultado.Success(AtualizarMesa);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                return Resultado.Falha("Não foi possível atualizar mesa no banco de dados!");
+                return Resultado.Falha(ex.Message);
             }
         }
 
@@ -126,6 +127,23 @@ namespace Restaurante.Infrastructure.Repositories
             catch (Exception)
             {
                 return Resultado.Falha("Não foi possível filtrar mesas por status no banco de dados!");
+            }
+        }
+
+        public async Task<Resultado> VerificarMesaDesocupada(int mesaId)
+        {
+            try
+            {
+                var mesa = await _context.Mesas
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.StatusMesaId == (int)StatusMesaEnum.Desocupada && m.Id == mesaId);
+
+                return Resultado.Success(mesa != null);
+            }
+            catch (Exception)
+            {
+
+                return Resultado.Falha("Houve um erro ao verificar Status!");
             }
         }
     }

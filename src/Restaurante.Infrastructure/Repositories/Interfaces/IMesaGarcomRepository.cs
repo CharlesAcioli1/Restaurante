@@ -1,4 +1,5 @@
-﻿using Restaurante.Domain.Compartilhar;
+﻿using Restaurante.Domain;
+using Restaurante.Domain.Compartilhar;
 
 namespace Restaurante.Infrastructure.Repositories.Interfaces
 {
@@ -6,6 +7,7 @@ namespace Restaurante.Infrastructure.Repositories.Interfaces
     {
         Task<Resultado> ObterPorIdMesa(int id);
         Task<Resultado> ObterPorIdGarcom(int id);
-
+        Task<Resultado> AbrirMesaAsync(GarcomMesa garcomMesa);
+        Task<Resultado> FecharMesaAsync(GarcomMesa garcomMesa);
     }
 }

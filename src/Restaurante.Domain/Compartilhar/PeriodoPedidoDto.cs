@@ -8,6 +8,6 @@ public sealed record PeriodoPedidoDto
     public PeriodoPedidoDto(DateTime dateUtc)
     {
         PedidoInicio = dateUtc.Date;
-        PedidoFim = dateUtc.AddDays(1).AddTicks(-1);
+        PedidoFim = dateUtc.Date.AddDays(1).AddTicks(-1);
     }
 }

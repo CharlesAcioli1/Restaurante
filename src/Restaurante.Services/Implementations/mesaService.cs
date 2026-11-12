@@ -1,10 +1,10 @@
 using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
+using Restaurante.Domain.Enums;
+using Restaurante.Domain.Validacoes;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Mesa;
 using Restaurante.Services.Interfaces;
-using Restaurante.Domain.Validacoes;
-using Restaurante.Domain.Enums;
 
 
 namespace Restaurante.Services.Implementations
@@ -13,7 +13,7 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IMesaRepository _mesaRepository = mesaRepository;
 
-        public async Task<Resultado> AtualizarAsync(int id,AtualizarMesaDto dto)
+        public async Task<Resultado> AtualizarAsync(int id, AtualizarMesaDto dto)
         {
             var obterId = await _mesaRepository.ObterPorIdAsync(id);
 
@@ -22,7 +22,7 @@ namespace Restaurante.Services.Implementations
 
             var mesa = (Mesa)obterId.Dados!;
 
-            if(!string.IsNullOrWhiteSpace(dto.Numero))
+            if (!string.IsNullOrWhiteSpace(dto.Numero))
                 mesa.Numero = dto.Numero;
 
             if (dto.StatusMesaId.HasValue)
@@ -41,7 +41,7 @@ namespace Restaurante.Services.Implementations
                 mesa.RestauranteId = dto.RestauranteID.Value;
 
             var atualizarMesa = await _mesaRepository.AtualizarAsync(mesa);
-            if(!atualizarMesa.Sucesso)
+            if (!atualizarMesa.Sucesso)
                 return atualizarMesa;
 
             var mesaDto = MesaResponseDto.MesaToDto(mesa);
@@ -90,7 +90,7 @@ namespace Restaurante.Services.Implementations
             var mesa = (Mesa)obterId.Dados!;
             var deletarMesa = await _mesaRepository.DeletarAsync(mesa);
 
-            if(!deletarMesa.Sucesso)
+            if (!deletarMesa.Sucesso)
                 return deletarMesa;
             return Resultado.Success(null);
 

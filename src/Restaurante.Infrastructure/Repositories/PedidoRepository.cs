@@ -59,6 +59,8 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var pedidos = await _context.Pedidos
                     .AsNoTracking()
+                    .Include(p => p.Mesa)
+                    .ThenInclude(r => r!.Restaurante)
                     .Where(p => p.DataCriacao >= datas.PedidoInicio && p.DataCriacao <= datas.PedidoFim)
                     .ToListAsync();
                 return Resultado.Success(pedidos);
@@ -76,6 +78,8 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var pedido = await _context.Pedidos
                 .AsNoTracking()
+                .Include(p => p.Mesa)
+                .ThenInclude(r => r!.Restaurante)
                 .FirstOrDefaultAsync(p => p.Id == id);
                 return Resultado.Success(pedido);
             }
@@ -91,7 +95,8 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var pedido = await _context.Pedidos
                     .AsNoTracking()
-                    .Include(p => p.Itens)
+                    .Include(p => p.Mesa)
+                    .ThenInclude(r => r!.Restaurante)
                     .Where(p => p.IdMesa == mesaId)
                     .ToListAsync();
                 return Resultado.Success(pedido);
@@ -108,6 +113,8 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var pedido = await _context.Pedidos
                 .AsNoTracking()
+                .Include(p => p.Mesa)
+                .ThenInclude(r => r!.Restaurante)
                 .Where(p => p.StatusId == statusId)
                 .ToListAsync();
                 return Resultado.Success(pedido);
@@ -125,7 +132,8 @@ namespace Restaurante.Infrastructure.Repositories
             {
                 var lista = await _context.Pedidos
                     .AsNoTracking()
-                    .Include(p => p.Itens)
+                    .Include(p => p.Mesa)
+                    .ThenInclude(r => r!.Restaurante)
                     .ToListAsync();
                 return Resultado.Success(lista);
             }

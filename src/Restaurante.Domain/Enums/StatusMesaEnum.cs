@@ -2,6 +2,6 @@
 
 public enum StatusMesaEnum
 {
-    Ocupada = 1,
-    Desocupada = 2
+    Desocupada = 1,
+    Ocupada = 2
 }

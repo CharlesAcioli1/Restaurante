@@ -11,5 +11,6 @@ namespace Restaurante.Infrastructure.Repositories.Interfaces
         Task<Resultado> CriarAsync(Dom.Mesa mesa);
         Task<Resultado> AtualizarAsync(Dom.Mesa mesa);
         Task<Resultado> DeletarAsync(Dom.Mesa mesa);
+        Task<Resultado> VerificarMesaDesocupada(int mesaId);
     }
 }

@@ -3,17 +3,17 @@ using Restaurante.Domain.Compartilhar;
 using Restaurante.Domain.Enums;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.GarcomMesaDto;
-using Restaurante.Services.DTOs.Mesa;
 using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Services.Implementations
 {
     public class GarcomMesaService(IMesaGarcomRepository mesaGarcomRepository, IMesaRepository mesaRepository,
-        IGarcomRepository garcomRepository) : IGarcomMesaService
+        IGarcomRepository garcomRepository, IGarcomRestauranteRepository garcomRestauranteRepository) : IGarcomMesaService
     {
         private readonly IMesaGarcomRepository _mesaGarcomRepository = mesaGarcomRepository;
         private readonly IMesaRepository _mesaRepository = mesaRepository;
         private readonly IGarcomRepository _garcomRepository = garcomRepository;
+        private readonly IGarcomRestauranteRepository _garcomRestauranteRepository = garcomRestauranteRepository;
 
         public async Task<Resultado> ObterPorIdGarcom(int id)
         {
@@ -51,28 +51,25 @@ namespace Restaurante.Services.Implementations
             if (!mesaResultado.PossuiDados || !(bool)mesaResultado.Dados!)
                 return Resultado.Falha("Mesa não existe ou ocupada!");
 
-            var obterId = await _mesaRepository.ObterPorIdAsync(mesaId);
-            if (!obterId.PossuiDados)
-                return Resultado.Falha("Mesa não encontrada!");
-
-            var mesa = (Mesa)obterId.Dados!;
-
-            mesa.StatusMesaId = (int)StatusMesaEnum.Ocupada;
-
-            var atualizarStatusMesa = await _mesaRepository.AtualizarAsync(mesa);
-            if (!atualizarStatusMesa.Sucesso)
-                return atualizarStatusMesa;
-
             var garcomMesa = new GarcomMesa
             {
                 GarcomId = garcomId,
-                MesaId = mesaId,
-                Mesa = mesa
+                MesaId = mesaId
             };
 
             var resultado = await _mesaGarcomRepository.AbrirMesaAsync(garcomMesa);
             if (!resultado.Sucesso)
                 return resultado;
+
+            var atualizarStatusMesa = await _mesaRepository.AtualizarStatusAsync(mesaId, (int)StatusMesaEnum.Ocupada);
+            if (!atualizarStatusMesa.Sucesso)
+                return atualizarStatusMesa;
+
+            var obterIdMesa = await _mesaRepository.ObterPorIdAsync(mesaId);
+            if (obterIdMesa.PossuiDados)
+            {
+                garcomMesa.Mesa = (Mesa)obterIdMesa.Dados!;
+            }
             return Resultado.Success(GarcomMesaResponseDto.GarcomMesaToDo(garcomMesa));
         }
 
@@ -86,15 +83,22 @@ namespace Restaurante.Services.Implementations
             if (!mesaResultado.PossuiDados)
                 return Resultado.Falha("Mesa não encontrada!");
 
+            var mesa = (Mesa)mesaResultado.Dados!;
+
             var garcomMesa = new GarcomMesa
             {
                 MesaId = mesaId,
-                GarcomId = garcomId
+                GarcomId = garcomId,
+                Mesa = mesa
             };
 
             var resultado = await _mesaGarcomRepository.FecharMesaAsync(garcomMesa);
             if (!resultado.Sucesso)
                 return resultado;
+
+            var atualizarStatusMesa = await _mesaRepository.AtualizarStatusAsync(mesaId, (int)StatusMesaEnum.Desocupada);
+            if (!atualizarStatusMesa.Sucesso)
+                return atualizarStatusMesa;
 
             return Resultado.Success(GarcomMesaResponseDto.GarcomMesaToDo(garcomMesa));
         }

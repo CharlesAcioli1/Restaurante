@@ -146,5 +146,24 @@ namespace Restaurante.Infrastructure.Repositories
                 return Resultado.Falha("Houve um erro ao verificar Status!");
             }
         }
+
+        public async Task<Resultado> AtualizarStatusAsync(int mesaId, int statusMesaId)
+        {
+            try
+            {
+                var mesa = await _context.Mesas.FindAsync(mesaId);
+                if (mesa == null)
+                    return Resultado.Falha("Mesa não encontrada no banco de dados!");
+
+                mesa.StatusMesaId = statusMesaId;
+                await _context.SaveChangesAsync();
+
+                return Resultado.Success(mesa);
+            }
+            catch (Exception)
+            {
+                return Resultado.Falha("Não foi possível atualizar o status da mesa no banco de dados!");
+            }
+        }
     }
 }

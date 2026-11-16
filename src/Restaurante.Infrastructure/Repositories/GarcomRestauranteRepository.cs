@@ -1,5 +1,5 @@
-﻿using Dom = Restaurante.Domain;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories.Interfaces;
@@ -10,34 +10,19 @@ namespace Restaurante.Infrastructure.Repositories
     {
         private readonly RestauranteDbContext _context = context;
 
-        public async Task<Resultado> ObterPorData(DateTime dateUtc)
-        {
-            try
-            {
-                var inicioDoDia = DateTime.SpecifyKind(dateUtc.Date, DateTimeKind.Utc);
-                var fimDoDia = inicioDoDia.AddDays(1).AddTicks(1);
-                var garcomRestaurante = await _context.GarcomRestaurantes
-                    .AsNoTracking()
-                    .Where(gr => gr.DataInicio >= inicioDoDia && gr.DataInicio <= fimDoDia)
-                    .ToListAsync();
-                return Resultado.Success(garcomRestaurante);
-            }
-            catch (Exception)
-            {
-
-                return Resultado.Falha("Não foi possível obter datas de garçom e restaurante!");
-            }
-        }
-
-        public async Task<Resultado> ObterPorGarcomId(int id)
+        public async Task<Resultado> ObterPorIdAsync(int garcomId, int restauranteId)
         {
             try
             {
                 var garcomRestaurante = await _context.GarcomRestaurantes
                 .AsNoTracking()
                 .Include(gr => gr.Garcom)
-                .Where(gr => gr.GarcomId == id)
-                .ToListAsync();
+                .Include(gr => gr.Restaurante)
+                .FirstOrDefaultAsync(gr => gr.GarcomId == garcomId && gr.RestauranteId == restauranteId);
+
+                if (garcomRestaurante == null)
+                    return Resultado.Falha("Vínculo não encontrado!");
+
                 return Resultado.Success(garcomRestaurante);
             }
             catch (Exception)
@@ -46,22 +31,39 @@ namespace Restaurante.Infrastructure.Repositories
             }
         }
 
-        public async Task<Resultado> ObterPorRestauranteId(int id)
+        public async Task<Resultado> CriarVinculoAsync(GarcomRestaurante garcomRestaurante)
         {
             try
             {
-                var garcomRestaurante = await _context.GarcomRestaurantes
-                .AsNoTracking()
-                .Include(gr => gr.Garcom)
-                .Where(gr => gr.RestauranteId == id)
-                .ToListAsync();
+                _context.GarcomRestaurantes.Add(garcomRestaurante);
+                await _context.SaveChangesAsync();
+                var vinculoCriado = await _context.GarcomRestaurantes
+                    .AsNoTracking()
+                    .Include(gr => gr.Garcom)
+                    .Include(gr => gr.Restaurante)
+                    .FirstOrDefaultAsync(gr => gr.GarcomId == garcomRestaurante.GarcomId && gr.RestauranteId == garcomRestaurante.RestauranteId);
+                return Resultado.Success(vinculoCriado);
+            }
+            catch (Exception)
+            {
+
+                return Resultado.Falha("Houve uma falha na criação ou há vínculos!");
+            }
+        }
+
+        public async Task<Resultado> DeletarAsync(GarcomRestaurante garcomRestaurante)
+        {
+            try
+            {
+                _context.GarcomRestaurantes.Remove(garcomRestaurante);
+                await _context.SaveChangesAsync();
                 return Resultado.Success(garcomRestaurante);
             }
             catch (Exception)
             {
 
-                return Resultado.Falha("Não foi possível obter informações de restaurantes para garçom!");
+                return Resultado.Falha("Houve uma falha na exclusão ou não existe mais no banco de dados!");
             }
-        }        
+        }
     }
 }

@@ -66,11 +66,15 @@ namespace Restaurante.Services.Implementations
         {
             var obterId = await _garcomRepository.ObterPorIdAsync(id);
             if (!obterId.PossuiDados)
-                return obterId;
+                return Resultado.Falha("Não há garçom nesta posição ou houve um erro!");
 
             var garcom = (Garcom)obterId.Dados!;
+
             var deletarGarcom = await _garcomRepository.DeletarAsync(garcom);
-            return deletarGarcom;
+            if (!deletarGarcom.Sucesso)
+                return deletarGarcom;
+
+            return Resultado.Success(garcom);
         }
     }
 }

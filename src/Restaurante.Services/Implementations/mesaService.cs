@@ -1,6 +1,5 @@
 using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
-using Restaurante.Domain.Enums;
 using Restaurante.Domain.Validacoes;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Services.DTOs.Mesa;
@@ -13,41 +12,41 @@ namespace Restaurante.Services.Implementations
     {
         private readonly IMesaRepository _mesaRepository = mesaRepository;
 
-        public async Task<Resultado> AtualizarAsync(int id, AtualizarMesaDto dto)
-        {
-            var obterId = await _mesaRepository.ObterPorIdAsync(id);
+        //public async Task<Resultado> AtualizarAsync(int id, AtualizarMesaDto dto)
+        //{
+        //    var obterId = await _mesaRepository.ObterPorIdAsync(id);
 
-            if (!obterId.PossuiDados)
-                return obterId;
+        //    if (!obterId.PossuiDados)
+        //        return obterId;
 
-            var mesa = (Mesa)obterId.Dados!;
+        //    var mesa = (Mesa)obterId.Dados!;
 
-            if (!string.IsNullOrWhiteSpace(dto.Numero))
-                mesa.Numero = dto.Numero;
+        //    if (!string.IsNullOrWhiteSpace(dto.Numero))
+        //        mesa.Numero = dto.Numero;
 
-            if (dto.StatusMesaId.HasValue)
-            {
-                StatusMesaValidacao.Validar(dto.StatusMesaId.Value);
-                mesa.StatusMesaId = dto.StatusMesaId.Value;
+        //    if (dto.StatusMesaId.HasValue)
+        //    {
+        //        StatusMesaValidacao.Validar(dto.StatusMesaId.Value);
+        //        mesa.StatusMesaId = dto.StatusMesaId.Value;
 
-                mesa.StatusMesa = new StatusMesa
-                {
-                    Id = dto.StatusMesaId.Value,
-                    StatusId = (StatusMesaEnum)dto.StatusMesaId.Value
-                };
-            }
+        //        mesa.StatusMesa = new StatusMesa
+        //        {
+        //            Id = dto.StatusMesaId.Value,
+        //            StatusId = (StatusMesaEnum)dto.StatusMesaId.Value
+        //        };
+        //    }
 
-            if (dto.RestauranteID.HasValue)
-                mesa.RestauranteId = dto.RestauranteID.Value;
+        //    if (dto.RestauranteID.HasValue)
+        //        mesa.RestauranteId = dto.RestauranteID.Value;
 
-            var atualizarMesa = await _mesaRepository.AtualizarAsync(mesa);
-            if (!atualizarMesa.Sucesso)
-                return atualizarMesa;
+        //    var atualizarMesa = await _mesaRepository.AtualizarAsync(mesa);
+        //    if (!atualizarMesa.Sucesso)
+        //        return atualizarMesa;
 
-            var mesaDto = MesaResponseDto.MesaToDto(mesa);
+        //    var mesaDto = MesaResponseDto.MesaToDto(mesa);
 
-            return Resultado.Success(mesaDto);
-        }
+        //    return Resultado.Success(mesaDto);
+        //}
 
         public async Task<Resultado> CriarAsync(CriarMesaDto dto)
         {

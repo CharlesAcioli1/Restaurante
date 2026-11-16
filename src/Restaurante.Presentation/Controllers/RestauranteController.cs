@@ -7,13 +7,11 @@ namespace Restaurante.Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class RestauranteController(IRestauranteService restauranteService, ICardapioService cardapioService,
-        IMesaService mesaService, IGarcomRestauranteService garcomRestauranteService, IItemCardapioService itemCardapioService) : ControllerBase
+        IItemCardapioService itemCardapioService) : ControllerBase
     {
         private readonly IRestauranteService _restauranteService = restauranteService;
         private readonly ICardapioService _cardapioService = cardapioService;
-        private readonly IMesaService _mesaService = mesaService;
         private readonly IItemCardapioService _itemCardapioService = itemCardapioService;
-        private readonly IGarcomRestauranteService _garcomRestauranteService = garcomRestauranteService;
 
         [HttpGet]
         public async Task<IActionResult> ObterTodosAsync()
@@ -48,17 +46,6 @@ namespace Restaurante.Presentation.Controllers
             return Ok(cardapios.Dados);
         }
 
-        [HttpGet("{restauranteId}/mesas")]
-        public async Task<IActionResult> ObterMesasPorRestauranteIdAsync(int restauranteId)
-        {
-            var mesasRestaurante = await _mesaService.ObterPorRestauranteIdAsync(restauranteId);
-
-            if (!mesasRestaurante.PossuiDados)
-                return BadRequest(new { Error = mesasRestaurante.Erro });
-
-            return Ok(mesasRestaurante.Dados);
-        }
-
         [HttpGet("cardapio/{cardapioId}")]
         public async Task<IActionResult> ObterPorCardapioIdAsync(int cardapioId)
         {
@@ -68,17 +55,6 @@ namespace Restaurante.Presentation.Controllers
                 return BadRequest(new { Error = obterIdCardapio.Erro });
 
             return Ok(obterIdCardapio.Dados);
-        }
-
-        [HttpGet("{restauranteId}/garcons")]
-        public async Task<IActionResult> ObterGarconsPorRestaurante(int restauranteId)
-        {
-            var garcomRestaurante = await _garcomRestauranteService.ObterPorRestauranteId(restauranteId);
-
-            if (!garcomRestaurante.PossuiDados)
-                return BadRequest(new { Error = garcomRestaurante.Erro });
-
-            return Ok(garcomRestaurante.Dados);
         }
 
         [HttpPost]

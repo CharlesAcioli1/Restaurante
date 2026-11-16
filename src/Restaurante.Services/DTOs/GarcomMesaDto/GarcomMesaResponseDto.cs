@@ -1,4 +1,5 @@
-﻿using Dom = Restaurante.Domain;
+﻿using Restaurante.Domain.Enums;
+using Dom = Restaurante.Domain;
 namespace Restaurante.Services.DTOs.GarcomMesaDto;
 
 public sealed record GarcomMesaResponseDto
@@ -13,7 +14,9 @@ public sealed record GarcomMesaResponseDto
         {
             GarcomId = garcomMesa.GarcomId,
             MesaId = garcomMesa.MesaId,
-            NomeRestaurante = garcomMesa.Mesa?.Restaurante?.Nome?? "Não encontrado!",
-            StatusMesa = garcomMesa.Mesa?.StatusMesaId.ToString()?? "Tipo de Status não encontrado!"
+            NomeRestaurante = garcomMesa.Mesa?.Restaurante?.Nome ?? "Restaurante Não encontrado!",
+            StatusMesa = garcomMesa.Mesa != null
+                ? ((StatusMesaEnum)garcomMesa.Mesa.StatusMesaId).ToString()
+                : "Status Não encontrado!"
         };
 }

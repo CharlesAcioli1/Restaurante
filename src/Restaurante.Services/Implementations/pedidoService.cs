@@ -25,7 +25,6 @@ namespace Restaurante.Services.Implementations
                 return Resultado.Falha("O pedido ja está em preparo ou foi entregue e não pode ser alterado!");
             }
 
-            pedido.IdMesa = dto.IdMesa;
             pedido.StatusId = dto.StatusId;
 
             var atualizarPedido = await _pedidoRepository.AtualizarAsync(pedido);
@@ -117,7 +116,7 @@ namespace Restaurante.Services.Implementations
         public async Task<Resultado> ObterPorStatusIdAsync(int statusPedido)
         {
             var status = await _pedidoRepository.ObterPorStatusIdAsync(statusPedido);
-            if(!status.PossuiDados || status.Dados == null)
+            if(!status.Sucesso)
                 return Resultado.Falha("Posição errada, não possui dados ou é nula!");
 
             var pedido = (IEnumerable<Pedido>)status.Dados!;

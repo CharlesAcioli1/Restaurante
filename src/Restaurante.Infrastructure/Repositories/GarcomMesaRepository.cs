@@ -3,7 +3,6 @@ using Restaurante.Domain;
 using Restaurante.Domain.Compartilhar;
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories.Interfaces;
-using Dom = Restaurante.Domain;
 
 namespace Restaurante.Infrastructure.Repositories
 {
@@ -55,14 +54,14 @@ namespace Restaurante.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
                 return Resultado.Success(garcomMesa);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                return Resultado.Falha($"Erro ao abrir mesa: {ex.InnerException?.Message ?? ex.Message}");
+                return Resultado.Falha("Houve uma falha ou a mesa já existe!");
             }
         }
 
-        public async Task<Resultado>FecharMesaAsync(GarcomMesa garcomMesa)
+        public async Task<Resultado> FecharMesaAsync(GarcomMesa garcomMesa)
         {
             try
             {

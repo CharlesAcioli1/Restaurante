@@ -100,18 +100,6 @@ namespace Restaurante.Presentation.Controllers
             return Ok(mesa.Dados);
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> AtualizarAsync(int id, [FromBody] AtualizarMesaDto dto)
-        {
-            var mesa = await _mesaService.AtualizarAsync(id, dto);
-
-            if (!mesa.Sucesso)
-                return BadRequest(new { Error = mesa.Erro });
-
-            return Ok(mesa.Dados);
-
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarAsync(int id)
         {

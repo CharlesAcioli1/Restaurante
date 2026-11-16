@@ -1,12 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Restaurante.Infrastructure.Persistencia;
 using Restaurante.Infrastructure.Repositories;
 using Restaurante.Infrastructure.Repositories.Interfaces;
 using Restaurante.Presentation.Middlewares;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
-using Restaurante.Services.Interfaces;
-using Restaurante.Domain;
 using Restaurante.Services.Implementations;
+using Restaurante.Services.Interfaces;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -6,52 +6,65 @@ using Restaurante.Services.Interfaces;
 
 namespace Restaurante.Services.Implementations
 {
-    public class GarcomRestauranteService(IGarcomRestauranteRepository garcomRestauranteRepository) : IGarcomRestauranteService
+    public class GarcomRestauranteService(IGarcomRestauranteRepository garcomRestauranteRepository,
+        IGarcomRepository garcomRepository, IRestauranteRepository restauranteRepository) : IGarcomRestauranteService
     {
         private readonly IGarcomRestauranteRepository _garcomRestauranteRepository = garcomRestauranteRepository;
-
-        public async Task<Resultado> ObterPorData(DateTime dateUtc)
+        private readonly IGarcomRepository _garcomRepository = garcomRepository;
+        private readonly IRestauranteRepository _restauranteRepository = restauranteRepository;
+        public async Task<Resultado> CriarVinculoAsync(CriarGarcomRestauranteDto dto)
         {
-            var resultado = await _garcomRestauranteRepository.ObterPorData(dateUtc);
+            var obterIdGarcom = await _garcomRepository.ObterPorIdAsync(dto.GarcomId);
+            if (!obterIdGarcom.PossuiDados)
+                return Resultado.Falha("Não há garçom nesta posição ou não existe!");
 
-            if(!resultado.PossuiDados)
+            var obterIdRestaurante = await _restauranteRepository.ObterPorIdAsync(dto.RestauranteId);
+            if (!obterIdRestaurante.PossuiDados)
+                return Resultado.Falha("Não há restaurante nesta posição ou não existe!");
+
+            var obterVinculoExistente = await _garcomRestauranteRepository.ObterPorIdAsync(dto.GarcomId, dto.RestauranteId);
+            if (obterVinculoExistente.PossuiDados)
+                return Resultado.Falha("Garçom vinculado ao restaurante ou houve um erro!");
+
+            var garcomRestaurante = new GarcomRestaurante
+            {
+                GarcomId = dto.GarcomId,
+                RestauranteId = dto.RestauranteId
+            };
+
+            var resultado = await _garcomRestauranteRepository.CriarVinculoAsync(garcomRestaurante);
+            if (!resultado.Sucesso)
                 return resultado;
 
-            var obterPorData = (List<GarcomRestaurante>)resultado.Dados!;
-            var listaDto = obterPorData.Select(GarcomRestauranteResponseDto.GarcomRestauranteToDo).ToList();
-            return Resultado.Success(listaDto);
+            var garcomRestauranteDto = GarcomRestauranteResponseDto.GarcomRestauranteToDo(garcomRestaurante);
+            return Resultado.Success(garcomRestauranteDto);
         }
 
-        public async Task<Resultado> ObterPorGarcomId(int id)
+        public async Task<Resultado> DeletarAsync(int garcomId, int restauranteId)
         {
-            var obterIdGarcom = await _garcomRestauranteRepository.ObterPorGarcomId(id);
-            if (!obterIdGarcom.PossuiDados)
-                return obterIdGarcom;
+            var obterVinculo = await _garcomRestauranteRepository.ObterPorIdAsync(garcomId, restauranteId);
+            if (!obterVinculo.PossuiDados)
+                return Resultado.Falha("Não há mais vinculo ou não foi encontrado!");
 
-            var obterLista = (IEnumerable<GarcomRestaurante>)obterIdGarcom.Dados!;
-            var listaDto = obterLista.Select(listaGarcom => new GarcomRestauranteResponseDto
-            {
-                GarcomId = listaGarcom.GarcomId,
-                NomeGarcom = listaGarcom.Garcom!.Nome
-               
-            }).ToList();
-            return Resultado.Success(listaDto);
+            var vinculo = (GarcomRestaurante)obterVinculo.Dados!;
+
+            var resultado = await _garcomRestauranteRepository.DeletarAsync(vinculo);
+            if (!resultado.Sucesso)
+                return resultado;
+
+            return Resultado.Success(vinculo);
         }
 
-        public async Task<Resultado> ObterPorRestauranteId(int id)
+        public async Task<Resultado> ObterPorIdAsync(int garcomId, int restauranteId)
         {
-            var obterPorIdRestaurante = await _garcomRestauranteRepository.ObterPorRestauranteId(id);
-            if (!obterPorIdRestaurante.PossuiDados)
-                return obterPorIdRestaurante;
+            var obterVinculo = await _garcomRestauranteRepository.ObterPorIdAsync(garcomId, restauranteId);
+            if (!obterVinculo.PossuiDados || obterVinculo.Dados == null)
+                return Resultado.Falha("Excluído ou não encontrado!");
 
-            var obterLista = (IEnumerable<GarcomRestaurante>)obterPorIdRestaurante.Dados!;
-            var listaDto = obterLista.Select(garcomPorRestaurante => new GarcomRestauranteResponseDto
-            {
-                RestauranteId = garcomPorRestaurante.RestauranteId,
-                NomeRestaurante = garcomPorRestaurante.Restaurante!.Nome,
-                NomeGarcom = garcomPorRestaurante.Garcom!.Nome
-            }).ToList();
-            return Resultado.Success(listaDto);
+            var entidade = (GarcomRestaurante)obterVinculo.Dados!;
+            var dto = GarcomRestauranteResponseDto.GarcomRestauranteToDo(entidade);
+
+            return Resultado.Success(dto);
         }
     }
 }
